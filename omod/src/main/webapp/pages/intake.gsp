@@ -176,6 +176,11 @@
 	#artDate, #cptDate {
 		display: none;
 	}
+	.append-label {
+		color: #999999;
+		left: -45px;
+		position: relative;
+	}
 </style>
 
 ${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: program.patientProgramId]) }

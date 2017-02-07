@@ -32,6 +32,7 @@
 					<span class="mandatory">*</span>
 				</label>
 				<input id="vitalsWeight" class="required" name="vitals.weight" type="text" placeholder="Weight">
+				<span class="append-label">KG</span>
 			</field>
 			
 			<field>
@@ -40,6 +41,7 @@
 					<span class="mandatory">*</span>
 				</label>
 				<input id="vitalsHeight" class="required" name="vitals.height" type="text" placeholder="Height">
+				<span class="append-label">CM</span>
 			</field>
 			
 			<field>
@@ -48,6 +50,7 @@
 					<span class="mandatory">*</span>
 				</label>
 				<input id="bmi" class="required" type="text" ${patient.age>5?'name="vitals.bmi" placeholder="B.M.I" readonly=""':'name="vitals.muac" placeholder="M.U.A.C"'}>
+				<span class="append-label">${patient.age>5?'':'CM'}</span>
 			</field>
 		</fieldset>
 		
@@ -58,7 +61,7 @@
 					Treatment Supporter:
 					<span class="mandatory">*</span>
 				</label>
-				<input id="treatmentSupporter" class="required" name="treatment.supporter" type="text" placeholder="Treatment Supporter">
+				<input id="treatmentSupporter" class="required" name="treatment.supporter" type="text" placeholder="Treatment Supporter (Damiin)">
 			</field>
 			
 			<field>
@@ -94,7 +97,7 @@
 			
 			<field>
 				<label for="treatmentSite">
-					Site:
+					Disease Site:
 					<span class="mandatory">*</span>
 				</label>
 				
@@ -110,35 +113,6 @@
 	
 	<section>
 		<span class="title">Examinations</span>
-		<fieldset>
-			<legend>Sputum Smear</legend>
-			<field>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.sputum.date', id: 'sputum-date', label: 'Exam Date:', useTime: false, defaultToday: false, endDate: new Date()])}
-			</field>
-			
-			<field>
-				<label for="LabNumber">
-					Lab. No.:
-					<span class="mandatory">*</span>
-				</label>
-				<input id="LabNumber" class="required" name="exams.lab.number" type="text" placeholder="Laboratory Number" />
-			</field>
-			
-			<field>
-				<label for="sputumResult">
-					Microscopy Result:
-					<span class="mandatory">*</span>
-				</label>
-				
-				<select id="sputumResult" class="required" name="exams.sputum.result">
-					<option value="">&nbsp;</option>
-					<% smearResults.eachWithIndex { sites, index -> %>
-						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name.toString().toUpperCase()}</option>
-					<% } %>
-				</select>
-			</field>
-		</fieldset>
-		
 		<fieldset>
 			<legend>GenXpert</legend>
 			<field>

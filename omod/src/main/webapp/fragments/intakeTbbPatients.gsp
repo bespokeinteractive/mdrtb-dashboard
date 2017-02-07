@@ -20,6 +20,7 @@
 					<span class="mandatory">*</span>
 				</label>
 				<input id="vitalsWeight" class="required" name="vitals.weight" type="text" placeholder="Weight">
+				<span class="append-label">KG</span>
 			</field>
 			
 			<field>
@@ -28,6 +29,7 @@
 					<span class="mandatory">*</span>
 				</label>
 				<input id="vitalsHeight" class="required" name="vitals.height" type="text" placeholder="Height">
+				<span class="append-label">CM</span>
 			</field>
 			
 			<field>
@@ -36,6 +38,7 @@
 					<span class="mandatory">*</span>
 				</label>
 				<input id="bmi" class="required" type="text" ${patient.age>5?'name="vitals.bmi" placeholder="B.M.I" readonly=""':'name="vitals.muac" placeholder="M.U.A.C"'}>
+				<span class="append-label">${patient.age>5?'':'CM'}</span>
 			</field>
 		</fieldset>
 		
@@ -46,7 +49,7 @@
 					Treatment Supporter:
 					<span class="mandatory">*</span>
 				</label>
-				<input id="treatmentSupporter" class="required" name="treatment.supporter" type="text" placeholder="Treatment Supporter">
+				<input id="treatmentSupporter" class="required" name="treatment.supporter" type="text" placeholder="Treatment Supporter (Damiin)">
 			</field>
 			
 			<field>
@@ -82,7 +85,7 @@
 			
 			<field>
 				<label for="treatmentSite">
-					Site:
+					Disease Site:
 					<span class="mandatory">*</span>
 				</label>
 				

@@ -71,6 +71,23 @@ public class IntakePageController {
         Map<String, Object> params=new HashMap<String, Object>();
         Patient patient = Context.getPatientService().getPatient(Integer.parseInt(request.getParameter("patient.id")));
 
+        String height = request.getParameter("vitals.height");
+        String weight = request.getParameter("vitals.weight");
+        String muac = request.getParameter("vitals.muac");
+        String bmi = request.getParameter("vitals.bmi");
+
+        if (muac.equals("999")){
+            muac = "";
+        }
+
+        if (height.equals("999")){
+            height = "";
+        }
+
+        if (weight.equals("999")){
+            weight = "";
+        }
+
         SimpleIntakeForm intake = new SimpleIntakeForm(patient);
         // Fields for Encounter
         intake.setLocation(session.getSessionLocation());
@@ -78,14 +95,16 @@ public class IntakePageController {
         intake.setEncounterDatetime(new Date());
 
         // Obs Fields
-        intake.setWeight(request.getParameter("vitals.weight"));
-        intake.setHeight(request.getParameter("vitals.height"));
-        intake.setBMI(request.getParameter("vitals.bmi"));
-        intake.setMUAC(request.getParameter("vitals.muac"));
+        intake.setWeight(weight);
+        intake.setHeight(height);
+        intake.setBMI(bmi);
+        intake.setMUAC(muac);
 
         intake.setHealthFacility(request.getParameter("treatment.facility"));
         intake.setTreatementSupporter(request.getParameter("treatment.supporter"));
         intake.setReferringDepartment(request.getParameter("treatment.referral"));
+        intake.setSecondLineRegistrationDate(request.getParameter("register.date"));
+        intake.setSecondLineRegistrationNumber(request.getParameter("register.number"));
 
         intake.setDirectObserver(request.getParameter("treatment.dots"));
         intake.setTreatmentStartDate(request.getParameter("treatment.started"));
