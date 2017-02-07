@@ -22,7 +22,7 @@ import org.openmrs.module.ModuleActivator;
 /**
  * This class contains the logic that is run every time this module is either started or stopped.
  */
-public class mdrtbdashboardAppModuleActivator implements ModuleActivator {
+public class mdrtbdashboardModuleActivator implements ModuleActivator {
 	
 	protected Log log = LogFactory.getLog(getClass());
 		
