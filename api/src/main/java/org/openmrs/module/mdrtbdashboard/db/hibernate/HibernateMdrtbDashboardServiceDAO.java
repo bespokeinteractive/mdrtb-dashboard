@@ -94,7 +94,7 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
         } else if(searchSplit.length == 2) {
             hql = hql + "OR pn.given_name like \'%" + searchSplit[0] + "%\' " + "AND (pn.middle_name like \'%" + searchSplit[1] + "%\' " + "OR pn.family_name like \'%" + searchSplit[1] + "%\') ";
         } else if(searchSplit.length == 3) {
-            hql = hql + "OR pn.given_name like \'%" + searchSplit[0] + "%\' " + "AND pn.middle_name like \'%" + searchSplit[1] + "%\' " + "AND pn.family_name like \'%" + searchSplit[2] + "%\'";
+            hql = hql + "OR pn.given_name like \'%" + searchSplit[0] + "%\' " + "AND pn.middle_name like \'%" + searchSplit[2] + "%\' " + "AND pn.family_name like \'%" + searchSplit[1] + "%\'";
         }
 
         hql += ") ";

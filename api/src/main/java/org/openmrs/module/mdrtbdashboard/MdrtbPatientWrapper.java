@@ -1,5 +1,6 @@
 package org.openmrs.module.mdrtbdashboard;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
@@ -85,7 +86,11 @@ public class MdrtbPatientWrapper {
     }
 
     public String getWrapperNames() {
-        wrapperNames = this.patientProgram.getPatient().getNames().toString().substring(1, this.patientProgram.getPatient().getNames().toString().length() - 1);
+        wrapperNames = this.patientProgram.getPatient().getGivenName() +" "+ this.patientProgram.getPatient().getFamilyName();
+        if (StringUtils.isNotEmpty(this.patientProgram.getPatient().getMiddleName())){
+            wrapperNames += " " + this.patientProgram.getPatient().getMiddleName();
+        }
+
         return wrapperNames;
     }
 
