@@ -66,12 +66,42 @@
 			}
 		});
 		
+		jq('#sputumResult').change(function(){
+			if (jq(this).val() == 30 || jq(this).val() == ""){
+				jq('.smear-date').hide();
+			} else {
+				jq('.smear-date').show();
+			}
+		});
+		
+		jq('#genXpertResult').change(function(){
+			if (jq(this).val() == 30 || jq(this).val() == ""){
+				jq('.genxpert-date').hide();
+			} else {
+				jq('.genxpert-date').show();
+			}
+		});
+		
 		jq('#hivResult').change(function(){
+			if (jq(this).val() == 30 || jq(this).val() == ""){
+				jq('.hivtest-date').hide();
+			} else {
+				jq('.hivtest-date').show();
+			}			
+			
 			if (jq(this).val() == 28){
 				jq('.hiv-positive-section').show(300);
 			} else {
 				jq('.hiv-positive-section').hide(300);
-			}		
+			}
+		});
+		
+		jq('#xray-result').change(function(){
+			if (jq(this).val() == 30 || jq(this).val() == ""){
+				jq('.xray-date').hide();
+			} else {
+				jq('.xray-date').show();
+			}
 		});
 		
 		jq('#artStatus').change(function(){
@@ -180,6 +210,12 @@
 		color: #999999;
 		left: -45px;
 		position: relative;
+	}
+	.genxpert-date,
+	.hivtest-date,
+	.xray-date,
+	.smear-date{
+		display: none;
 	}
 </style>
 

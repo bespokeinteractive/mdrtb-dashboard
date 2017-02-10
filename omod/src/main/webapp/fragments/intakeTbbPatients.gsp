@@ -102,11 +102,7 @@
 	<section>
 		<span class="title">Examinations</span>
 		<fieldset>
-			<legend>Sputum Smear</legend>
-			<field>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.sputum.date', id: 'sputum-date', label: 'Exam Date:', useTime: false, defaultToday: false, endDate: new Date()])}
-			</field>
-			
+			<legend>Sputum Smear</legend>			
 			<field>
 				<label for="LabNumber">
 					Lab. No.:
@@ -128,14 +124,14 @@
 					<% } %>
 				</select>
 			</field>
+			
+			<field class="smear-date">
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.sputum.date', id: 'sputum-date', label: 'Exam Date:', useTime: false, defaultToday: true, endDate: new Date()])}
+			</field>
 		</fieldset>
 		
 		<fieldset>
 			<legend>GenXpert</legend>
-			<field>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.genxpert.date', id: 'genXpertDate', label: 'Exam Date:', useTime: false, defaultToday: false, endDate: new Date()])}
-			</field>
-			
 			<field>
 				<label for="genXpertResult">
 					GenXpert Result:
@@ -149,14 +145,14 @@
 					<% } %>
 				</select>
 			</field>
+			
+			<field class="genxpert-date">
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.genxpert.date', id: 'genXpertDate', label: 'Exam Date:', useTime: false, defaultToday: true, endDate: new Date()])}
+			</field>			
 		</fieldset>
 		
 		<fieldset>
 			<legend>HIV Result</legend>
-			<field>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.hiv.date', id: 'hivDate', label: 'Exam Date:', useTime: false, defaultToday: false, endDate: new Date()])}
-			</field>
-			
 			<field>
 				<label for="hivResult">
 					HIV Result:
@@ -169,6 +165,10 @@
 						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
 					<% } %>
 				</select>
+			</field>
+			
+			<field class="hivtest-date">
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.hiv.date', id: 'hivDate', label: 'Exam Date:', useTime: false, defaultToday: true, endDate: new Date()])}
 			</field>
 			
 			<div class="hiv-positive-section" style="display:none;">
@@ -188,7 +188,7 @@
 				</field>
 				
 				<field>
-					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.art.date', id: 'artDate', label: 'Exam Date:', useTime: false, defaultToday: false, endDate: new Date()])}
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.art.date', id: 'artDate', label: 'ART Start Date:', useTime: false, defaultToday: true, endDate: new Date()])}
 				</field>
 				
 				<field>
@@ -205,18 +205,13 @@
 				</field>
 				
 				<field>
-					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.cpt.date', id: 'cptDate', label: 'Exam Date:', useTime: false, defaultToday: false, endDate: new Date()])}
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.cpt.date', id: 'cptDate', label: 'CPT Start Date:', useTime: false, defaultToday: true, endDate: new Date()])}
 				</field>
-			</div>
-			
+			</div>			
 		</fieldset>
 		
 		<fieldset>
 			<legend>X-ray Result</legend>
-			<field>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.xray.date', id: 'xrayDate', label: 'Exam Date:', useTime: false, defaultToday: false, endDate: new Date()])}
-			</field>
-			
 			<field>
 				<label for="xray-result">
 					X-ray Result:
@@ -231,6 +226,10 @@
 				</select>
 				</select>
 			</field>
+			
+			<field class="xray-date">
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.xray.date', id: 'xrayDate', label: 'Exam Date:', useTime: false, defaultToday: true, endDate: new Date()])}
+			</field>			
 		</fieldset>
 	</section>
 	
