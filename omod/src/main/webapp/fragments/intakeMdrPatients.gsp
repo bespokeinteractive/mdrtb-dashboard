@@ -73,7 +73,7 @@
 				<select id="treatmentReferral" class="required" name="treatment.referral">
 					<option value="">&nbsp;</option>
 					<% referringDepartments.eachWithIndex { sites, index -> %>
-						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
+						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name.toString().toUpperCase()}</option>
 					<% } %>
 				</select>
 			</field>

@@ -28,7 +28,7 @@
 		<% } else { %>
 			<div class="patient-items">
 				<span class="span-left">SECOND LINE NO.</span>
-				<span class="span-right">XXXX</span>
+				<span class="span-right">${current.getInitialSecondLineNumberDuringProgram()?current.getInitialSecondLineNumberDuringProgram():'N/A'}</span>
 			</div>
 			
 			<div class="patient-items">

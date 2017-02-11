@@ -77,7 +77,7 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
-    public List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit){
+    public List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId){
         Vector search = new Vector();
 
         String[] searchSplit = nameOrIdentifier.split("\\s+");
@@ -160,7 +160,15 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
                         }
                     }
 
-                    search.add(Context.getService(MdrtbService.class).getMostRecentMdrtbPatientProgram(patient));
+                    MdrtbPatientProgram pp = Context.getService(MdrtbService.class).getMostRecentMdrtbPatientProgram(patient);
+                    if (programId != 0){
+                        if (pp.getPatientProgram() != null && pp.getActive() && pp.getPatientProgram().getProgram() == Context.getProgramWorkflowService().getProgram(programId)){
+                            search.add(pp);
+                        }
+                    }
+                    else{
+                        search.add(pp);
+                    }
                 }
             }
         }

@@ -11,7 +11,7 @@
 	<artifactId>mdrtbdashboard-api</artifactId>
 	<version>1.0</version>
 	<packaging>jar</packaging>
-	<name>MDRTB Dashboard</name>
+	<name>MDRTB Dashboard API</name>
 	<description>OpenMRS module for Management of MDRTB Patients</description>
 
 	<dependencies>

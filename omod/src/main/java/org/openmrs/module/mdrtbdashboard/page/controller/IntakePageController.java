@@ -1,5 +1,6 @@
 package org.openmrs.module.mdrtbdashboard.page.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.ConceptAnswer;
 import org.openmrs.Encounter;
 import org.openmrs.Obs;
@@ -76,15 +77,15 @@ public class IntakePageController {
         String muac = request.getParameter("vitals.muac");
         String bmi = request.getParameter("vitals.bmi");
 
-        if (muac.equals("999")){
+        if (StringUtils.equals(muac, "999")){
             muac = "";
         }
 
-        if (height.equals("999")){
+        if (StringUtils.equals(height, "999")){
             height = "";
         }
 
-        if (weight.equals("999")){
+        if (StringUtils.equals(weight, "999")){
             weight = "";
         }
 

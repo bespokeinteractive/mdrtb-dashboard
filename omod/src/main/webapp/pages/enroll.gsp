@@ -529,10 +529,9 @@
 					</select>
 				</div>
 				
-				<div class="mdrtb">
+				<div style="display:none">
 					<label for="enrollmentPreviousTreatment">Previous Treatment:</label>
 					<select id="enrollmentPreviousTreatment" name="enrollment.PreviousTreatment" disabled="true">
-						<option value="" data-uuid=""></option>
 						<% enrollmentPreviousTreatment.eachWithIndex { classification, index -> %>
 							<option value="${classification.id}" data-uuid="${classification.uuid}">${classification.concept.displayString}</option>
 						<% } %>
