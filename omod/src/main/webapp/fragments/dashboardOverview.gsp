@@ -56,13 +56,15 @@
 			<td width="1px">LAB.NO</td>
 			<td>RESULT</td>
 		</tr>
-		  
-		<tr class="table-content">
-			<td>${ui.formatDatePretty(current.getInitialSputumSmearDateDuringProgram()).toUpperCase()}</td>
-			<td>SPUTUM SMEAR</td>
-			<td>${current.getInitialLabNumberDuringProgram()}</td>
-			<td>${current.getInitialSputumSmearResultDuringProgram().name}</td>
-		</tr>
+		
+		<% if (current.program.program.programId == 1) { %>
+			<tr class="table-content">
+				<td>${ui.formatDatePretty(current.getInitialSputumSmearDateDuringProgram()).toUpperCase()}</td>
+				<td>SPUTUM SMEAR</td>
+				<td>${current.getInitialLabNumberDuringProgram()}</td>
+				<td>${current.getInitialSputumSmearResultDuringProgram().name}</td>
+			</tr>		
+		<% } %>		  
 		
 		<tr class="table-content">
 			<td>${ui.formatDatePretty(current.getInitialGenXpertDateDuringProgram()).toUpperCase()}</td>
