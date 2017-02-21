@@ -3,13 +3,112 @@
 %>
 
 <script>
-	jq(function() {
+	jq(function(){
 		var tabs = jq(".mdrtb-tabs").tabs();
+	
+		jq("#ul-left-menu").on("click", ".visit-summary", function(){
+			jq("#visit-detail").html('<i class=\"icon-spinner icon-spin icon-2x pull-left\"></i> <span style="float: left; margin-top: 12px;">Loading...</span>');	
+				
+			var visitSummary = jq(this);
+			jq(".visit-summary").removeClass("selected");
+			jq(visitSummary).addClass("selected");			
+			
+			jq.getJSON('${ ui.actionLink("mdrtbdashboard", "dashboard" ,"getVisitSummaryDetails") }', { 
+				'encounterId' : jq(visitSummary).find(".encounter-id").val() 
+			}).success(function (data) {
+				var visitDetailTemplate =  _.template(jq("#visit-detail-template").html());				
+				jq("#visit-detail").html(visitDetailTemplate(data.details));
+				
+			});
+		});
+		
+		jq(document).on("change", "#lastVisit", function () {
+			if (jq(this).attr('checked')) {
+				jq('.outcome').show();
+				
+				visitDialog.close();
+				visitDialog.show();
+			}
+			else {
+				jq('.outcome').hide();
+				jq('#outcomeResults').val('');
+				jq('#outcomeRemarks').val('');
+			}			
+		});
+		
+		jq(".add-visit").on("click", function(e) {
+			e.preventDefault();
+			
+			jq('#lastVisit').attr('checked', false);
+			jq('.outcome').hide();
+			jq('#outcomeResults').val('');
+			jq('#outcomeRemarks').val('');
+			
+			visitDialog.show();
+		});
+		
+		var visitDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+			selector: '#visit-dialog',
+			actions: {
+				confirm: function() {
+					if (jq('#LabNumber').val() == '' || jq('#sputumResult').val() == ''){
+						jq().toastmessage('showErrorToast', 'Ensure all fields have been properly filled before you continue');
+						return false;
+					}
+					
+					if (jq('#lastVisit').attr('checked')){						
+						if (jq('#outcomeResults').val() == ''){
+							jq().toastmessage('showErrorToast', 'Ensure all fields have been properly filled before you continue');
+							return false;
+						}
+					}
+					
+					jq.ajax({
+						type: "POST",
+						url: '${ui.actionLink("mdrtbdashboard", "dashboardVisits", "addPatientVisit")}',
+						data: ({
+							patientId:			${patient.id},
+							programId:			${current.program.patientProgramId},
+							labNumber: 			jq('#LabNumber').val(),
+							testedOn: 			jq('#sputum-date-field').val(),
+							testResult:			jq('#sputumResult').val(),
+							outcomeResults:		jq('#outcomeResults').val(),
+							outcomeRemarks:		jq('#outcomeRemarks').val()
+						}),
+						dataType: "json",
+						success: function(data) {
+							if (data.status == "success"){
+								jq().toastmessage('showSuccessToast', data.message);
+								window.location.href = "main.page?patient=${patient.id}";					
+							}
+							else {
+								jq().toastmessage('showErrorToast', 'x:'+ data.message);
+							}
+							
+						},
+						error: function(data){
+							jq().toastmessage('showErrorToast', "Post Failed. " + data.statusText);
+						}
+					});
+					
+					visitDialog.close();
+				},
+				cancel: function() {
+					visitDialog.close();
+				}
+			}
+		});
 		
 		if ('${tabs}' == 'chart'){
 			tabs.tabs('option','selected',3);
 		}
-    });
+		
+		jq(".visit-summary")[0].click();
+	});
 </script>
 
 <style>

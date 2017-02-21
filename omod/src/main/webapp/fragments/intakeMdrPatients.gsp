@@ -1,7 +1,7 @@
 <form method="post" id="intake" class="simple-form-ui" style="margin-top:10px;" action="intake.page?patientId=17&patientProgramId=20&encounterId=-1">
 	<section>
 		<span class="title">Intake Form</span>
-		<fieldset>
+		<fieldset id="visit-details">
 			<legend>Visit Details</legend>
 			<field>
 				<label for="vitalsWeight">
@@ -219,7 +219,50 @@
 	
 	<div id="confirmation">
 		<span class="title">Summary Page</span>
-		<div id="confirmationQuestion" class="focused" style="margin-top:20px">		
+		<div id="confirmationQuestion" class="focused" style="margin-top:20px">
+			<div class="dashboard">
+				<div class="info-section">
+					<div class="info-header">
+						<i class="icon-list-ul"></i>
+						<h3>TB INTAKE SUMMARY &amp; CONFIRMATION</h3>
+					</div>
+
+					<div class="info-body">
+						<table id="summaryTable">
+							<tbody>
+								<tr style="${program.program.programId == 1?'display:none':''}">
+									<td><span class="status active"></span>Register No.</td>
+									<td>N/A</td>
+								</tr>
+								
+								<tr>
+									<td><span class="status active"></span>Facility</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>Weight</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>Height</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>${patient.age>5?'B.M.I':'M.U.A.C'}</td>
+									<td>N/A</td>
+								</tr>								
+							</tbody>
+						</table>
+
+					</div>
+				</div>
+			</div>
+		
+		
+		
 			<field style="display: inline"> 
 				<button class="button submit confirm" style="display: none;"></button>
 			</field>

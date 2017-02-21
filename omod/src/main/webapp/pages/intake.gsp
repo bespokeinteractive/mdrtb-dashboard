@@ -124,6 +124,17 @@
 			}
 		});
 		
+		jq('#visit-details input').change(function(){
+			jq('#summaryTable tr:eq(0) td:eq(1)').text(jq('#registerNumber').val());
+			jq('#summaryTable tr:eq(1) td:eq(1)').text(jq('#locationFacility').val());
+			jq('#summaryTable tr:eq(2) td:eq(1)').text(jq('#vitalsWeight').val());
+			jq('#summaryTable tr:eq(3) td:eq(1)').text(jq('#vitalsHeight').val());
+			jq('#summaryTable tr:eq(4) td:eq(1)').text(jq('#bmi').val());
+			jq('#summaryTable tr:eq(5) td:eq(1)').text(jq('#locationFacility').val());
+		
+		});
+		
+		
 		jq('.submit').click(function(){
 			jq("#intake").submit();		
 		});
@@ -216,6 +227,27 @@
 	.xray-date,
 	.smear-date{
 		display: none;
+	}	
+	table th, table td {
+		border: 1px none #ddd;
+		padding: 5px 10px;
+	}
+	#summaryTable tr:nth-child(2n), #summaryTable tr:nth-child(2n+1) {
+		background: none;
+	}
+	#summaryTable tr, 
+	#summaryTable th, 
+	#summaryTable td {
+		border: 1px none #eee;
+	}
+	#summaryTable tr {
+		border-bottom: 1px solid #eee;
+	}
+	#summaryTable tr:last-child{
+		border-bottom: 1px none #eee;
+	}
+	#summaryTable td:first-child{
+		width: 20%;
 	}
 </style>
 
