@@ -42,7 +42,7 @@
 			</field>
 		</fieldset>
 		
-		<fieldset>
+		<fieldset id ="treatment-details">
 			<legend>Treatment</legend>
 			<field>
 				<label for="treatmentSupporter">
@@ -101,7 +101,7 @@
 	
 	<section>
 		<span class="title">Examinations</span>
-		<fieldset>
+		<fieldset id= "spaturm-details">
 			<legend>Sputum Smear</legend>			
 			<field>
 				<label for="LabNumber">
@@ -130,7 +130,7 @@
 			</field>
 		</fieldset>
 		
-		<fieldset>
+		<fieldset id = "genXpert-details">
 			<legend>GenXpert</legend>
 			<field>
 				<label for="genXpertResult">
@@ -151,7 +151,7 @@
 			</field>			
 		</fieldset>
 		
-		<fieldset>
+		<fieldset id = "hivResult-details">
 			<legend>HIV Result</legend>
 			<field>
 				<label for="hivResult">
@@ -210,7 +210,7 @@
 			</div>			
 		</fieldset>
 		
-		<fieldset>
+		<fieldset id = "xrayresult-details">
 			<legend>X-ray Result</legend>
 			<field>
 				<label for="xray-result">
@@ -247,10 +247,10 @@
 						<table id="summaryTable">
 							<tbody>
 								<tr style="${program.program.programId == 1?'display:none':''}">
-									<td><span class="status active"></span>Register Number</td>
+									<td><span class="status active"></span>Register No.</td>
 									<td>N/A</td>
 								</tr>
-								
+
 								<tr>
 									<td><span class="status active"></span>Facility</td>
 									<td>N/A</td>
@@ -267,9 +267,68 @@
 								</tr>
 
 								<tr>
-									<td><span class="status active"></span>${patient.age>5?'B.M.I':'M.U.A.C'}</td>
+									<td><span class="status active"></span>
+										${patient.age>5?'B.M.I':'M.U.A.C'}</td>
 									<td>N/A</td>
-								</tr>								
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>Supporter</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>Referred by</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>D.O.T.S</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>Disease Sites</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>Lab. No.:</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>Microscopy</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>GenXpert Result</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>HIV Result</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>Started on ART:</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>Started on CPT:</td>
+									<td>N/A</td>
+								</tr>
+
+								<tr>
+									<td><span class="status active"></span>X-Ray Result</td>
+									<td>N/A</td>
+								</tr>
+
+
+
 							</tbody>
 						</table>
 
