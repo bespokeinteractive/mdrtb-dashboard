@@ -1,7 +1,21 @@
 <div id="em-title" class="visits">
 	<i class='icon-file-alt small'></i>
 	<span class="section-title">VISIT INFORMATION</span>
-	<span class="right update-vitals" style="margin-top: 6px;"><a class="popups ${current.program.program.programId == 1?'add-visit':'choose-visit'}" href="#"><i class="icon-pencil small"></i>Add Visit</a></span>
+	<% if (current.program.program.programId == 1) { %>
+		<span class="right update-vitals" style="margin-top: 6px;"><a class="popups add-visit href="#"><i class="icon-pencil small"></i>Add Visit</a></span>
+	<% } else { %>
+		<div style="float: right; margin-top: -3px;">
+			<div style="position: static" class="dropdown">
+				<span class="dropdown-name"><i class="icon-cog"></i>Actions<i class="icon-sort-down"></i></span>
+				<ul style="z-index: 99">
+					<li><a data-value="1"><i class="icon-file-text"></i>Add GenXpert</a></li>
+					<li><a data-value="2"><i class="icon-file-text"></i>Add Culture</a></li>
+					<li><a data-value="3"><i class="icon-retweet"></i>Add D.S.T</a></li>
+					<li><a data-value="4"><i class="icon-reply"></i>Exit from Program</a></li>
+				</ul>
+			</div>
+		</div>
+	<% } %>
 </div>
 
 <div class="aside">
@@ -139,7 +153,7 @@
 <div id="visit-dialog" class="dialog" style="display:none;">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
-        <h3>ADD VISIT</h3>
+        <h3>UPDATE VISIT</h3>
     </div>
 
     <div class="dialog-content">
@@ -198,6 +212,44 @@
 				<label style="width: 100%; border-top: 1px dotted; margin-top: 6px;">
 					<input type="checkbox" id="lastVisit" style="margin-left: 168px;"> This is the Last Visit
 				</label>
+			</li>
+        </ul>
+
+        <label class="button confirm right">Confirm</label>
+        <label class="button cancel">Cancel</label>
+    </div>
+</div>
+
+<div id="genxpert-dialog" class="dialog" style="display:none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>UPDATE GENXPERT</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+				<label for="genxpertLabNumber">
+					Lab. Number :
+				</label>
+				<input id="genxpertLabNumber" class="required" name="exams.lab.number" type="text" placeholder="Laboratory Number" />
+			</li>
+			
+            <li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.sputum.date', id: 'genxpert-date', label: 'Exam Date:', useTime: false, defaultToday: true, endDate: new Date()])}
+            </li>
+			
+			<li>
+				<label for="genxpertResult">
+					GenXpert Result:
+				</label>
+				
+				<select id="genxpertResult" class="required" name="exams.sputum.result">
+					<option value="">&nbsp;</option>
+					<% genXpertResults.eachWithIndex { sites, index -> %>
+						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
+					<% } %>
+				</select>
 			</li>
         </ul>
 

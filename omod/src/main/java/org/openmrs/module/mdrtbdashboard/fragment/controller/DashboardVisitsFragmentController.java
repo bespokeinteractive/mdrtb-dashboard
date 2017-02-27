@@ -1,12 +1,10 @@
 package org.openmrs.module.mdrtbdashboard.fragment.controller;
 
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.Encounter;
-import org.openmrs.Patient;
-import org.openmrs.Program;
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
+import org.openmrs.module.mdrtb.MdrtbConcepts;
 import org.openmrs.module.mdrtb.form.SimpleFollowUpForm;
 import org.openmrs.module.mdrtb.form.SimpleIntakeForm;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
@@ -22,10 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Dennis Henry on 1/31/2017.
@@ -40,10 +35,13 @@ public class DashboardVisitsFragmentController {
 
         List<Encounter> visitSummaries = Context.getEncounterService().getEncounters(patient, null, mpp.getDateEnrolled(), mpp.getDateCompleted(), null, null, false);
         Collection<ConceptAnswer> smearResults = Context.getService(MdrtbService.class).getPossibleSmearResults();
+        Collection<ConceptAnswer> genXpertResults = Context.getService(MdrtbService.class).getPossibleGenXpertResults();
+
         Collections.reverse(visitSummaries);
 
-        model.addAttribute("smearResults", smearResults);
         model.addAttribute("visitSummaries", visitSummaries);
+        model.addAttribute("smearResults", smearResults);
+        model.addAttribute("genXpertResults", genXpertResults);
     }
 
     public SimpleObject addPatientVisit(@RequestParam(value = "patientId") Patient patient,
@@ -81,6 +79,68 @@ public class DashboardVisitsFragmentController {
 
         //Return Answer
         return SimpleObject.create("status", "success", "message", "Patient visit successfully updated!");
+    }
+
+    public SimpleObject updateGenXpert (@RequestParam(value = "patientId") Patient patient,
+                                        @RequestParam(value = "labNumber") String labNumber,
+                                        @RequestParam(value = "testedOn") Date testedOn,
+                                        @RequestParam(value = "testResult") String result,
+                                        UiSessionContext session,
+                                        SessionStatus status)
+            throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        SimpleFollowUpForm followup = new SimpleFollowUpForm(patient);
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(testedOn);
+        calendar.add(Calendar.DATE, 1);
+
+        List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, testedOn, calendar.getTime(), null, null, null, null, null, false);
+        for (Encounter encounter : encounters){
+            if (encounter.getEncounterType().equals(Context.getEncounterService().getEncounterType(Context.getAdministrationService().getGlobalProperty("mdrtb.follow_up_encounter_type")))){
+                followup = new SimpleFollowUpForm(encounter);
+                break;
+            }
+        }
+
+        //Set up Encounter
+        followup.setLocation(session.getSessionLocation());
+        followup.setProvider(Context.getPersonService().getPerson(3));
+        followup.setEncounterDatetime(new Date());
+        followup.setLabNumber(labNumber);
+
+        //Store GenXpert Result
+        followup.setGenXpert(df.format(testedOn), result);
+
+        //Save Encounter
+        Encounter encounter = Context.getEncounterService().saveEncounter(followup.getEncounter());
+
+        //Return Answer
+        return SimpleObject.create("status", "success", "message", "GenXpert successfully updated!");
+    }
+
+    public String getObsLabNumber(@RequestParam(value = "patientId") Patient patient,
+                                  @RequestParam(value = "date") Date date,
+                                  SessionStatus status)
+                                  throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 1);
+        String labNumber = "";
+
+        List<Encounter> encounters = Context.getEncounterService().getEncounters(patient, null, date, calendar.getTime(), null, null, null, null, null, false);
+        outerLoop:
+        for (Encounter encounter : encounters){
+            if (encounter.getEncounterType().equals(Context.getEncounterService().getEncounterType(Context.getAdministrationService().getGlobalProperty("mdrtb.follow_up_encounter_type")))){
+                for (Obs obs :encounter.getAllObs()) {
+                    if (obs.getConcept().equals(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.LAB_TEST_SERIAL_NUMBER))) {
+                        labNumber = obs.getValueText();
+                        break outerLoop;
+                    }
+                }
+            }
+        }
+
+        return labNumber;
     }
 
 }

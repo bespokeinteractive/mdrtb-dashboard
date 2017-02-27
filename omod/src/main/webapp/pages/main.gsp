@@ -47,6 +47,29 @@
 			visitDialog.show();
 		});
 		
+		jq('#genxpert-date-display').change(function(){
+			loadGenXpertDialog();
+		});
+		
+		jq('.dropdown ul li a').click(function(){			
+			var selected = jq(this).data('value');
+			
+			if (selected == 1){
+				jq('#genxpertResult').val('');
+				loadGenXpertDialog();
+			}
+		});
+		
+		function loadGenXpertDialog(){
+			jq.getJSON('${ ui.actionLink("mdrtbdashboard", "dashboardVisits", "getObsLabNumber") }', { 
+				patientId	: ${patient.id},
+				date		: jq('#genxpert-date-field').val()
+			}).success(function (data) {
+				jq('#genxpertLabNumber').val(data);
+				genxpertDialog.show();				
+			});
+		}
+		
 		var visitDialog = emr.setupConfirmationDialog({
 			dialogOpts: {
 				overlayClose: false,
@@ -103,7 +126,56 @@
 			}
 		});
 		
-		if ('${tabs}' == 'chart'){
+		var genxpertDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+			selector: '#genxpert-dialog',
+			actions: {
+				confirm: function() {
+					if (jq('#genxpertLabNumber').val() == '' || jq('#genxpertResult').val() == ''){
+						jq().toastmessage('showErrorToast', 'Ensure all fields have been properly filled before you continue');
+						return false;
+					}
+					
+					jq.ajax({
+						type: "POST",
+						url: '${ui.actionLink("mdrtbdashboard", "dashboardVisits", "updateGenXpert")}',
+						data: ({
+							patientId:			${patient.id},
+							labNumber: 			jq('#genxpertLabNumber').val(),
+							testedOn: 			jq('#genxpert-date-field').val(),
+							testResult:			jq('#genxpertResult').val()
+						}),
+						dataType: "json",
+						success: function(data) {
+							if (data.status == "success"){
+								jq().toastmessage('showSuccessToast', data.message);
+								window.location.href = "main.page?patient=${patient.id}&tabs=visits";					
+							}
+							else {
+								jq().toastmessage('showErrorToast', 'x:'+ data.message);
+							}
+							
+						},
+						error: function(data){
+							jq().toastmessage('showErrorToast', "Post Failed. " + data.statusText);
+						}
+					});
+					
+					genxpertDialog.close();
+				},
+				cancel: function() {
+					genxpertDialog.close();
+				}
+			}
+		});
+		
+		if ('${tabs}' == 'visits'){
+			tabs.tabs('option','selected',1);
+		}
+		else if ('${tabs}' == 'chart'){
 			tabs.tabs('option','selected',3);
 		}
 		
@@ -314,7 +386,7 @@
 	}
 	.dialog-content ul li label{
 		display: inline-block;
-		width: 165px;
+		width: 150px;
 	}
 	.dialog-content ul li input[type=text],
 	.dialog-content ul li select,
@@ -347,6 +419,13 @@
 	}
 	.outcome {
 		display: none;
+	}
+	.dropdown ul {
+		position: absolute;
+		right: 4px;
+	}
+	.dropdown ul li {
+		cursor: pointer;
 	}
 </style>
 
