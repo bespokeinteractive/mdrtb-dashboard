@@ -230,7 +230,7 @@
 					<div class="info-body">
 						<table id="summaryTable">
 							<tbody>
-								<tr style="${program.program.programId == 1?'display:none':''}">
+								<tr>
 									<td><span class="status active"></span>Register No.</td>
 									<td>N/A</td>
 								</tr>
@@ -275,13 +275,13 @@
 									<td>N/A</td>
 								</tr>
 
-								<tr style="${program.program.programId == 2?'display:none':''}">
+								<tr>
 									<td><span class="status active"></span>Lab. No.:</td>
 									<td>N/A</td>
 								</tr>
 
 								<tr style="${program.program.programId == 2?'display:none':''}">
-									<td><span class="status active"></span>Microscopy</td>
+									<td><span class="status active"></span>Sputum Smear</td>
 									<td>N/A</td>
 								</tr>
 

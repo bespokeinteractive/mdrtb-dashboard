@@ -90,9 +90,17 @@
 			}			
 			
 			if (jq(this).val() == 28){
+				// Positive
 				jq('.hiv-positive-section').show(300);
+				jq('#summaryTable tr:eq(13)').show();
+				jq('#summaryTable tr:eq(14)').show();
+				
 			} else {
+				// Negative
 				jq('.hiv-positive-section').hide(300);
+				
+				jq('#summaryTable tr:eq(13)').hide();
+				jq('#summaryTable tr:eq(14)').hide();
 			}
 		});
 		
@@ -154,10 +162,12 @@
         });
 
         jq('#hivResult-details input, #hivResult-details select').change(function(){
+			var artStatus = jq('#artStatus :selected').text();
+			var cptStatus = jq('#cptStatus :selected').text();
+			
             jq('#summaryTable tr:eq(12) td:eq(1)').text(jq('#hivResult :selected').text());
-            jq('#summaryTable tr:eq(13) td:eq(1)').text(jq('#artStatus :selected').text());
-            jq('#summaryTable tr:eq(14) td:eq(1)').text(jq('#cptStatus :selected').text());
-        
+            jq('#summaryTable tr:eq(13) td:eq(1)').text(artStatus);
+            jq('#summaryTable tr:eq(14) td:eq(1)').text(cptStatus);        
         });
 
         jq('#xrayresult-details input, #xrayresult-details select').change(function(){

@@ -298,7 +298,7 @@
 								</tr>
 
 								<tr>
-									<td><span class="status active"></span>Microscopy</td>
+									<td><span class="status active"></span>Sputum Smear</td>
 									<td>N/A</td>
 								</tr>
 
