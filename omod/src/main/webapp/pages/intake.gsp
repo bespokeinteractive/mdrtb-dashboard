@@ -90,9 +90,17 @@
 			}			
 			
 			if (jq(this).val() == 28){
+				// Positive
 				jq('.hiv-positive-section').show(300);
+				jq('#summaryTable tr:eq(13)').show();
+				jq('#summaryTable tr:eq(14)').show();
+				
 			} else {
+				// Negative
 				jq('.hiv-positive-section').hide(300);
+				
+				jq('#summaryTable tr:eq(13)').hide();
+				jq('#summaryTable tr:eq(14)').hide();
 			}
 		});
 		
@@ -130,11 +138,44 @@
 			jq('#summaryTable tr:eq(2) td:eq(1)').text(jq('#vitalsWeight').val());
 			jq('#summaryTable tr:eq(3) td:eq(1)').text(jq('#vitalsHeight').val());
 			jq('#summaryTable tr:eq(4) td:eq(1)').text(jq('#bmi').val());
-			jq('#summaryTable tr:eq(5) td:eq(1)').text(jq('#locationFacility').val());
 		
 		});
-		
-		
+
+		jq('#treatment-details input, #treatment-details select').change(function(){
+            jq('#summaryTable tr:eq(5) td:eq(1)').text(jq('#treatmentSupporter').val());
+            jq('#summaryTable tr:eq(6) td:eq(1)').text(jq('#treatmentReferral :selected').text());
+            jq('#summaryTable tr:eq(7) td:eq(1)').text(jq('#treatmentDots :selected').text());
+            jq('#summaryTable tr:eq(8) td:eq(1)').text(jq('#treatmentSite :selected').text());
+        
+        });
+
+        jq('#spaturm-details input, #spaturm-details select').change(function(){
+            jq('#summaryTable tr:eq(9) td:eq(1)').text(jq('#LabNumber').val());
+            jq('#summaryTable tr:eq(10) td:eq(1)').text(jq('#sputumResult :selected').text());
+        
+        });
+        
+
+        jq('#genXpert-details input, #genXpert-details select').change(function(){
+            jq('#summaryTable tr:eq(11) td:eq(1)').text(jq('#genXpertResult :selected').text());
+        
+        });
+
+        jq('#hivResult-details input, #hivResult-details select').change(function(){
+			var artStatus = jq('#artStatus :selected').text();
+			var cptStatus = jq('#cptStatus :selected').text();
+			
+            jq('#summaryTable tr:eq(12) td:eq(1)').text(jq('#hivResult :selected').text());
+            jq('#summaryTable tr:eq(13) td:eq(1)').text(artStatus);
+            jq('#summaryTable tr:eq(14) td:eq(1)').text(cptStatus);        
+        });
+
+        jq('#xrayresult-details input, #xrayresult-details select').change(function(){
+            jq('#summaryTable tr:eq(15) td:eq(1)').text(jq('#xray-result :selected').text());
+        
+        });
+        
+        
 		jq('.submit').click(function(){
 			jq("#intake").submit();		
 		});
@@ -247,7 +288,7 @@
 		border-bottom: 1px none #eee;
 	}
 	#summaryTable td:first-child{
-		width: 20%;
+		width: 30%;
 	}
 </style>
 
