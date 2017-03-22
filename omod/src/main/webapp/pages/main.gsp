@@ -143,8 +143,7 @@
 							}
 							else {
 								jq().toastmessage('showErrorToast', 'x:'+ data.message);
-							}
-							
+							}							
 						},
 						error: function(data){
 							jq().toastmessage('showErrorToast', "Post Failed. " + data.statusText);
@@ -274,7 +273,7 @@
 						success: function(data) {
 							if (data.status == "success"){
 								jq().toastmessage('showSuccessToast', data.message);
-								//window.location.href = "main.page?patient=${patient.id}&tabs=visits";					
+								window.location.href = "main.page?patient=${patient.id}&tabs=visits";					
 							}
 							else {
 								jq().toastmessage('showErrorToast', 'x:'+ data.message);

@@ -167,7 +167,7 @@
 </script>
 
 <script id="visit-dst-template" type="text/template">		
-	{{ if(drugTest.length > 0 ) { }}
+	{{ if (drugTest.length > 0 ) { }}
 		<div class="info-header" style="margin-top: 15px;">
 			<i class="icon-medicine"></i>
 			<h3>DRUGS SUSCEPTIBILITY TEST (DST)</h3>
