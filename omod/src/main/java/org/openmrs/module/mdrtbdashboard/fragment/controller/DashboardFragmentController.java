@@ -8,10 +8,12 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
+import org.openmrs.module.mdrtb.util.DrugSensitivityModel;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 import org.openmrs.module.mdrtbdashboard.VisitDetails;
+import org.openmrs.module.mdrtbdashboard.util.DrugTestingResults;
 import org.openmrs.ui.framework.SimpleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
@@ -110,7 +112,9 @@ public class DashboardFragmentController {
         Encounter encounter = Context.getEncounterService().getEncounter(encounterId);
         VisitDetails visitDetail = VisitDetails.create(encounter);
         SimpleObject details = SimpleObject.fromObject(visitDetail, ui, "weight", "height", "bmi", "muac", "facility", "date", "location", "sputumSmear", "genXpert", "hivExam", "xrayExam", "culture", "drugTest", "artStarted", "cptStarted", "showTests", "labNumber");
-        return SimpleObject.create("details", details);
+        List<DrugTestingResults> drugTest = Context.getService(MdrtbDashboardService.class).getDrugSensitivityOutcome(encounter);
+
+        return SimpleObject.create("details", details, "drugTest", drugTest);
     }
 
 }

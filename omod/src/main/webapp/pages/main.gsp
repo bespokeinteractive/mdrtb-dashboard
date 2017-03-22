@@ -16,9 +16,11 @@
 			jq.getJSON('${ ui.actionLink("mdrtbdashboard", "dashboard" ,"getVisitSummaryDetails") }', { 
 				'encounterId' : jq(visitSummary).find(".encounter-id").val() 
 			}).success(function (data) {
-				var visitDetailTemplate =  _.template(jq("#visit-detail-template").html());				
-				jq("#visit-detail").html(visitDetailTemplate(data.details));
+				var visitDetailTemplate =  _.template(jq("#visit-detail-template").html());
+				var visitDstTemplate =  _.template(jq("#visit-dst-template").html());
 				
+				jq("#visit-detail").html(visitDetailTemplate(data.details));
+				jq("#visit-dst").html(visitDstTemplate(data));
 			});
 		});
 		

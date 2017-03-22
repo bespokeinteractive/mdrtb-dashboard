@@ -8,7 +8,7 @@ import org.openmrs.module.mdrtb.MdrtbConcepts;
 import org.openmrs.module.mdrtb.form.SimpleFollowUpForm;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
-import org.openmrs.module.mdrtb.util.MdrtbDrugResultsModel;
+import org.openmrs.module.mdrtb.util.DrugSensitivityModel;
 import org.openmrs.module.mdrtbdashboard.util.ResultModelWrapper;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
@@ -171,11 +171,11 @@ public class DashboardVisitsFragmentController {
         Date testedOn = wrapper.getTestDate();
         Patient patient = wrapper.getPatient();
 
-        List <MdrtbDrugResultsModel> results = new ArrayList<MdrtbDrugResultsModel>();
+        List <DrugSensitivityModel> results = new ArrayList<DrugSensitivityModel>();
 
         for (Map.Entry<String, String[]> params : ((Map<String, String[]>) request.getParameterMap()).entrySet()) {
             if (StringUtils.contains(params.getKey(), "results.")){
-                MdrtbDrugResultsModel rm = new MdrtbDrugResultsModel();
+                DrugSensitivityModel rm = new DrugSensitivityModel();
                 rm.setDrug(Context.getConceptService().getConcept(Integer.parseInt(params.getKey().substring("results.".length()) )));
                 rm.setResult(Context.getConceptService().getConcept(Integer.parseInt(params.getValue()[0])));
                 results.add(rm);
