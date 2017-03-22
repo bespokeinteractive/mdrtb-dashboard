@@ -167,29 +167,31 @@
 </script>
 
 <script id="visit-dst-template" type="text/template">		
-	<div class="info-header" style="margin-top: 15px;">
-		<i class="icon-medicine"></i>
-		<h3>DRUGS SUSCEPTIBILITY TEST (DST)</h3>
-	</div>
+	{{ if(drugTest.length > 0 ) { }}
+		<div class="info-header" style="margin-top: 15px;">
+			<i class="icon-medicine"></i>
+			<h3>DRUGS SUSCEPTIBILITY TEST (DST)</h3>
+		</div>
 
-	<table id="drugList">
-		<thead>
-			<tr style="border-bottom: 1px solid #eee;">
-				<th style="width: 1px;">#</th>
-				<th style="width: 1px;">DRUG</th>
-				<th>RESULTS</th>
-			</tr>
-		</thead>
-		<tbody>
-		{{ _.each(drugTest, function(drug, index) { }}
-			<tr style="border: 1px solid #eee; font-size: 0.95em;">
-				<td style="border: 1px solid #eee; padding: 5px 10px; margin: 0;">{{=index+1}}.</td>
-				<td style="border: 1px solid #eee; padding: 5px 10px; margin: 0;">{{-drug.drugName}}</td>
-				<td style="border: 1px solid #eee; padding: 5px 10px; margin: 0;">{{-drug.testResult}}</td>
-			</tr>
-		{{ }); }}
-		 </tbody>
-	</table>	
+		<table id="drugList">
+			<thead>
+				<tr style="border-bottom: 1px solid #eee;">
+					<th style="width: 1px;">#</th>
+					<th style="width: 1px;">DRUG</th>
+					<th>RESULTS</th>
+				</tr>
+			</thead>
+			<tbody>
+			{{ _.each(drugTest, function(drug, index) { }}
+				<tr style="border: 1px solid #eee; font-size: 0.95em;">
+					<td style="border: 1px solid #eee; padding: 5px 10px; margin: 0;">{{=index+1}}.</td>
+					<td style="border: 1px solid #eee; padding: 5px 10px; margin: 0;">{{-drug.drugName}}</td>
+					<td style="border: 1px solid #eee; padding: 5px 10px; margin: 0;">{{-drug.testResult}}</td>
+				</tr>
+			{{ }); }}
+			 </tbody>
+		</table>
+	{{ } }}
 </script>
 
 <div id="visit-dialog" class="dialog" style="display:none;">
