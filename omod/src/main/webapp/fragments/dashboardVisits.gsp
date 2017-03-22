@@ -123,6 +123,12 @@
 				<br/>
 			{{ } }}
 			
+			{{ if(culture !== '' ) { }}
+				<label><span class='status active'></span>CULTURE:</label>
+				<span>{{-culture!=''?culture:'Not Done'}}</span>
+				<br/>
+			{{ } }}
+			
 			{{ if(hivExam !== '' ) { }}
 				<label><span class='status active'></span>HIV TEST:</label>
 				<span>{{-hivExam!=''?hivExam:'Not Done'}}</span>
@@ -144,6 +150,12 @@
 			{{ if(xrayExam !== '' ) { }}
 				<label><span class='status active'></span>X-RAY EXAM:</label>
 				<span>{{-xrayExam!=''?xrayExam:'Not Done'}}</span>
+				<br/>
+			{{ } }}
+			
+			{{ if(drugTest !== '' ) { }}
+				<label><span class='status active'></span>DRUG SENSITIVITY:</label>
+				<span>{{-drugTest!=''?drugTest:'Not Done'}}</span>
 				<br/>
 			{{ } }}
 		</div>	
@@ -225,7 +237,6 @@
         <i class="icon-folder-open"></i>
         <h3>UPDATE GENXPERT</h3>
     </div>
-
     <div class="dialog-content">
         <ul>
 			<li>
@@ -244,7 +255,7 @@
 					GenXpert Result:
 				</label>
 				
-				<select id="genxpertResult" class="required" name="exams.sputum.result">
+				<select id="genxpertResult" class="required">
 					<option value="">&nbsp;</option>
 					<% genXpertResults.eachWithIndex { sites, index -> %>
 						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
@@ -254,6 +265,95 @@
         </ul>
 
         <label class="button confirm right">Confirm</label>
+        <label class="button cancel">Cancel</label>
+    </div>
+</div>
+
+<div id="culture-dialog" class="dialog" style="display:none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>UPDATE CULTURE</h3>
+    </div>
+    <div class="dialog-content">
+        <ul>
+			<li>
+				<label for="cultureLabNumber">
+					Lab. Number :
+				</label>
+				<input id="cultureLabNumber" class="required" type="text" placeholder="Laboratory Number" />
+			</li>
+			
+            <li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.sputum.date', id: 'culture-date', label: 'Exam Date:', useTime: false, defaultToday: true, endDate: new Date()])}
+            </li>
+			
+			<li>
+				<label for="cultureResult">
+					Culture Result:
+				</label>
+				
+				<select id="cultureResult" class="required">
+					<option value="">&nbsp;</option>
+					<% cultureResults.eachWithIndex { sites, index -> %>
+						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
+					<% } %>
+				</select>
+			</li>
+        </ul>
+
+        <label class="button confirm right">Confirm</label>
+        <label class="button cancel">Cancel</label>
+    </div>
+</div>
+
+<div id="dst-dialog" class="dialog" style="display:none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>UPDATE DST</h3>
+    </div>
+    <div class="dialog-content">
+		<form id="dst-form">
+			<ul>
+				<li>
+					<label for="dstLabNumber">
+						Lab. Number :
+					</label>
+					<input type="text" name="wrap.labNumber" id="dstLabNumber" placeholder="Laboratory Number" />
+					<input type="hidden" name="wrap.patient" value="${patient.id}" />
+				</li>
+				
+				<li>
+					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'wrap.testDate', id: 'dst-date', label: 'Date Completed:', useTime: false, defaultToday: true, endDate: new Date()])}
+				</li>
+				
+				<li>
+					<table id="dstTable">
+						<thead>
+							<tr>
+								<th style="width: 133px;">DRUG</td>
+								<th>RR</td>
+								<th>RS</td>
+								<th>CC</td>
+								<th>ND</td>
+							</tr>
+						</thead>
+						<tbody>
+							<% dstDrugs.eachWithIndex { drug, index -> %>
+								<tr>
+									<td>${drug.name}</td>
+									<td><label><input type="radio" data-value="Resistant" name="results.${drug.conceptId}" value="78"/></label></td>
+									<td><label><input type="radio" data-value="Resistant" name="results.${drug.conceptId}" value="79"/></label></td>
+									<td><label><input type="radio" data-value="Resistant" name="results.${drug.conceptId}" value="77"/></label></td>
+									<td><label><input type="radio" data-value="Resistant" name="results.${drug.conceptId}" value="30"/></label></td>
+								</tr>
+							<% } %>
+						</tbody>
+					</table>
+				</li>
+			</ul>		
+		</form>
+
+        <label class="button confirm right" style="margin-right:0px">Confirm</label>
         <label class="button cancel">Cancel</label>
     </div>
 </div>

@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 
 /**
- * Created by Dennis Henry on 12/23/2016.
+ * Created by Dennis Henry
+ * Created on 12/23/2016.
  */
+
 public class DashboardFragmentController {
     public String generateBMUNumber(@RequestParam(value = "regdate", required = false) Date regdate,
                                      UiSessionContext session){
@@ -107,7 +109,7 @@ public class DashboardFragmentController {
                                                UiUtils ui) {
         Encounter encounter = Context.getEncounterService().getEncounter(encounterId);
         VisitDetails visitDetail = VisitDetails.create(encounter);
-        SimpleObject details = SimpleObject.fromObject(visitDetail, ui, "weight", "height", "bmi", "muac", "facility", "date", "location", "sputumSmear", "genXpert", "hivExam", "xrayExam", "artStarted", "cptStarted", "showTests", "labNumber");
+        SimpleObject details = SimpleObject.fromObject(visitDetail, ui, "weight", "height", "bmi", "muac", "facility", "date", "location", "sputumSmear", "genXpert", "hivExam", "xrayExam", "culture", "drugTest", "artStarted", "cptStarted", "showTests", "labNumber");
         return SimpleObject.create("details", details);
     }
 

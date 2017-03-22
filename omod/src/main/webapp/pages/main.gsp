@@ -51,12 +51,23 @@
 			loadGenXpertDialog();
 		});
 		
+		jq('#culture-date-display').change(function(){
+			loadCultureDialog();
+		});
+		
 		jq('.dropdown ul li a').click(function(){			
 			var selected = jq(this).data('value');
 			
 			if (selected == 1){
 				jq('#genxpertResult').val('');
 				loadGenXpertDialog();
+			}
+			else if (selected == 2){
+				jq('#cultureResult').val('');
+				loadCultureDialog();
+			}
+			else if (selected == 3){
+				loadDSTDialog();
 			}
 		});
 		
@@ -67,6 +78,26 @@
 			}).success(function (data) {
 				jq('#genxpertLabNumber').val(data);
 				genxpertDialog.show();				
+			});
+		}
+		
+		function loadCultureDialog(){
+			jq.getJSON('${ ui.actionLink("mdrtbdashboard", "dashboardVisits", "getObsLabNumber") }', { 
+				patientId	: ${patient.id},
+				date		: jq('#culture-date-field').val()
+			}).success(function (data) {
+				jq('#cultureLabNumber').val(data);
+				cultureDialog.show();				
+			});
+		}
+		
+		function loadDSTDialog(){
+			jq.getJSON('${ ui.actionLink("mdrtbdashboard", "dashboardVisits", "getObsLabNumber") }', { 
+				patientId	: ${patient.id},
+				date		: jq('#dst-date-field').val()
+			}).success(function (data) {
+				jq('#dstLabNumber').val(data);
+				dstDialog.show();				
 			});
 		}
 		
@@ -168,6 +199,94 @@
 				},
 				cancel: function() {
 					genxpertDialog.close();
+				}
+			}
+		});
+		
+		var cultureDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+			selector: '#culture-dialog',
+			actions: {
+				confirm: function() {
+					if (jq('#cultureLabNumber').val() == '' || jq('#cultureResult').val() == ''){
+						jq().toastmessage('showErrorToast', 'Ensure all fields have been properly filled before you continue');
+						return false;
+					}
+					
+					jq.ajax({
+						type: "POST",
+						url: '${ui.actionLink("mdrtbdashboard", "dashboardVisits", "updateCulture")}',
+						data: ({
+							patientId:			${patient.id},
+							labNumber: 			jq('#cultureLabNumber').val(),
+							testedOn: 			jq('#culture-date-field').val(),
+							testResult:			jq('#cultureResult').val()
+						}),
+						dataType: "json",
+						success: function(data) {
+							if (data.status == "success"){
+								jq().toastmessage('showSuccessToast', data.message);
+								window.location.href = "main.page?patient=${patient.id}&tabs=visits";					
+							}
+							else {
+								jq().toastmessage('showErrorToast', 'x:'+ data.message);
+							}
+							
+						},
+						error: function(data){
+							jq().toastmessage('showErrorToast', "Post Failed. " + data.statusText);
+						}
+					});
+					
+					cultureDialog.close();
+				},
+				cancel: function() {
+					cultureDialog.close();
+				}
+			}
+		});
+		
+		var dstDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+			selector: '#dst-dialog',
+			actions: {
+				confirm: function() {
+					var dataString = jq('#dst-form').serialize();
+					
+					if (jq('#dstLabNumber').val() == ''){
+						jq().toastmessage('showErrorToast', 'Ensure all fields have been properly filled before you continue');
+						return false;
+					}
+					
+					jq.ajax({
+						type: "POST",
+						url: '${ui.actionLink("mdrtbdashboard", "dashboardVisits", "updateDrugSusceptibilityTests")}',
+						data: dataString,
+						dataType: "json",
+						success: function(data) {
+							if (data.status == "success"){
+								jq().toastmessage('showSuccessToast', data.message);
+								//window.location.href = "main.page?patient=${patient.id}&tabs=visits";					
+							}
+							else {
+								jq().toastmessage('showErrorToast', 'x:'+ data.message);
+							}							
+						},
+						error: function(data){
+							jq().toastmessage('showErrorToast', "Post Failed. " + data.statusText);
+						}
+					});
+					
+					dstDialog.close();
+				},
+				cancel: function() {
+					dstDialog.close();
 				}
 			}
 		});
@@ -395,8 +514,20 @@
 		display: inline-block;
 		height: 40px;
 		margin: 1px 0;
+		min-width: 20%;
 		padding: 5px 0 5px 10px;
 		width: 60%;
+	}
+	form input:focus, 
+	form select:focus, 
+	form textarea:focus, 
+	form ul.select:focus, 
+	.form input:focus, 
+	.form select:focus, 
+	.form textarea:focus, 
+	.form ul.select:focus {
+		background: lightyellow none repeat scroll 0 0;
+		outline: 0px none #007fff;
 	}
 	.add-on {
 		left: auto;
@@ -426,6 +557,34 @@
 	}
 	.dropdown ul li {
 		cursor: pointer;
+	}
+	#dst-form{
+		margin: 0;
+	}
+	#dstTable{
+		margin-top: 3px;
+	}
+	#dstTable tr th:nth-child(2),
+	#dstTable tr td:nth-child(2),
+	#dstTable tr th:nth-child(3),
+	#dstTable tr td:nth-child(3),
+	#dstTable tr th:nth-child(4),
+	#dstTable tr td:nth-child(4),
+	#dstTable tr th:nth-child(5),
+	#dstTable tr td:nth-child(5){
+		text-align: center;	
+	}
+	#dstTable tr td input[type="radio"]{
+		cursor: pointer;
+		-webkit-appearance: checkbox;
+		-moz-appearance: checkbox;
+		-ms-appearance: checkbox;
+		appearance: checkbox;
+	}
+	.dialog-content ul li td label {
+		display: inline-block;
+		cursor: pointer;
+		width: 100%;
 	}
 </style>
 

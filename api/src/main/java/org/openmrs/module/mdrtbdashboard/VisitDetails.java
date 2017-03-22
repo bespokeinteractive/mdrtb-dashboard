@@ -23,8 +23,10 @@ public class VisitDetails {
     private String facility = "";
     private String sputumSmear = "";
     private String genXpert = "";
+    private String culture = "";
     private String hivExam = "";
     private String xrayExam = "";
+    private String drugTest = "";
     private String location = "";
     private String date = "";
     private String labNumber = "";
@@ -152,6 +154,18 @@ public class VisitDetails {
         return xrayExam;
     }
 
+    public String getCulture() { return culture; }
+
+    public void setCulture(String culture) {
+        this.culture = culture;
+    }
+
+    public String getDrugTest() { return drugTest; }
+
+    public void setDrugTest(String drugTest) {
+        this.drugTest = drugTest;
+    }
+
     public static VisitDetails create(Encounter encounter) {
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -178,6 +192,10 @@ public class VisitDetails {
         Concept xrayDateConcept = Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.XRAY_DATE);
         Concept hivExamResultConcept = Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.RESULT_OF_HIV_TEST);
         Concept hivExamDateConcept = Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.HIV_EXAM_DATE);
+        Concept cultureResultConcept = Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.CULTURE_RESULT);
+        Concept cultureDateConcept = Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.CULTURE_DATE);
+        Concept drugSensitivityConcept = Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.DST_EXAM);
+        Concept drugSensitivityDateConcept = Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.DST_DATE);
 
         Concept artStartConcept = Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.ART_STARTED);
         Concept artStartDateConcept = Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.ART_STARTED_ON);
@@ -193,6 +211,10 @@ public class VisitDetails {
         String xrayResult = "";
         String hivExamDate = "";
         String hivExamResult = "";
+        String cultureResult = "";
+        String cultureDate = "";
+        String dstResult = "";
+        String dstDate = "";
 
         String artStarted = "";
         String artStartedOn = "";
@@ -252,6 +274,22 @@ public class VisitDetails {
                 hivExamDate = df.format(sdf.parse(obs.getValueText(), new ParsePosition(0))) ;
             }
 
+            //Complex Obs (CULTURE)
+            if (obs.getConcept().equals(cultureResultConcept)) {
+                cultureResult = obs.getValueCoded().getDisplayString();
+            }
+            if (obs.getConcept().equals(cultureDateConcept)) {
+                cultureDate = df.format(sdf.parse(obs.getValueText(), new ParsePosition(0))) ;
+            }
+
+            //Complex Obs (DST)
+            if (obs.getConcept().equals(drugSensitivityConcept)) {
+                dstResult = "DONE";
+            }
+            if (obs.getConcept().equals(drugSensitivityDateConcept)) {
+                dstDate = df.format(sdf.parse(obs.getValueText(), new ParsePosition(0))) ;
+            }
+
             //Complex Obs (ART)
             if (obs.getConcept().equals(artStartConcept)) {
                 artStarted = "ART Started";
@@ -284,6 +322,16 @@ public class VisitDetails {
             xrayResult += " (tested on " + xrayDate + ")";
         }
 
+        // Merge Complex Obs (CULTURE)
+        if (!cultureResult.equals("NOT DONE") && !cultureResult.equals("")){
+            cultureResult += " (performed on " + cultureDate + ")";
+        }
+
+        // Merge Complex Obs (DST)
+        if (!dstResult.equals("NOT DONE") && !dstResult.equals("")){
+            dstResult = "Done on " + dstDate;
+        }
+
         // Merge Complex Obs (HIV)
         if (!hivExamResult.equals("NOT DONE") && !hivExamResult.equals("")){
             hivExamResult += " (tested on " + hivExamDate + ")";
@@ -300,7 +348,7 @@ public class VisitDetails {
         }
 
         // Indicate Whether Exams should be displayed
-        if (sputumResult.equals("") && genXpertResult.equals("") && xrayResult.equals("") && hivExamResult.equals("")){
+        if (sputumResult.equals("") && genXpertResult.equals("") && xrayResult.equals("") && hivExamResult.equals("") && cultureResult.equals("") && dstResult.equals("")){
             visitDetail.setShowTests(0);
         }
         else{
@@ -311,6 +359,8 @@ public class VisitDetails {
         visitDetail.setGenXpert(genXpertResult);
         visitDetail.setXrayExam(xrayResult);
         visitDetail.setHivExam(hivExamResult);
+        visitDetail.setCulture(cultureResult);
+        visitDetail.setDrugTest(dstResult);
         visitDetail.setSputumSmear(sputumResult);
         visitDetail.setArtStarted(artStarted);
         visitDetail.setCptStarted(cptStarted);
