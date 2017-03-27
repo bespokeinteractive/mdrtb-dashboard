@@ -213,6 +213,25 @@ public class DashboardVisitsFragmentController {
         return SimpleObject.create("status", "success", "message", "DST successfully updated!");
     }
 
+    public SimpleObject exitMdrtbPatients(@RequestParam(value = "patientId") Patient patient,
+                                          @RequestParam(value = "programId") Integer programId,
+                                          @RequestParam(value = "outcomeDate") Date outcomeDate,
+                                          @RequestParam(value = "outcomeResult") String outcomeResults,
+                                          @RequestParam(value = "outcomeRemarks", required = false) String outcomeRemarks,
+                                          UiSessionContext session,
+                                          SessionStatus status)
+            throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        MdrtbPatientProgram program = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
+        program.setDateCompleted(outcomeDate);
+        program.setOutcome(Context.getProgramWorkflowService().getStateByUuid(outcomeResults));
+
+        // save the actual update
+        Context.getProgramWorkflowService().savePatientProgram(program.getPatientProgram());
+
+        //Return Answer
+        return SimpleObject.create("status", "success", "message", "Patient visit successfully updated!");
+    }
+
     public String getObsLabNumber(@RequestParam(value = "patientId") Patient patient,
                                   @RequestParam(value = "date") Date date,
                                   SessionStatus status)

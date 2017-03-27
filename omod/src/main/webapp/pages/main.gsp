@@ -8,7 +8,8 @@
 	
 		jq("#ul-left-menu").on("click", ".visit-summary", function(){
 			jq("#visit-detail").html('<i class=\"icon-spinner icon-spin icon-2x pull-left\"></i> <span style="float: left; margin-top: 12px;">Loading...</span>');	
-				
+			jq("#visit-dst").html('');
+			
 			var visitSummary = jq(this);
 			jq(".visit-summary").removeClass("selected");
 			jq(visitSummary).addClass("selected");			
@@ -70,6 +71,12 @@
 			}
 			else if (selected == 3){
 				loadDSTDialog();
+			}
+			else if (selected == 4){
+				jq('#MdrtbOutcome').val('');
+				jq('#MdrtbRemarks').val('');
+				
+				outcomeDialog.show();
 			}
 		});
 		
@@ -154,6 +161,51 @@
 				},
 				cancel: function() {
 					visitDialog.close();
+				}
+			}
+		});
+		
+		var outcomeDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+			selector: '#outcome-dialog',
+			actions: {
+				confirm: function() {
+					if (jq('#MdrtbOutcome').val() == ''){
+						jq().toastmessage('showErrorToast', 'Ensure that the outcome has been specified');
+						return false;
+					}
+					
+					jq.ajax({
+						type: "POST",
+						url: '${ui.actionLink("mdrtbdashboard", "dashboardVisits", "exitMdrtbPatients")}',
+						data: ({
+							patientId:			${patient.id},
+							programId:			${current.program.patientProgramId},
+							outcomeDate:		jq('#exit-date-field').val(),
+							outcomeResult:		jq('#MdrtbOutcome').val(),
+							outcomeRemarks:		jq('#MdrtbRemarks').val()
+						}),
+						dataType: "json",
+						success: function(data) {
+							if (data.status == "success"){
+								jq().toastmessage('showSuccessToast', data.message);
+								window.location.href = "main.page?patient=${patient.id}";
+							}
+							else {
+								jq().toastmessage('showErrorToast', 'x:'+ data.message);
+							}							
+						},
+						error: function(data){
+							jq().toastmessage('showErrorToast', "Post Failed. " + data.statusText);
+						}
+					});
+					
+				},
+				cancel: function() {
+					outcomeDialog.close();
 				}
 			}
 		});
@@ -491,6 +543,7 @@
 		margin: 0;
 		width: 100%;
 	}	
+	#visit-dst .info-header h3,
 	#visit-detail .info-header h3 {
 		color: #f26522;
 	}

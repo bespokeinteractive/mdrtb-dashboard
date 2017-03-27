@@ -170,7 +170,7 @@
 	{{ if (drugTest.length > 0 ) { }}
 		<div class="info-header" style="margin-top: 15px;">
 			<i class="icon-medicine"></i>
-			<h3>DRUGS SUSCEPTIBILITY TEST (DST)</h3>
+			<h3>DRUGS SUSCEPTIBILITY TEST</h3>
 		</div>
 
 		<table id="drugList">
@@ -189,7 +189,7 @@
 					<td style="border: 1px solid #eee; padding: 5px 10px; margin: 0;">{{-drug.testResult}}</td>
 				</tr>
 			{{ }); }}
-			 </tbody>
+			</tbody>
 		</table>
 	{{ } }}
 </script>
@@ -386,6 +386,51 @@
 		</form>
 
         <label class="button confirm right" style="margin-right:0px">Confirm</label>
+        <label class="button cancel">Cancel</label>
+    </div>
+</div>
+
+<div id="outcome-dialog" class="dialog" style="display:none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>EXIT FROM PROGRAM</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+				<label for="dstLabNumber">
+					Patient :
+				</label>
+				<input type="text" name="patient.name" id="patientName" readonly="" value="${patient.familyName} ${patient.givenName} ${patient.middleName ? patient.middleName : ''}" />
+			</li>
+				
+            <li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exit.date', id: 'exit-date', label: 'Exit Date:', useTime: false, defaultToday: true, endDate: new Date()])}
+            </li>
+			
+			<li>
+				<label for="MdrtbOutcome">
+					Outcome:
+				</label>
+				
+				<select id="MdrtbOutcome" class="required" name="program.outcome">
+					<option value="">&nbsp;</option>
+					<% mdrOutcomes.eachWithIndex { outcome, index -> %>
+						<option value="${outcome.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
+					<% } %>					
+				</select>
+			</li>
+			
+			<li>
+				<label for="MdrtbRemarks">
+					Outcome Remarks :
+				</label>
+				<textarea id="MdrtbRemarks" name="program.remarks" placeholder="Remarks" style="height:100px; resize:none;"></textarea>
+			</li>
+        </ul>
+
+        <label class="button confirm right">Confirm</label>
         <label class="button cancel">Cancel</label>
     </div>
 </div>
