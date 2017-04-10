@@ -1,16 +1,13 @@
 package org.openmrs.module.mdrtbdashboard;
 
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 
-import java.io.Serializable;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
