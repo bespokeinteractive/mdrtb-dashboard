@@ -1,5 +1,5 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [title: "User Details"])
+    ui.decorateWith("appui", "standardEmrPage", [title: "Location Details"])
 %>
 
 <style>
@@ -140,11 +140,11 @@
             </li>
             <li>
                 <i class="icon-chevron-right link"></i>
-                <a href="${ui.pageLink('mdrtbdashboard','users')}">Manage Users</a>
+                <a href="${ui.pageLink('mdrtbdashboard','users')}">Manage Locations</a>
             </li>
 			<li>
                 <i class="icon-chevron-right link"></i>
-                <span>${user.getPersonName().getFullName()}</span>
+                <span>${location.name}</span>
             </li>
         </ul>
     </div>
@@ -152,7 +152,7 @@
     <div class="patient-header new-patient-header">
         <div class="demographics">
             <h1 class="name" style="border-bottom: 1px solid #ddd;">
-                <span><i class="icon-group small"></i> USER DETAILS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span><i class="icon-map-marker small"></i> LOCATION DETAILS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             </h1>
             <br/>
         </div>

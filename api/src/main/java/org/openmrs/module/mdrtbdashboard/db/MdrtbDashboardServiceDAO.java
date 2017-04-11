@@ -5,6 +5,7 @@ import org.openmrs.PatientProgram;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentresAgencies;
+import org.openmrs.module.mdrtbdashboard.model.LocationCentresRegions;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 
 import java.util.List;
@@ -14,8 +15,14 @@ import java.util.List;
  */
 public interface MdrtbDashboardServiceDAO {
     List<LocationCentres> getCentres();
-    LocationCentres getCentresByLocation(Location location);
     List<LocationCentresAgencies> getAgencies();
+    List<LocationCentresRegions> getRegions();
+
+    LocationCentres getCentresByLocation(Location location);
+    LocationCentres saveLocationCentres(LocationCentres centre);
+
+    LocationCentresAgencies getAgency(Integer agentId);
+    LocationCentresRegions getRegion(Integer regionId);
 
     PatientProgramDetails getPatientProgramDetails(PatientProgram patientProgram);
     PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails);

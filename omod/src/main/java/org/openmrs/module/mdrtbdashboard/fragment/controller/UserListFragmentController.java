@@ -6,7 +6,6 @@ import org.openmrs.Person;
 import org.openmrs.PersonName;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtb.model.UserLocation;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.MdrtbUserWrapper;
@@ -116,7 +115,7 @@ public class UserListFragmentController {
         User user = wrapper.getUser();
         user.setUsername(username);
         Context.getUserService().saveUser(user,  password);
-        
+
         return SimpleObject.create("status", "success", "message", "Password successfully changed!");
     }
 
@@ -125,7 +124,7 @@ public class UserListFragmentController {
         SimpleObject users = SimpleObject.create("names", user.getPersonName().getFullName(), "gender", user.getPerson().getGender(), "systemId", user.getSystemId(), "username", user.getUsername());
         List<UserLocationModel> model = new ArrayList<UserLocationModel>();
         List<Location> locationList = Context.getLocationService().getAllLocations();
-        List<Location> locations = getgetAuthenticatedUsersLocations(user);
+        List<Location> locations = getAuthenticatedUsersLocations(user);
 
         for (Location location: locationList){
             UserLocationModel usl = new UserLocationModel();
@@ -163,7 +162,7 @@ public class UserListFragmentController {
         return SimpleObject.fromCollection(wrapperList, ui, "user.userId", "user.systemId", "user.username", "wrapperLocations", "wrapperNames");
     }
 
-    public List<Location> getgetAuthenticatedUsersLocations(User user){
+    public List<Location> getAuthenticatedUsersLocations(User user){
         List<UserLocation> locales = Context.getService(MdrtbService.class).getUserLocations(user);
         List<Location> locations = new ArrayList<Location>();
 

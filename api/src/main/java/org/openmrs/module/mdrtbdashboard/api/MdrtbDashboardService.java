@@ -8,6 +8,7 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentresAgencies;
+import org.openmrs.module.mdrtbdashboard.model.LocationCentresRegions;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 import org.openmrs.module.mdrtbdashboard.util.DrugTestingResults;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +16,22 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Created by Dennis Henry on 12/24/2016.
+ * Created by Dennis Henry
+ * Created on 12/24/2016.
  */
 
 @Transactional
 public interface MdrtbDashboardService
         extends OpenmrsService {
     List<LocationCentres> getCentres();
-    LocationCentres getCentresByLocation(Location location);
     List<LocationCentresAgencies> getAgencies();
+    List<LocationCentresRegions> getRegions();
+
+    LocationCentres getCentresByLocation(Location location);
+    LocationCentres saveLocationCentres(LocationCentres centre);
+
+    LocationCentresAgencies getAgency(Integer agentId);
+    LocationCentresRegions getRegion(Integer regionId);
 
     PatientProgramDetails getPatientProgramDetails(PatientProgram patientProgram);
     PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails);

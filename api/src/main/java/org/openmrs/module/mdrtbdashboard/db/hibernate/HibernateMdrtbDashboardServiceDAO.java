@@ -15,6 +15,7 @@ import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.db.MdrtbDashboardServiceDAO;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentresAgencies;
+import org.openmrs.module.mdrtbdashboard.model.LocationCentresRegions;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 
 import java.util.*;
@@ -51,10 +52,36 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
+    public List<LocationCentresRegions> getRegions(){
+        Criteria criteria = getSession().createCriteria(LocationCentresRegions.class);
+        List list = criteria.list();
+        return list;
+    }
+
+    @Override
     public LocationCentres getCentresByLocation(Location location){
         Criteria criteria = getSession().createCriteria(LocationCentres.class);
         criteria.add(Restrictions.eq("location", location));
         return (LocationCentres) criteria.uniqueResult();
+    }
+
+    @Override
+    public LocationCentres saveLocationCentres(LocationCentres centre){
+        return (LocationCentres)getSession().merge(centre);
+    }
+
+    @Override
+    public LocationCentresAgencies getAgency(Integer agentId){
+        Criteria criteria = getSession().createCriteria(LocationCentresAgencies.class);
+        criteria.add(Restrictions.eq("id", agentId));
+        return (LocationCentresAgencies) criteria.uniqueResult();
+    }
+
+    @Override
+    public LocationCentresRegions getRegion(Integer regionId){
+        Criteria criteria = getSession().createCriteria(LocationCentresRegions.class);
+        criteria.add(Restrictions.eq("id", regionId));
+        return (LocationCentresRegions) criteria.uniqueResult();
     }
 
     @Override

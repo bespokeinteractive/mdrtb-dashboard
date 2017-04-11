@@ -518,7 +518,7 @@
     <div class="patient-header new-patient-header">
         <div class="demographics">
             <h1 class="name" style="border-bottom: 1px solid #ddd;">
-                <span>&nbsp; SYSTEM USERS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span><i class="icon-group small"></i> SYSTEM USERS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             </h1>
             <br/>
         </div>

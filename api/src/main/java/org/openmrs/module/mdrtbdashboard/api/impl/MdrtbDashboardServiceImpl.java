@@ -14,6 +14,7 @@ import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.db.MdrtbDashboardServiceDAO;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentresAgencies;
+import org.openmrs.module.mdrtbdashboard.model.LocationCentresRegions;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 import org.openmrs.module.mdrtbdashboard.util.DrugTestingResults;
 
@@ -41,8 +42,28 @@ public class MdrtbDashboardServiceImpl
     }
 
     @Override
+    public List<LocationCentresRegions> getRegions(){
+        return dao.getRegions();
+    }
+
+    @Override
     public LocationCentres getCentresByLocation(Location location){
         return dao.getCentresByLocation(location);
+    }
+
+    @Override
+    public LocationCentres saveLocationCentres(LocationCentres centre){
+        return dao.saveLocationCentres(centre);
+    }
+
+    @Override
+    public LocationCentresAgencies getAgency(Integer agentId){
+        return dao.getAgency(agentId);
+    }
+
+    @Override
+    public LocationCentresRegions getRegion(Integer regionId){
+        return dao.getRegion(regionId);
     }
 
     @Override
