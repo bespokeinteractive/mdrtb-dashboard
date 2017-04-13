@@ -14,10 +14,13 @@ import org.openmrs.ui.framework.fragment.FragmentConfiguration;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
- * Created by Dennis Henry on 1/27/2017.
+ * Created by Dennis Henry
+ * Created on 1/27/2017.
  */
 
 public class HeaderFragmentController {
@@ -45,6 +48,13 @@ public class HeaderFragmentController {
 
             models.add(lm);
         }
+
+        Collections.sort(models, new Comparator<LocationModel>() {
+            @Override
+            public int compare(LocationModel o1, LocationModel o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
 
         return SimpleObject.create("locations", models, "status", "success");
     }

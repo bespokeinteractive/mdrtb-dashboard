@@ -24,7 +24,7 @@
 	jq(function() {
 		NavigatorController = new KeyboardController();
 		
-		jq("#session-location ul.select li").click(function (event) {
+		jq("#session-location ul.select").on('click', 'li', function (event) {
 			jq.ajax({
 				type: "GET",
 				url: '${ ui.actionLink("mdrtbdashboard", "dashboard", "getSelectedLocation") }',

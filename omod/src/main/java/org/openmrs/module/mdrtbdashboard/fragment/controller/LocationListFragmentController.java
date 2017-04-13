@@ -11,6 +11,8 @@ import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +38,12 @@ public class LocationListFragmentController {
 
     public List<SimpleObject> getMdrtbLocations(UiUtils ui) {
         List<LocationCentres> centres = Context.getService(MdrtbDashboardService.class).getCentres();
+        Collections.sort(centres, new Comparator<LocationCentres>() {
+            @Override
+            public int compare(LocationCentres o1, LocationCentres o2) {
+                return o1.getSerialNumber().compareTo(o2.getSerialNumber());
+            }
+        });
         return SimpleObject.fromCollection(centres, ui, "serialNumber", "location.id", "location.name", "agency.name", "region.name");
     }
 
