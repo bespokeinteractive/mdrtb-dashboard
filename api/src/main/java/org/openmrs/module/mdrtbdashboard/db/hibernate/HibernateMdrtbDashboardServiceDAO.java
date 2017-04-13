@@ -104,7 +104,7 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
-    public List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId){
+    public List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId, List<Location> locations){
         Vector search = new Vector();
 
         String[] searchSplit = nameOrIdentifier.split("\\s+");
@@ -140,6 +140,15 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
 
         if(lastVisit > 0) {
             hql = hql + " AND (DATEDIFF(NOW(), en.date_created) <= " + lastVisit + ")";
+        }
+
+        if (locations.size()>0){
+            String oLocation = "0";
+            for (Location location: locations){
+                oLocation += ","+location.getId();
+            }
+
+            hql += " AND p.patient_id IN (SELECT person_id FROM person_location WHERE location_id IN (" + oLocation + "))";
         }
 
         hql += " ORDER BY pn.given_name ASC, pn.family_name ASC, pn.middle_name ASC LIMIT 0, 50";

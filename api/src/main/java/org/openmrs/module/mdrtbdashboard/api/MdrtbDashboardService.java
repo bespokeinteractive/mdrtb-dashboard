@@ -37,6 +37,6 @@ public interface MdrtbDashboardService
     PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails);
     Integer getNextTbmuNumberCount(String header);
 
-    List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId);
+    List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId, List<Location> locations);
     List<DrugTestingResults> getDrugSensitivityOutcome(Encounter encounter);
 }

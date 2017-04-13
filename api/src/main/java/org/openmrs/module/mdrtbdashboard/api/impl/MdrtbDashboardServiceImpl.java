@@ -82,8 +82,8 @@ public class MdrtbDashboardServiceImpl
     }
 
     @Override
-    public List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId){
-        return dao.getMdrtbPatients(nameOrIdentifier, gender, age, rangeAge, lastDayOfVisit, lastVisit, programId);
+    public List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId, List<Location> locations){
+        return dao.getMdrtbPatients(nameOrIdentifier, gender, age, rangeAge, lastDayOfVisit, lastVisit, programId, locations);
     }
 
     @Override
