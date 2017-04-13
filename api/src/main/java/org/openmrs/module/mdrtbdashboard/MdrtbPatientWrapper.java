@@ -1,9 +1,13 @@
 package org.openmrs.module.mdrtbdashboard;
 
 import org.apache.commons.lang.StringUtils;
+import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.mdrtb.model.PersonLocation;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
+import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
+import sun.swing.plaf.synth.Paint9Painter;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -21,14 +25,20 @@ public class MdrtbPatientWrapper {
     private String wrapperStatus = "Completed";
     private String formartedVisitDate;
     private Date visitDate = new Date();
+    private Integer wrapperLocationId;
+    private String wrapperLocationName;
+
+    MdrtbDashboardService dashboardService = Context.getService(MdrtbDashboardService.class);
+    MdrtbService mdrtbService = Context.getService(MdrtbService.class);
 
     private static final Logger log = Logger.getLogger(MdrtbPatientWrapper.class.getName());
 
     public MdrtbPatientWrapper(MdrtbPatientProgram patientProgram){
         this.patientProgram = patientProgram;
+        this.getPatientDefaultLocation();
 
         try{
-            this.wrapperIdentifier = Context.getService(MdrtbDashboardService.class).getPatientProgramDetails(patientProgram.getPatientProgram()).getTbmuNumber();
+            this.wrapperIdentifier = dashboardService.getPatientProgramDetails(patientProgram.getPatientProgram()).getTbmuNumber();
         }
         catch (Exception e){ }
     }
@@ -36,10 +46,19 @@ public class MdrtbPatientWrapper {
     public MdrtbPatientWrapper(MdrtbPatientProgram patientProgram, Date visitDate){
         this.patientProgram = patientProgram;
         this.visitDate = visitDate;
+        this.getPatientDefaultLocation();
         try {
-            this.wrapperIdentifier = Context.getService(MdrtbDashboardService.class).getPatientProgramDetails(patientProgram.getPatientProgram()).getTbmuNumber();
+            this.wrapperIdentifier = dashboardService.getPatientProgramDetails(patientProgram.getPatientProgram()).getTbmuNumber();
         }
         catch (Exception e){ }
+    }
+
+    public void getPatientDefaultLocation(){
+        Patient patient = patientProgram.getPatient();
+        PersonLocation pl = mdrtbService.getPersonLocation(patient);
+
+        this.wrapperLocationId = pl.getId();
+        this.wrapperLocationName = pl.getLocation().getName();
     }
 
     public String getWrapperIdentifier() {
@@ -108,6 +127,22 @@ public class MdrtbPatientWrapper {
 
     public void setWrapperStatus(String wrapperStatus) {
         this.wrapperStatus = wrapperStatus;
+    }
+
+    public Integer getWrapperLocationId() {
+        return wrapperLocationId;
+    }
+
+    public void setWrapperLocationId(Integer wrapperLocationId) {
+        this.wrapperLocationId = wrapperLocationId;
+    }
+
+    public String getWrapperLocationName() {
+        return wrapperLocationName;
+    }
+
+    public void setWrapperLocationName(String wrapperLocationName) {
+        this.wrapperLocationName = wrapperLocationName;
     }
 
 }
