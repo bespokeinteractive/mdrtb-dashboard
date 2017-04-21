@@ -33,7 +33,9 @@ public interface MdrtbDashboardService
     LocationCentresAgencies getAgency(Integer agentId);
     LocationCentresRegions getRegion(Integer regionId);
 
-    PatientProgramDetails getPatientProgramDetails(PatientProgram patientProgram);
+    PatientProgramDetails getPatientProgramDetails(PatientProgram pp);
+    PatientProgramDetails getPatientProgramDetails(MdrtbPatientProgram mpp);
+
     PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails);
     Integer getNextTbmuNumberCount(String header);
 

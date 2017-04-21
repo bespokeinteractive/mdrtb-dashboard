@@ -1,9 +1,12 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [title: "Enrollment Form"])
+    ui.decorateWith("appui", "standardEmrPage", [title: "Transfer In"])
 %>
 
 <script>
-	jq(function() {		
+	var class01 = ${class01.programWorkflowStateId};
+	var class02 = ${class02.programWorkflowStateId};
+	
+	jq(function() {
 		jq('#enrollmentClassifications').change(function(){
 			if(jq(this).val() == 31){
 				jq('#enrollmentPreviousTreatment').val(46);
@@ -18,7 +21,7 @@
 			}
 		});
 
-        jq("#session-location ul.select").on('click', 'li', function (event) {
+		jq("#session-location ul.select").on('click', 'li', function (event) {
 			setTimeout(function() {
 				GenerateTbmuNumber();
 			}, 300);
@@ -27,24 +30,6 @@
 		jq('#date-enrolled-display').change(function(){
 			GenerateTbmuNumber();
 		}).change();
-		
-		jq('#enrollmentType').change(function(){
-			if (jq(this).val() == 1){
-				jq('.tbb'  ).show(300);
-				jq('.mdrtb').hide(300);
-				jq('.menu-title span').text('TB PROGRAMME');
-			}
-			else  if (jq(this).val() == 2){
-				jq('.tbb'  ).hide(300);
-				jq('.mdrtb').show(300);
-				jq('.menu-title span').text('MDR-TB PROGRAMME');
-			}
-			else{
-				jq('.tbb'  ).hide(300);
-				jq('.mdrtb').hide(300);
-				jq('.menu-title span').text('SELECT PROGRAMME');
-			}
-		});
 		
 		jq('#enrollmentPatientType').change(function(){
 			var catg = jq('#enrollmentTreatmentCategory');
@@ -78,7 +63,7 @@
 			
 			jq.ajax({
 				type: "POST",
-				url: '${ui.actionLink("mdrtbdashboard", "dashboard", "enrollPatient")}',
+				url: '${ui.actionLink("mdrtbdashboard", "dashboard", "transferPatient")}',
 				data: ({
 					patientId:			${patient.id},
 					programId: 			jq('#enrollmentType').val(),
@@ -115,8 +100,7 @@
 					regdate: jq('#date-enrolled-field').val()
 				}),
 				success: function (data) {
-					jq('.identifiers span').text(data);
-					jq('#identifier').val(data);
+					jq('#tbmuNo').val(data);
 				},
 				error: function (xhr, ajaxOptions, thrownError) {
 					alert(thrownError);
@@ -124,6 +108,11 @@
 
 			});
 		}
+		
+		jq('#enrollmentPatientType').val(class01);
+		jq('#enrollmentClassifications').val(class01);		
+		jq('#enrollmentTreatmentCategory').val(class02);
+		jq('#enrollmentPreviousTreatment').val(class02);
 	});
 	
 </script>
@@ -381,10 +370,6 @@
 		resize: none;
 		width: 68%;
 	}
-	.tbb,
-	.mdrtb{
-		display: none;
-	}
 </style>
 
 
@@ -400,52 +385,18 @@
 
             <li>
                 <i class="icon-chevron-right link"></i>
-                <a href="${ui.pageLink('mdrtbregistration', 'search')}">MDR-TB Dashboard</a>
+                <a href="${ui.pageLink('mdrtbregistration', 'search')}">MDR-TB Patients</a>
             </li>
 
             <li>
                 <i class="icon-chevron-right link"></i>
-                Enroll Patient
+                Transfer In
             </li>
         </ul>
     </div>
 </div>
 
-<div class="patient-header new-patient-header">
-    <div class="demographics">
-        <h1 class="name">
-            <span id="surname">${patient.familyName},<em>surname</em></span>
-            <span id="othname">${patient.givenName} ${patient.middleName ? patient.middleName : ''} &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <em>other names</em>
-            </span>
-
-            <span class="gender-age">
-                <span>
-                    ${gender}
-                </span>
-                <span id="agename"></span>
-            </span>
-        </h1>
-
-        <br/>
-
-        <div id="stacont" class="status-container">
-            <span class="status active"></span>
-            Registered Facility
-        </div>
-
-        <div class="tag">Bandarbeyla</div>
-    </div>
-
-    <div class="identifiers">
-        <em>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Patient ID</em>
-        <span>${patient.getPatientIdentifier()}</span>
-        <br>
-
-        <div class="catg">
-            <i class="icon-tags small" style="font-size: 16px"></i><small>Agency:</small> Mercy USA
-        </div>
-    </div>
-</div>
+${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: program.patientProgramId]) }
 
 <div>
 	<div id="div-left-menu" style="padding-top: 15px; color: #363463;" class="col15 clear">
@@ -454,12 +405,12 @@
 				<span class="menu-date">
 					<i class="icon-user"></i>
 					<span id="vistdate">
-						PATIENT ENROLMENT
+						PATIENT TRANSFER
 					</span>
 				</span>
 				<span class="menu-title">
 					<i class="icon-info-sign"></i>
-					<span>ENROLL PROGRAMME</span>
+					<span>TRANSFER DETAILS</span>
 				</span>
 				<span class="arrow-border"></span>
 				<span class="arrow"></span>
@@ -474,70 +425,74 @@
 		<div id="visit-detail" class="info-section">
 			<div class="info-header">
 				<i class="icon-user-md"></i>
-				<h3>ENROLMENT DETAILS</h3>
+				<h3>TRANSFER IN DETAILS</h3>
 			</div>
 
 			<div class="info-body">
 				<div>
-					<label for="date-enrolled-display">Enrollment Date :</label>
+					<label for="date-enrolled-display">New TBMU No.:</label>
+					<input type="text" id="tbmuNo" name="patient.tbmu_number" readonly="" />
+				</div>
+				<div>
+					<label for="date-enrolled-display">Transfer Date :</label>
 					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'date-enrolled', id: 'date-enrolled', label: 'Date of Enrollment', useTime: false, defaultToday: true, endDate: new Date()])}
 					<input type="hidden" id="patientId"  name="patient.id" value="${patient.id}" />
 					<input type="hidden" id="identifier" name="patient.identifier" />
 				</div>
 				
 				<div>
-					<label for="enrollmentType">Patient Program:</label>
-					<select id="enrollmentType" name="enrollment.Type">
-						<option value=""></option>
-						<option value="1">TB PATIENT</option>
-						<option value="2">MDR-TB PATIENT</option>
-					</select>
+					<label for="patientProgram">Patient Program:</label>
+					<input type="text" id="patientProgram" name="patient.program" readonly="" value="${program.program.concept.name}" />
 				</div>
 				
-				<div class="tbb">
-					<label for="enrollmentPatientType">Type of Patient:</label>
-					<select id="enrollmentPatientType" name="enrollment.type">
-						<option value="" data-uuid=""></option>
-						<% enrollmentPatientType.eachWithIndex { classification, index -> %>
-							<option value="${classification.id}" data-uuid="${classification.uuid}">${classification.concept.displayString}</option>
-						<% } %>
-					</select>
-				</div>
+				<% if (program.program.programId == 1) { %>
+					<div class="tbb">
+						<label for="enrollmentPatientType">Type of Patient:</label>
+						<select id="enrollmentPatientType" name="enrollment.type">
+							<option value="" data-uuid=""></option>
+							<% enrollmentPatientType.eachWithIndex { classification, index -> %>
+								<option value="${classification.id}" data-uuid="${classification.uuid}">${classification.concept.displayString}</option>
+							<% } %>
+						</select>
+					</div>
+					
+					<div class="tbb">
+						<label for="enrollmentTreatmentCategory">Treatment Category:</label>
+						<select id="enrollmentTreatmentCategory" name="enrollment.category">
+							<option value="" data-uuid=""></option>
+							<% enrollmentTreatmentCategory.eachWithIndex { classification, index -> %>
+								<option value="${classification.id}" data-uuid="${classification.uuid}">${classification.concept.displayString}</option>
+							<% } %>
+						</select>
+					</div>
+					
+				<% } else { %>
+					<div class="mdrtb">
+						<label for="enrollmentClassifications">Registration Group:</label>
+						<select id="enrollmentClassifications" name="enrollment.Classifications">
+							<option value="" data-uuid=""></option>
+							<% enrollmentClassifications.eachWithIndex { classification, index -> %>
+								<option value="${classification.id}" data-uuid="${classification.uuid}">${classification.concept.displayString}</option>
+							<% } %>
+						</select>
+					</div>
+					
+					<div style="display:none">
+						<label for="enrollmentPreviousTreatment">Previous Treatment:</label>
+						<select id="enrollmentPreviousTreatment" name="enrollment.PreviousTreatment" disabled="true">
+							<% enrollmentPreviousTreatment.eachWithIndex { classification, index -> %>
+								<option value="${classification.id}" data-uuid="${classification.uuid}">${classification.concept.displayString}</option>
+							<% } %>
+						</select>
+					</div>
+				<% } %>
 				
-				<div class="tbb">
-					<label for="enrollmentTreatmentCategory">Treatment Category:</label>
-					<select id="enrollmentTreatmentCategory" name="enrollment.category">
-						<option value="" data-uuid=""></option>
-						<% enrollmentTreatmentCategory.eachWithIndex { classification, index -> %>
-							<option value="${classification.id}" data-uuid="${classification.uuid}">${classification.concept.displayString}</option>
-						<% } %>
-					</select>
-				</div>
-				
-				<div class="mdrtb">
-					<label for="enrollmentClassifications">Registration Group:</label>
-					<select id="enrollmentClassifications" name="enrollment.Classifications">
-						<option value="" data-uuid=""></option>
-						<% enrollmentClassifications.eachWithIndex { classification, index -> %>
-							<option value="${classification.id}" data-uuid="${classification.uuid}">${classification.concept.displayString}</option>
-						<% } %>
-					</select>
-				</div>
-				
-				<div style="display:none">
-					<label for="enrollmentPreviousTreatment">Previous Treatment:</label>
-					<select id="enrollmentPreviousTreatment" name="enrollment.PreviousTreatment" disabled="true">
-						<% enrollmentPreviousTreatment.eachWithIndex { classification, index -> %>
-							<option value="${classification.id}" data-uuid="${classification.uuid}">${classification.concept.displayString}</option>
-						<% } %>
-					</select>
-				</div>
 			</div>
 		</div>		
 		
-		<button style="float: right; margin: 10px; display: block;" class="confirm">
+		<button style="float: right; margin: 2px 40px 0 0; display: block;" class="confirm">
 			<i class="icon-save small"></i>
-			Enroll
+			Transfer In
 		</button>
 	</div>
 </div>
@@ -545,4 +500,3 @@
 <div class="container">	
 	<br style="clear: both">
 </div>
-

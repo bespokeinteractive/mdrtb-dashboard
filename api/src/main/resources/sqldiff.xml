@@ -67,7 +67,7 @@
 		<author>Dennis Henry</author>
 		<date>Jan 13th 2017</date>
 		<description>
-			Create Location tables
+			Create patient_program_details
 		</description>
 		<sql>
 			CREATE TABLE IF NOT EXISTS patient_program_details (
@@ -82,5 +82,20 @@
 				CONSTRAINT fk_patient_program_idx FOREIGN KEY (patient_program_id) REFERENCES patient_program(patient_program_id) ON DELETE NO ACTION  ON UPDATE NO ACTION
 			);
         </sql>
+	</diff>
+
+	<diff>
+		<version>1.0.2</version>
+		<author>Dennis Henry</author>
+		<date>Apr 21th 2017</date>
+		<description>
+			Alter patient_program_details
+		</description>
+		<sql>
+            ALTER TABLE patient_program_details
+            ADD referral_program_id INT NULL AFTER patient_program_id,
+            ADD daamin_name VARCHAR(150) NULL AFTER lab_number,
+            ADD daamin_contacts VARCHAR(250) NULL AFTER daamin_name;
+		</sql>
 	</diff>
 </sqldiff>

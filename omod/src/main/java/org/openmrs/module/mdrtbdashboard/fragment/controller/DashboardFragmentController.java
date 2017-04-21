@@ -34,17 +34,16 @@ public class DashboardFragmentController {
     }
 
     public String generateTbmuNumber(Date regdate,
-                                    Location location){
+                                     Location location){
         LocationCentres centre = Context.getService(MdrtbDashboardService.class).getCentresByLocation(location);
-
         SimpleDateFormat sdf = new SimpleDateFormat("yy");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(regdate);
 
-        String stringTbmnuNumber = centre.getSerialNumber().trim() +"/0" + ((calendar.get(Calendar.MONTH)/3)+1) +  "/" + sdf.format(calendar.getTime()).toString() + "/";
+        String stringTbmnuNumber = centre.getSerialNumber().trim() +  "/" + sdf.format(calendar.getTime()).toString();
         Integer integerTbmnuNumber = Context.getService(MdrtbDashboardService.class).getNextTbmuNumberCount(stringTbmnuNumber);
 
-        return  stringTbmnuNumber + String.format("%04d", integerTbmnuNumber);
+        return  stringTbmnuNumber + "/0"  + ((calendar.get(Calendar.MONTH)/3)+1) + "/" + String.format("%04d", integerTbmnuNumber);
     }
 
     public SimpleObject enrollPatient(@RequestParam(value = "programId") Program program,
@@ -101,6 +100,21 @@ public class DashboardFragmentController {
 
         // Return Object for Success
         return SimpleObject.create("status", "success", "message", "Patient successfully enrolled!");
+    }
+
+    public SimpleObject transferPatient(@RequestParam(value = "programId") Program program,
+                                        @RequestParam(value = "patientId") Patient patient,
+                                        @RequestParam(value = "enrolledOn") Date enrolledOn,
+                                        @RequestParam(value = "enrollmentNotes", required = false) String enrollmentNotes,
+                                        @RequestParam(value = "previousTreatment", required = false) String previousTreatment,
+                                        @RequestParam(value = "classification",required = false) String classification,
+                                        @RequestParam(value = "patientType", required = false) String patientType,
+                                        @RequestParam(value = "treatmentCategory", required = false) String treatmentCategory,
+                                        UiSessionContext session,
+                                        SessionStatus status)
+            throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        // Return Object for Success
+        return SimpleObject.create("status", "success", "message", "Patient successfully transferred!");
     }
 
     public String getSelectedLocation(UiSessionContext session){

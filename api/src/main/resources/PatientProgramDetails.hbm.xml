@@ -8,9 +8,12 @@
 		<id name="id" type="int" column="id" unsaved-value="0">
 				<generator class="native" />
 		</id>
-		<property name="tbmuNumber" column="tbmu_number"  />
-		<property name="labNumber" column="lab_number"  />
-		<property name="details" column="details"  />
+		<property name="tbmuNumber" column="tbmu_number" type="java.lang.String" />
+		<property name="labNumber" column="lab_number" type="java.lang.String" />
+		<property name="details" column="details" type="java.lang.String" />
+		<property name="daamin" column="daamin_name" type="java.lang.String" />
+		<property name="daaminContacts" column="daamin_contacts" type="java.lang.String" />
 		<many-to-one name="patientProgram" class="org.openmrs.PatientProgram" column="patient_program_id" cascade="none"  />
+		<many-to-one name="referringProgram" class="org.openmrs.PatientProgram" column="referral_program_id" cascade="none"  />
 	</class>
 </hibernate-mapping>

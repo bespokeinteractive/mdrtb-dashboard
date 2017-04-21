@@ -172,7 +172,7 @@
 						success: function(data) {
 							if (data.status == "success"){
 								jq().toastmessage('showSuccessToast', data.message);
-								window.location.href = "locations.page";					
+								window.location.href = "locations.page";
 							}
 							else {
 								jq().toastmessage('showErrorToast', 'x:'+ data.message);

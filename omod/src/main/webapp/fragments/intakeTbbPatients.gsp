@@ -32,14 +32,16 @@
 				<span class="append-label">CM</span>
 			</field>
 			
-			<field>
-				<label for="bmi">
-					${patient.age>5?'B.M.I :':'M.U.A.C :'}
-					<span class="mandatory">*</span>
-				</label>
-				<input id="bmi" class="required" type="text" ${patient.age>5?'name="vitals.bmi" placeholder="B.M.I" readonly=""':'name="vitals.muac" placeholder="M.U.A.C"'}>
-				<span class="append-label">${patient.age>5?'':'CM'}</span>
-			</field>
+			<% if (patient.age > 5) { %>
+				<field>
+					<label for="bmi">
+						B.M.I :
+						<span class="mandatory">*</span>
+					</label>
+					<input id="bmi" class="required" type="text" name="vitals.bmi" placeholder="B.M.I" readonly="">
+					<span class="append-label"></span>
+				</field>
+			<% } %>
 		</fieldset>
 		
 		<fieldset id ="treatment-details">
@@ -50,6 +52,15 @@
 					<span class="mandatory">*</span>
 				</label>
 				<input id="treatmentSupporter" class="required" name="treatment.supporter" type="text" placeholder="Treatment Supporter (Damiin)">
+			</field>
+			
+			<field>
+				<label for="treatmentSupporterContacts">
+					Supporter Contacts:
+					<span class="mandatory"></span>
+				</label>
+				<input id="treatmentSupporterContacts" class="" name="treatment.supporter.contacts" type="text" placeholder="Damiin Contacts" />
+				<div class="separater"></div>
 			</field>
 			
 			<field>

@@ -67,8 +67,13 @@ public class MdrtbDashboardServiceImpl
     }
 
     @Override
-    public PatientProgramDetails getPatientProgramDetails(PatientProgram patientProgram){
-        return dao.getPatientProgramDetails(patientProgram);
+    public PatientProgramDetails getPatientProgramDetails(PatientProgram pp){
+        return dao.getPatientProgramDetails(pp);
+    }
+
+    @Override
+    public PatientProgramDetails getPatientProgramDetails(MdrtbPatientProgram mpp){
+        return getPatientProgramDetails(mpp.getPatientProgram());
     }
 
     @Override

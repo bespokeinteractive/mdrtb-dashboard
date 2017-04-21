@@ -47,6 +47,7 @@ public class MdrtbPatientWrapper {
         this.patientProgram = patientProgram;
         this.visitDate = visitDate;
         this.getPatientDefaultLocation();
+
         try {
             this.wrapperIdentifier = dashboardService.getPatientProgramDetails(patientProgram.getPatientProgram()).getTbmuNumber();
         }
@@ -57,7 +58,7 @@ public class MdrtbPatientWrapper {
         Patient patient = patientProgram.getPatient();
         PersonLocation pl = mdrtbService.getPersonLocation(patient);
 
-        this.wrapperLocationId = pl.getId();
+        this.wrapperLocationId = pl.getLocation().getId();
         this.wrapperLocationName = pl.getLocation().getName();
     }
 
