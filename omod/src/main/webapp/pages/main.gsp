@@ -667,6 +667,7 @@ ${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, progra
 		<li id="ti"><a href="#visits">Visits</a></li>
 		<li id="cs"><a href="#treatment">Treatment</a></li>
 		<li id="lr"><a href="#chart">Chart</a></li>
+		<li id="hs"><a href="#history">Program History</a></li>
 	</ul>
 	
 	<div id="overview">
@@ -683,5 +684,9 @@ ${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, progra
 	
 	<div id="chart">
 		${ ui.includeFragment("mdrtbdashboard", "dashboardChart", [patientId: patient.id]) }
+	</div>
+	
+	<div id="history">
+		History NOT Available
 	</div>
 </div>

@@ -363,10 +363,10 @@
 						<thead>
 							<tr>
 								<th style="width: 133px;">DRUG</td>
-								<th>RR</td>
-								<th>RS</td>
-								<th>CC</td>
-								<th>ND</td>
+								<th title="Drug Resistance">DR</td>
+								<th title="Drug Sensitive">DS</td>
+								<th title="Culture Contaminated">CC</td>
+								<th title="Not Done">ND</td>
 							</tr>
 						</thead>
 						<tbody>

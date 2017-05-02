@@ -48,7 +48,7 @@
 
         <div id="stacont" class="status-container">
             <span class="status active"></span>
-            Registered Facility 
+            Registered Location
         </div>
 
         <div class="tag">${program.location.name}</div>

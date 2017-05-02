@@ -27,13 +27,15 @@ import java.util.*;
  */
 public class IntakePageController {
     MdrtbDashboardService dashboardService = Context.getService(MdrtbDashboardService.class);
+    MdrtbService mdrtbService = Context.getService(MdrtbService.class);
 
     public String get(
             @RequestParam(value = "patient") Patient patient,
             PageModel model,
             UiUtils ui,
             UiSessionContext session) {
-        MdrtbPatientProgram mostRecentProgram = Context.getService(MdrtbService.class).getMostRecentMdrtbPatientProgram(patient);
+
+        MdrtbPatientProgram mostRecentProgram = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
         if (mostRecentProgram != null && mostRecentProgram.getActive()){
             model.addAttribute("program", mostRecentProgram.getPatientProgram().getProgram());
         }
@@ -41,20 +43,20 @@ public class IntakePageController {
             return "redirect:" + ui.pageLink("mdrtbdashboard", "enroll")+"?patient="+patient.getId();
         }
 
-        List <Obs> list = Context.getObsService().getObservationsByPersonAndConcept(patient, Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.ANATOMICAL_SITE_OF_TB));
+        List <Obs> list = Context.getObsService().getObservationsByPersonAndConcept(patient, mdrtbService.getConcept(MdrtbConcepts.ANATOMICAL_SITE_OF_TB));
         for (Obs obs : list){
             if (obs.getObsDatetime().after(mostRecentProgram.getPatientProgram().getDateEnrolled())){
                 return "redirect:" + ui.pageLink("mdrtbdashboard", "enroll")+"?patient="+patient.getId();
             }
         }
 
-        Collection<ConceptAnswer> anatomicalSites = Context.getService(MdrtbService.class).getPossibleAnatomicalSites();
-        Collection<ConceptAnswer> directObservers = Context.getService(MdrtbService.class).getPossibleDirectObservers();
-        Collection<ConceptAnswer> smearResults = Context.getService(MdrtbService.class).getPossibleSmearResults();
-        Collection<ConceptAnswer> genXpertResults = Context.getService(MdrtbService.class).getPossibleGenXpertResults();
-        Collection<ConceptAnswer> xrayTestResults = Context.getService(MdrtbService.class).getPossibleXRayTestResults();
-        Collection<ConceptAnswer> hivTestResults = Context.getService(MdrtbService.class).getPossibleHivTestResults();
-        Collection<ConceptAnswer> referringDepartments = Context.getService(MdrtbService.class).getPossibleReferringDepartments();
+        Collection<ConceptAnswer> anatomicalSites = mdrtbService.getPossibleAnatomicalSites();
+        Collection<ConceptAnswer> directObservers = mdrtbService.getPossibleDirectObservers();
+        Collection<ConceptAnswer> smearResults = mdrtbService.getPossibleSmearResults();
+        Collection<ConceptAnswer> genXpertResults = mdrtbService.getPossibleGenXpertResults();
+        Collection<ConceptAnswer> xrayTestResults = mdrtbService.getPossibleXRayTestResults();
+        Collection<ConceptAnswer> hivTestResults = mdrtbService.getPossibleHivTestResults();
+        Collection<ConceptAnswer> referringDepartments = mdrtbService.getPossibleReferringDepartments();
 
         model.addAttribute("patient", patient);
         model.addAttribute("program", mostRecentProgram.getPatientProgram());
@@ -66,6 +68,7 @@ public class IntakePageController {
         model.addAttribute("xrayTestResults", xrayTestResults);
         model.addAttribute("genXpertResults", genXpertResults);
         model.addAttribute("referringDepartments", referringDepartments);
+
 
         return null;
     }
@@ -130,7 +133,7 @@ public class IntakePageController {
 
         //Obs Groups Fields
         Encounter encounter = Context.getEncounterService().saveEncounter(intake.getEncounter());
-        MdrtbPatientProgram mpp = Context.getService(MdrtbService.class).getMostRecentMdrtbPatientProgram(patient);
+        MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
         PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
         ppd.setDaamin(daamin);
         ppd.setDaaminContacts(contacts);

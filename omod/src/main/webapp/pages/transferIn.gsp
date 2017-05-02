@@ -66,9 +66,7 @@
 				url: '${ui.actionLink("mdrtbdashboard", "dashboard", "transferPatient")}',
 				data: ({
 					patientId:			${patient.id},
-					programId: 			jq('#enrollmentType').val(),
 					enrolledOn: 		jq('#date-enrolled-field').val(),
-					enrollmentNotes:	'',
 					previousTreatment:	jq('option:selected', '#enrollmentPreviousTreatment').data('uuid'),					
 					classification:		jq('option:selected', '#enrollmentClassifications').data('uuid'),
 					patientType:		jq('option:selected', '#enrollmentPatientType').data('uuid'),
@@ -81,7 +79,7 @@
 						window.location.href = "main.page?patient=${patient.id}";					
 					}
 					else {
-						jq().toastmessage('showErrorToast', 'x:'+ data.message);
+						jq().toastmessage('showErrorToast', data.message);
 					}
 					
 				},
@@ -430,14 +428,12 @@ ${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, progra
 
 			<div class="info-body">
 				<div>
-					<label for="date-enrolled-display">New TBMU No.:</label>
+					<label for="tbmuNo">New TBMU No.:</label>
 					<input type="text" id="tbmuNo" name="patient.tbmu_number" readonly="" />
 				</div>
 				<div>
 					<label for="date-enrolled-display">Transfer Date :</label>
 					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'date-enrolled', id: 'date-enrolled', label: 'Date of Enrollment', useTime: false, defaultToday: true, endDate: new Date()])}
-					<input type="hidden" id="patientId"  name="patient.id" value="${patient.id}" />
-					<input type="hidden" id="identifier" name="patient.identifier" />
 				</div>
 				
 				<div>

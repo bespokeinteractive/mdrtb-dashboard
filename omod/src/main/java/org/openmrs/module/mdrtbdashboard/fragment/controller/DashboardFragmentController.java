@@ -1,6 +1,9 @@
 package org.openmrs.module.mdrtbdashboard.fragment.controller;
 
+import net.sourceforge.jtds.jdbc.DateTime;
 import org.openmrs.*;
+
+import java.text.ParsePosition;
 import java.util.*;
 
 import org.openmrs.api.ProgramWorkflowService;
@@ -28,6 +31,9 @@ import org.springframework.web.bind.support.SessionStatus;
  */
 
 public class DashboardFragmentController {
+    MdrtbDashboardService dashboardService = Context.getService(MdrtbDashboardService.class);
+    MdrtbService mdrtbService = Context.getService(MdrtbService.class);
+
     public String generateBMUNumber(@RequestParam(value = "regdate", required = false) Date regdate,
                                      UiSessionContext session){
         return  generateTbmuNumber(regdate, session.getSessionLocation());
@@ -35,13 +41,13 @@ public class DashboardFragmentController {
 
     public String generateTbmuNumber(Date regdate,
                                      Location location){
-        LocationCentres centre = Context.getService(MdrtbDashboardService.class).getCentresByLocation(location);
+        LocationCentres centre = dashboardService.getCentresByLocation(location);
         SimpleDateFormat sdf = new SimpleDateFormat("yy");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(regdate);
 
         String stringTbmnuNumber = centre.getSerialNumber().trim() +  "/" + sdf.format(calendar.getTime()).toString();
-        Integer integerTbmnuNumber = Context.getService(MdrtbDashboardService.class).getNextTbmuNumberCount(stringTbmnuNumber);
+        Integer integerTbmnuNumber = dashboardService.getNextTbmuNumberCount(stringTbmnuNumber);
 
         return  stringTbmnuNumber + "/0"  + ((calendar.get(Calendar.MONTH)/3)+1) + "/" + String.format("%04d", integerTbmnuNumber);
     }
@@ -54,13 +60,29 @@ public class DashboardFragmentController {
                                       @RequestParam(value = "classification",required = false) String classification,
                                       @RequestParam(value = "patientType", required = false) String patientType,
                                       @RequestParam(value = "treatmentCategory", required = false) String treatmentCategory,
-                                      UiSessionContext session,
-                                      SessionStatus status)
+                                      UiSessionContext session)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        MdrtbPatientProgram mostRecentProgram = Context.getService(MdrtbService.class).getMostRecentMdrtbPatientProgram(patient);
+        MdrtbPatientProgram mostRecentProgram = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
         if (mostRecentProgram != null && mostRecentProgram.getActive()){
             return SimpleObject.create("status", "failed", "message", "Patient already enrolled in Program!");
         }
+
+        this.patientEnrollment(program, patient, enrolledOn, enrollmentNotes, previousTreatment, classification, patientType, treatmentCategory, session);
+
+        // Return Object for Success
+        return SimpleObject.create("status", "success", "message", "Patient successfully enrolled!");
+    }
+
+    public void patientEnrollment(Program program,
+                                  Patient patient,
+                                  Date enrolledOn,
+                                  String enrollmentNotes,
+                                  String previousTreatment,
+                                  String classification,
+                                  String patientType,
+                                  String treatmentCategory,
+                                  UiSessionContext session){
+
 
         MdrtbPatientProgram mpp = new MdrtbPatientProgram(program);
         Location location = session.getSessionLocation();
@@ -93,19 +115,12 @@ public class DashboardFragmentController {
         details.setDetails(enrollmentNotes);
 
         // save the the patient program details
-        MdrtbDashboardService mdrtbservice = Context.getService(MdrtbDashboardService.class);
-        mdrtbservice.savePatientProgramDetails(details);
+        dashboardService.savePatientProgramDetails(details);
 
-        //status.setComplete();
-
-        // Return Object for Success
-        return SimpleObject.create("status", "success", "message", "Patient successfully enrolled!");
     }
 
-    public SimpleObject transferPatient(@RequestParam(value = "programId") Program program,
-                                        @RequestParam(value = "patientId") Patient patient,
+    public SimpleObject transferPatient(@RequestParam(value = "patientId") Patient patient,
                                         @RequestParam(value = "enrolledOn") Date enrolledOn,
-                                        @RequestParam(value = "enrollmentNotes", required = false) String enrollmentNotes,
                                         @RequestParam(value = "previousTreatment", required = false) String previousTreatment,
                                         @RequestParam(value = "classification",required = false) String classification,
                                         @RequestParam(value = "patientType", required = false) String patientType,
@@ -113,6 +128,29 @@ public class DashboardFragmentController {
                                         UiSessionContext session,
                                         SessionStatus status)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        MdrtbPatientProgram current = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        MdrtbPatientProgram mpp = new MdrtbPatientProgram(current.getPatientProgram().getProgram());
+        Location location = session.getSessionLocation();
+
+        if (mdrtbService.getPersonLocation(patient).getLocation().equals(location)){
+            return SimpleObject.create("status", "failed", "message", "You can't transfer to the same Location!");
+        }
+
+        if (current.getDateCompleted() != null){
+            //Close previous Entry
+            Date completedOn = new Date();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(enrolledOn);
+            cal.add(Calendar.DATE, -1);
+            completedOn = cal.getTime();
+
+            current.setDateCompleted(completedOn);
+            current.setOutcome(Context.getProgramWorkflowService().getStateByUuid("341a7f5a-0370-102d-b0e3-001ec94a0cc1"));
+            Context.getProgramWorkflowService().savePatientProgram(current.getPatientProgram());
+        }
+
+
+
         // Return Object for Success
         return SimpleObject.create("status", "success", "message", "Patient successfully transferred!");
     }
@@ -126,9 +164,10 @@ public class DashboardFragmentController {
         Encounter encounter = Context.getEncounterService().getEncounter(encounterId);
         VisitDetails visitDetail = VisitDetails.create(encounter);
         SimpleObject details = SimpleObject.fromObject(visitDetail, ui, "weight", "height", "bmi", "muac", "facility", "date", "location", "sputumSmear", "genXpert", "hivExam", "xrayExam", "culture", "drugTest", "artStarted", "cptStarted", "showTests", "labNumber");
-        List<DrugTestingResults> drugTest = Context.getService(MdrtbDashboardService.class).getDrugSensitivityOutcome(encounter);
+        List<DrugTestingResults> drugTest = dashboardService.getDrugSensitivityOutcome(encounter);
 
         return SimpleObject.create("details", details, "drugTest", drugTest);
     }
 
 }
+
