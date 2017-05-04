@@ -98,4 +98,28 @@
             ADD daamin_contacts VARCHAR(250) NULL AFTER daamin_name;
 		</sql>
 	</diff>
+	
+	<diff>
+		<version>1.0.3</version>
+		<author>Dennis Henry</author>
+		<date>Apr 21th 2017</date>
+		<description>
+			Create Table containing List of all Facilities
+		</description>
+		<sql>
+            CREATE TABLE IF NOT EXISTS location_facilities (
+				id INT NOT NULL AUTO_INCREMENT,
+				name VARCHAR(255) NOT NULL,
+				status VARCHAR(50) NOT NULL DEFAULT 'active',
+				location_id INT(11) NOT NULL,
+				created_on DATETIME NOT NULL,
+				created_by INT(11) NOT NULL DEFAULT 1,
+				description VARCHAR(255) NOT NULL,
+				
+				PRIMARY KEY (id),
+				CONSTRAINT fk_location_facilities_location FOREIGN KEY (location_id) REFERENCES Location (location_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+				CONSTRAINT fk_location_facilities_person1   FOREIGN KEY (created_by)  REFERENCES person (person_id) ON DELETE NO ACTION ON UPDATE NO ACTION
+			);
+		</sql>
+	</diff>
 </sqldiff>
