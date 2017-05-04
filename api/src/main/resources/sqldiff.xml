@@ -114,7 +114,7 @@
 				location_id INT(11) NOT NULL,
 				created_on DATETIME NOT NULL,
 				created_by INT(11) NOT NULL DEFAULT 1,
-				description VARCHAR(255) NOT NULL,
+				description VARCHAR(255) NULL,
 				
 				PRIMARY KEY (id),
 				CONSTRAINT fk_location_facilities_location FOREIGN KEY (location_id) REFERENCES Location (location_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
