@@ -1,7 +1,8 @@
 package org.openmrs.module.mdrtbdashboard.util;
 
 /**
- * Created by daugm on 3/31/2017.
+ * Created by Dennis Henry
+ * Created on 3/31/2017.
  */
 public class LocationModel {
     Integer id;

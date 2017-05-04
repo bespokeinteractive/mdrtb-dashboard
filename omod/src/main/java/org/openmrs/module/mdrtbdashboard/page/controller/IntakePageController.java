@@ -1,10 +1,7 @@
 package org.openmrs.module.mdrtbdashboard.page.controller;
 
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.ConceptAnswer;
-import org.openmrs.Encounter;
-import org.openmrs.Obs;
-import org.openmrs.Patient;
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
@@ -12,6 +9,7 @@ import org.openmrs.module.mdrtb.form.SimpleIntakeForm;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
+import org.openmrs.module.mdrtbdashboard.model.LocationFacilities;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
@@ -36,6 +34,8 @@ public class IntakePageController {
             UiSessionContext session) {
 
         MdrtbPatientProgram mostRecentProgram = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        Location location = session.getSessionLocation();
+
         if (mostRecentProgram != null && mostRecentProgram.getActive()){
             model.addAttribute("program", mostRecentProgram.getPatientProgram().getProgram());
         }
@@ -50,6 +50,8 @@ public class IntakePageController {
             }
         }
 
+        List<LocationFacilities> facilities = dashboardService.getFacilities(location, "active");
+
         Collection<ConceptAnswer> anatomicalSites = mdrtbService.getPossibleAnatomicalSites();
         Collection<ConceptAnswer> directObservers = mdrtbService.getPossibleDirectObservers();
         Collection<ConceptAnswer> smearResults = mdrtbService.getPossibleSmearResults();
@@ -58,9 +60,12 @@ public class IntakePageController {
         Collection<ConceptAnswer> hivTestResults = mdrtbService.getPossibleHivTestResults();
         Collection<ConceptAnswer> referringDepartments = mdrtbService.getPossibleReferringDepartments();
 
+
         model.addAttribute("patient", patient);
         model.addAttribute("program", mostRecentProgram.getPatientProgram());
-        model.addAttribute("location", session.getSessionLocation());
+        model.addAttribute("location", location);
+        model.addAttribute("facilities", facilities);
+
         model.addAttribute("anatomicalSites", anatomicalSites);
         model.addAttribute("directObservers", directObservers);
         model.addAttribute("smearResults", smearResults);
@@ -68,7 +73,6 @@ public class IntakePageController {
         model.addAttribute("xrayTestResults", xrayTestResults);
         model.addAttribute("genXpertResults", genXpertResults);
         model.addAttribute("referringDepartments", referringDepartments);
-
 
         return null;
     }

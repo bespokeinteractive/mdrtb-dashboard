@@ -20,8 +20,13 @@
 					Health Facility:
 					<span class="mandatory">*</span>
 				</label>
-				<input id="locationFacility" class="required" name="treatment.facility" type="text" placeholder="Treatment Facility">
-				<input id="locationName" name="treatment.location" type="hidden" value="${location.name}" readonly="" />
+				<select id="locationFacility" class="required" name="treatment.facility">
+					<option value="">&nbsp;</option>
+					<% facilities.eachWithIndex { sites, index -> %>
+						<option value="${sites.id}">${sites.name.toString().toUpperCase()}</option>
+					<% } %>
+				</select>
+				<input id="locationName" name="treatment.location" type="hidden" value="${location.name}" readonly="" class="locations" />
 				<input name="patient.id" type="hidden" value="${patient.id}" />
 				<div class="separater"></div>
 			</field>

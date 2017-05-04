@@ -21,7 +21,7 @@
         jq("#session-location ul.select").on('click', 'li', function (event) {
 			setTimeout(function() {
 				GenerateTbmuNumber();
-			}, 300);
+			}, 1500);
 		});
 		
 		jq('#date-enrolled-display').change(function(){

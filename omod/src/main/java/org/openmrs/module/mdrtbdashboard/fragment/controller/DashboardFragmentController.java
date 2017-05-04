@@ -14,9 +14,11 @@ import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtb.util.DrugSensitivityModel;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
+import org.openmrs.module.mdrtbdashboard.model.LocationFacilities;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 import org.openmrs.module.mdrtbdashboard.VisitDetails;
 import org.openmrs.module.mdrtbdashboard.util.DrugTestingResults;
+import org.openmrs.module.mdrtbdashboard.util.LocationModel;
 import org.openmrs.ui.framework.SimpleObject;
 import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
@@ -157,6 +159,22 @@ public class DashboardFragmentController {
 
     public String getSelectedLocation(UiSessionContext session){
         return session.getSessionLocation().getName();
+    }
+
+    public SimpleObject getSelectedLocationFacilities(UiSessionContext session){
+        Location location = session.getSessionLocation();
+        List<LocationFacilities> facilities = dashboardService.getFacilities(location, "active");
+        List<LocationModel> models = new ArrayList<LocationModel>();
+
+        for (LocationFacilities facility: facilities){
+            LocationModel lm = new LocationModel();
+            lm.setId(facility.getId());
+            lm.setName(facility.getName());
+
+            models.add(lm);
+        }
+
+        return SimpleObject.create("facilities", models);
     }
 
     public SimpleObject getVisitSummaryDetails(@RequestParam("encounterId") Integer encounterId,

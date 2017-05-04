@@ -25,18 +25,42 @@
 		NavigatorController = new KeyboardController();
 		
 		jq("#session-location ul.select").on('click', 'li', function (event) {
-			jq.ajax({
-				type: "GET",
-				url: '${ ui.actionLink("mdrtbdashboard", "dashboard", "getSelectedLocation") }',
-				dataType: "json",
-				success: function (data) {
-					jq('#location').val(data);
-				},
-				error: function (xhr, ajaxOptions, thrownError) {
-					alert(thrownError);
-				}
-
-			});
+			setTimeout(function() {
+				jq.ajax({
+					type: "GET",
+					url: '${ ui.actionLink("mdrtbdashboard", "dashboard", "getSelectedLocation") }',
+					dataType: "json",
+					success: function (data) {
+						jq('#location').val(data);
+						jq('.locations').val(data);
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						alert(thrownError);
+						return false;
+					}
+				});
+				
+				jq.ajax({
+					type: "GET",
+					url: '${ ui.actionLink("mdrtbdashboard", "dashboard", "getSelectedLocationFacilities") }',
+					dataType: "json",
+					success: function (data) {
+						//alert('success');
+						jq('#locationFacility').empty();
+						for (index in data.facilities) {
+							var item = data.facilities[index];
+							jq('#locationFacility').append('<option value=""></option>');
+							
+							var row = '<option value="' + item.id + '">' + item.name + '</option>';
+							jq('#locationFacility').append(row);
+						}
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						alert(thrownError);
+					}
+				});				
+			}, 1500);
+			
 		});
 		
 		jq("#vitalsHeight, #vitalsWeight").on('blur', function () {
