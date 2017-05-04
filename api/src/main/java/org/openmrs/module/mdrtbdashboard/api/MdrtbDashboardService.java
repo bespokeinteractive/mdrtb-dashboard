@@ -6,10 +6,7 @@ import org.openmrs.Obs;
 import org.openmrs.PatientProgram;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentresAgencies;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentresRegions;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtbdashboard.model.*;
 import org.openmrs.module.mdrtbdashboard.util.DrugTestingResults;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,4 +38,6 @@ public interface MdrtbDashboardService
 
     List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId, List<Location> locations);
     List<DrugTestingResults> getDrugSensitivityOutcome(Encounter encounter);
+
+    List<LocationFacilities> getFacilities(Location location, String status);
 }

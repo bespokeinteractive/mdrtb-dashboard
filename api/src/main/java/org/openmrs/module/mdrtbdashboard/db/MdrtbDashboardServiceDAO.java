@@ -3,10 +3,7 @@ package org.openmrs.module.mdrtbdashboard.db;
 import org.openmrs.Location;
 import org.openmrs.PatientProgram;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentresAgencies;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentresRegions;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtbdashboard.model.*;
 
 import java.util.List;
 
@@ -29,4 +26,5 @@ public interface MdrtbDashboardServiceDAO {
     Integer getNextTbmuNumberCount(String header);
 
     List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId, List<Location> locations);
+    List<LocationFacilities> getFacilities(Location location, String status);
 }

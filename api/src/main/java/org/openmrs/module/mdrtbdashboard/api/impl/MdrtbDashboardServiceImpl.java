@@ -12,10 +12,7 @@ import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtb.util.DrugSensitivityModel;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.db.MdrtbDashboardServiceDAO;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentresAgencies;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentresRegions;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtbdashboard.model.*;
 import org.openmrs.module.mdrtbdashboard.util.DrugTestingResults;
 
 import java.util.ArrayList;
@@ -115,5 +112,10 @@ public class MdrtbDashboardServiceImpl
         }
 
         return outcomes;
+    }
+
+    @Override
+    public List<LocationFacilities> getFacilities(Location location, String status){
+        return dao.getFacilities(location, status);
     }
 }

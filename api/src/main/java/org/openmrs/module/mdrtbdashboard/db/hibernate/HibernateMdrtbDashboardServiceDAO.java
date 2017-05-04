@@ -13,10 +13,7 @@ import org.openmrs.api.db.DAOException;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.db.MdrtbDashboardServiceDAO;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentresAgencies;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentresRegions;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtbdashboard.model.*;
 
 import java.util.*;
 
@@ -101,6 +98,16 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     @Override
     public PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails) {
         return (PatientProgramDetails)getSession().merge(patientProgramDetails);
+    }
+
+    @Override
+    public List<LocationFacilities> getFacilities(Location location, String status){
+        Criteria criteria = getSession().createCriteria(LocationFacilities.class);
+        criteria.add(Restrictions.eq("location", location));
+        if (StringUtils.isNotBlank(status)){
+            criteria.add(Restrictions.eq("status", status));
+        }
+        return criteria.list();
     }
 
     @Override
