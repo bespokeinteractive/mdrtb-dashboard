@@ -45,11 +45,11 @@
 					url: '${ ui.actionLink("mdrtbdashboard", "dashboard", "getSelectedLocationFacilities") }',
 					dataType: "json",
 					success: function (data) {
-						//alert('success');
 						jq('#locationFacility').empty();
+						jq('#locationFacility').append('<option value=""></option>');
+						
 						for (index in data.facilities) {
 							var item = data.facilities[index];
-							jq('#locationFacility').append('<option value=""></option>');
 							
 							var row = '<option value="' + item.id + '">' + item.name + '</option>';
 							jq('#locationFacility').append(row);

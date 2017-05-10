@@ -101,6 +101,13 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
+    public LocationFacilities getFacilityById(Integer facilityId){
+        Criteria criteria = getSession().createCriteria(LocationFacilities.class);
+        criteria.add(Restrictions.eq("id", facilityId));
+        return (LocationFacilities)criteria.uniqueResult();
+    }
+
+    @Override
     public List<LocationFacilities> getFacilities(Location location, String status){
         Criteria criteria = getSession().createCriteria(LocationFacilities.class);
         criteria.add(Restrictions.eq("location", location));
@@ -204,7 +211,13 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
                     }
 
                     MdrtbPatientProgram pp = Context.getService(MdrtbService.class).getMostRecentMdrtbPatientProgram(patient);
-                    if (programId != 0){
+                    if (programId == -1){
+                        //Return only active patients, either MDRTB or TB
+                        if (pp.getPatientProgram() != null && pp.getActive()){
+                            search.add(pp);
+                        }
+                    }
+                    else if (programId > 0){
                         if (pp.getPatientProgram() != null && pp.getActive() && pp.getPatientProgram().getProgram() == Context.getProgramWorkflowService().getProgram(programId)){
                             search.add(pp);
                         }

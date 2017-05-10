@@ -118,4 +118,9 @@ public class MdrtbDashboardServiceImpl
     public List<LocationFacilities> getFacilities(Location location, String status){
         return dao.getFacilities(location, status);
     }
+
+    @Override
+    public LocationFacilities getFacilityById(Integer facilityId){
+        return dao.getFacilityById(facilityId);
+    }
 }

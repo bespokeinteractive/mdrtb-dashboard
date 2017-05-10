@@ -24,6 +24,7 @@ public interface MdrtbDashboardServiceDAO {
     PatientProgramDetails getPatientProgramDetails(PatientProgram patientProgram);
     PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails);
     Integer getNextTbmuNumberCount(String header);
+    LocationFacilities getFacilityById(Integer facilityId);
 
     List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId, List<Location> locations);
     List<LocationFacilities> getFacilities(Location location, String status);
