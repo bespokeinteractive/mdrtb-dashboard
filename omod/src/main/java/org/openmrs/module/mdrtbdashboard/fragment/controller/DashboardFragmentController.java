@@ -33,6 +33,7 @@ import org.springframework.web.bind.support.SessionStatus;
  */
 
 public class DashboardFragmentController {
+    ProgramWorkflowService workflowService = Context.getProgramWorkflowService();
     MdrtbDashboardService dashboardService = Context.getService(MdrtbDashboardService.class);
     MdrtbService mdrtbService = Context.getService(MdrtbService.class);
 
@@ -69,7 +70,7 @@ public class DashboardFragmentController {
             return SimpleObject.create("status", "failed", "message", "Patient already enrolled in Program!");
         }
 
-        this.patientEnrollment(program, patient, enrolledOn, enrollmentNotes, previousTreatment, classification, patientType, treatmentCategory, session);
+        this.patientEnrollment(program, patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, session);
 
         // Return Object for Success
         return SimpleObject.create("status", "success", "message", "Patient successfully enrolled!");
@@ -78,14 +79,12 @@ public class DashboardFragmentController {
     public void patientEnrollment(Program program,
                                   Patient patient,
                                   Date enrolledOn,
-                                  String enrollmentNotes,
                                   String previousTreatment,
                                   String classification,
                                   String patientType,
                                   String treatmentCategory,
                                   UiSessionContext session){
-
-
+        PatientProgramDetails details = new PatientProgramDetails();
         MdrtbPatientProgram mpp = new MdrtbPatientProgram(program);
         Location location = session.getSessionLocation();
 
@@ -96,29 +95,28 @@ public class DashboardFragmentController {
 
         if (program.getName().equals(Context.getAdministrationService().getGlobalProperty("mdrtb.program_name"))){
             // set program workflows if the Patient is an MDR-TB Patient
-            mpp.setClassificationAccordingToPreviousDrugUse(Context.getProgramWorkflowService().getStateByUuid(classification));
-            mpp.setClassificationAccordingToPreviousTreatment(Context.getProgramWorkflowService().getStateByUuid(previousTreatment));
+            mpp.setClassificationAccordingToPreviousDrugUse(workflowService.getStateByUuid(classification));
+            mpp.setClassificationAccordingToPreviousTreatment(workflowService.getStateByUuid(previousTreatment));
+
+            details.setPatientType(mpp.getClassificationAccordingToPreviousDrugUse());
+            details.setPatientCategory(mpp.getClassificationAccordingToPreviousTreatment());
         }
         else {
             // set program workflows if the Patient is an TB Patient
-            mpp.setClassificationAccordingToPatientType(Context.getProgramWorkflowService().getStateByUuid(patientType));
-            mpp.setClassificationAccordingToTreatmentCategory(Context.getProgramWorkflowService().getStateByUuid(treatmentCategory));
+            mpp.setClassificationAccordingToPatientType(workflowService.getStateByUuid(patientType));
+            mpp.setClassificationAccordingToTreatmentCategory(workflowService.getStateByUuid(treatmentCategory));
+
+            details.setPatientType(mpp.getClassificationAccordingToPatientType());
+            details.setPatientCategory(mpp.getClassificationAccordingToTreatmentCategory());
         }
 
         // save the actual update
-        ProgramWorkflowService programWorkflowService = Context.getProgramWorkflowService();
-        PatientProgram pp = programWorkflowService.savePatientProgram(mpp.getPatientProgram());
+        PatientProgram pp = workflowService.savePatientProgram(mpp.getPatientProgram());
 
-        // set the patient program details parameters
-        PatientProgramDetails details = new PatientProgramDetails();
+        // set the patient program details parameters & save
         details.setTbmuNumber(generateTbmuNumber(enrolledOn, location));
         details.setPatientProgram(pp);
-        details.setLabNumber("x");
-        details.setDetails(enrollmentNotes);
-
-        // save the the patient program details
         dashboardService.savePatientProgramDetails(details);
-
     }
 
     public SimpleObject transferPatient(@RequestParam(value = "patientId") Patient patient,
@@ -131,7 +129,6 @@ public class DashboardFragmentController {
                                         SessionStatus status)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         MdrtbPatientProgram current = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
-        MdrtbPatientProgram mpp = new MdrtbPatientProgram(current.getPatientProgram().getProgram());
         Location location = session.getSessionLocation();
 
         if (mdrtbService.getPersonLocation(patient).getLocation().equals(location)){
@@ -147,11 +144,11 @@ public class DashboardFragmentController {
             completedOn = cal.getTime();
 
             current.setDateCompleted(completedOn);
-            current.setOutcome(Context.getProgramWorkflowService().getStateByUuid("341a7f5a-0370-102d-b0e3-001ec94a0cc1"));
-            Context.getProgramWorkflowService().savePatientProgram(current.getPatientProgram());
+            current.setOutcome(workflowService.getStateByUuid("341a7f5a-0370-102d-b0e3-001ec94a0cc1"));
+            workflowService.savePatientProgram(current.getPatientProgram());
         }
 
-
+        this.patientEnrollment(current.getPatientProgram().getProgram(), patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, session);
 
         // Return Object for Success
         return SimpleObject.create("status", "success", "message", "Patient successfully transferred!");

@@ -52,7 +52,9 @@
 			
 			if (jq(this).val() == 24){
 				catg.append(jq('<option></option>').attr("value", '').text(''));
-				catg.append(jq('<option></option>').attr("value", '23').attr("data-uuid", '3745a3bc-c9ad-4011-85ee-c8dcbfd1ed97').text('NEW'));
+				if (${patient.age} > 14){
+					catg.append(jq('<option></option>').attr("value", '23').attr("data-uuid", '3745a3bc-c9ad-4011-85ee-c8dcbfd1ed97').text('NEW ADULT'));				
+				}
 				catg.append(jq('<option></option>').attr("value", '48').attr("data-uuid", '3745a3bc-c9ad-4011-85ee-c8dcbfd1ed98').text('PEDIATRIC PATIENT'));			
 			}
 			else if (jq(this).val() == 25 || jq(this).val() == 26){
@@ -63,7 +65,9 @@
 			}
 			else {
 				catg.append(jq('<option></option>').attr("value", '').text(''));
-				catg.append(jq('<option></option>').attr("value", '23').attr("data-uuid", '3745a3bc-c9ad-4011-85ee-c8dcbfd1ed97').text('NEW'));
+				if (${patient.age} > 14){
+					catg.append(jq('<option></option>').attr("value", '23').attr("data-uuid", '3745a3bc-c9ad-4011-85ee-c8dcbfd1ed97').text('NEW ADULT'));				
+				}
 				catg.append(jq('<option></option>').attr("value", '48').attr("data-uuid", '3745a3bc-c9ad-4011-85ee-c8dcbfd1ed98').text('PEDIATRIC PATIENT'));
 				catg.append(jq('<option></option>').attr("value", '21').attr("data-uuid", 'd4f92bdd-1e22-4578-a535-93dbb44c1fd4').text('PREVIOUSLY TREATED WITH FIRST LINE DRUGS'));
 				catg.append(jq('<option></option>').attr("value", '22').attr("data-uuid", '8b418fa9-e4fb-4da8-89ea-7d5dd2545554').text('PREVIOUSLY TREATED WITH SECOND LINE DRUGS'));
@@ -117,6 +121,7 @@
 				success: function (data) {
 					jq('.identifiers span').text(data);
 					jq('#identifier').val(data);
+					jq('.tag').text(sessionLocationModel.text());
 				},
 				error: function (xhr, ajaxOptions, thrownError) {
 					alert(thrownError);
@@ -387,7 +392,6 @@
 	}
 </style>
 
-
 <div class="clear"></div>
 
 <div>
@@ -430,10 +434,10 @@
 
         <div id="stacont" class="status-container">
             <span class="status active"></span>
-            Registered Facility
+            Registration Center
         </div>
 
-        <div class="tag">Bandarbeyla</div>
+        <div class="tag">${ ui.format(sessionContext.sessionLocation) }</div>
     </div>
 
     <div class="identifiers">

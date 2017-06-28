@@ -7,6 +7,7 @@ import org.openmrs.module.mdrtb.model.PersonLocation;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
+import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 import sun.swing.plaf.synth.Paint9Painter;
 
 import java.text.Format;
@@ -16,7 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by Dennis Henry on 2/2/2017.
+ * Created by Dennis Henry
+ * Created on 2/2/2017.
  */
 public class MdrtbPatientWrapper {
     private MdrtbPatientProgram patientProgram;
@@ -123,6 +125,13 @@ public class MdrtbPatientWrapper {
         if (this.patientProgram.getActive()){
             wrapperStatus = this.patientProgram.getPatientProgram().getProgram().getName();
         }
+        else{
+            PatientProgramDetails ppd = Context.getService(MdrtbDashboardService.class).getPatientProgramDetails(this.patientProgram.getPatientProgram());
+            if (ppd.getOutcome() != null){
+                wrapperStatus = ppd.getOutcome().getDisplayString();
+            }
+        }
+
         return wrapperStatus;
     }
 

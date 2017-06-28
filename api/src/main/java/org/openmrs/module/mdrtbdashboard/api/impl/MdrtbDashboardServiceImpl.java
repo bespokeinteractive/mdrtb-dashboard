@@ -9,13 +9,13 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
-import org.openmrs.module.mdrtb.util.DrugSensitivityModel;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.db.MdrtbDashboardServiceDAO;
 import org.openmrs.module.mdrtbdashboard.model.*;
 import org.openmrs.module.mdrtbdashboard.util.DrugTestingResults;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -117,6 +117,11 @@ public class MdrtbDashboardServiceImpl
     @Override
     public List<LocationFacilities> getFacilities(Location location, String status){
         return dao.getFacilities(location, status);
+    }
+
+    @Override
+    public List<PatientProgramDetails> getPatientsFromDetails(Location location, Date startDate, Date endDate, LocationFacilities facility){
+        return dao.getPatientsFromDetails(location, startDate, endDate, facility);
     }
 
     @Override

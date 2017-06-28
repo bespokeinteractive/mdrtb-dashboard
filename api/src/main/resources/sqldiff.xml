@@ -75,7 +75,7 @@
 				patient_program_id INT(11) NOT NULL,
 				tbmu_number VARCHAR(255) NULL,
 				lab_number VARCHAR(255) NULL,
-				details VARCHAR(255) NULL,
+				description VARCHAR(255) NULL,
 
 				PRIMARY KEY (id),
 				UNIQUE INDEX tbmu_number_unique (tbmu_number ASC),
@@ -120,6 +120,20 @@
 				CONSTRAINT fk_location_facilities_location FOREIGN KEY (location_id) REFERENCES Location (location_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
 				CONSTRAINT fk_location_facilities_person1   FOREIGN KEY (created_by)  REFERENCES person (person_id) ON DELETE NO ACTION ON UPDATE NO ACTION
 			);
+		</sql>
+	</diff>
+
+	<diff>
+		<version>1.0.4</version>
+		<author>Dennis Henry</author>
+		<date>Jun 27th 2017</date>
+		<description>
+			Add Field for Confirmation Type in patient_program_details
+		</description>
+		<sql>
+			ALTER TABLE patient_program_details
+			ADD site_confirmation INT(11) NULL AFTER disease_site,
+			ADD site_confirmation INT(11) NULL AFTER outcome;
 		</sql>
 	</diff>
 </sqldiff>

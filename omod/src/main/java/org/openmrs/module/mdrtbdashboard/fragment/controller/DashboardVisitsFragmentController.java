@@ -9,6 +9,8 @@ import org.openmrs.module.mdrtb.form.SimpleFollowUpForm;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtb.util.DrugSensitivityModel;
+import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
+import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 import org.openmrs.module.mdrtbdashboard.util.ResultModelWrapper;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
@@ -29,6 +31,8 @@ import java.util.*;
  * Created by Dennis Henry on 1/31/2017.
  */
 public class DashboardVisitsFragmentController {
+    MdrtbDashboardService dashboardService = Context.getService(MdrtbDashboardService.class);
+
     public void controller(FragmentModel model,
                            FragmentConfiguration config,
                            UiUtils ui) {
@@ -78,8 +82,12 @@ public class DashboardVisitsFragmentController {
             DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
 
             MdrtbPatientProgram program = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
+            PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(program);
+
             program.setDateCompleted(df.parse(testedOn, new ParsePosition(0)));
             program.setOutcome(Context.getProgramWorkflowService().getStateByUuid(outcomeResults));
+            ppd.setOutcome(Context.getConceptService().getConceptByUuid(outcomeResults));
+            ppd = dashboardService.savePatientProgramDetails(ppd);
 
             // save the actual update
             Context.getProgramWorkflowService().savePatientProgram(program.getPatientProgram());
@@ -222,8 +230,12 @@ public class DashboardVisitsFragmentController {
                                           SessionStatus status)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         MdrtbPatientProgram program = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
+        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(program.getPatientProgram());
+
         program.setDateCompleted(outcomeDate);
         program.setOutcome(Context.getProgramWorkflowService().getStateByUuid(outcomeResults));
+        ppd.setOutcome(Context.getConceptService().getConceptByUuid(outcomeResults));
+        ppd = dashboardService.savePatientProgramDetails(ppd);
 
         // save the actual update
         Context.getProgramWorkflowService().savePatientProgram(program.getPatientProgram());

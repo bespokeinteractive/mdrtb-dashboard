@@ -5,6 +5,7 @@ import org.openmrs.PatientProgram;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtbdashboard.model.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,4 +29,5 @@ public interface MdrtbDashboardServiceDAO {
 
     List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId, List<Location> locations);
     List<LocationFacilities> getFacilities(Location location, String status);
+    List<PatientProgramDetails> getPatientsFromDetails(Location location, Date startDate, Date endDate, LocationFacilities facility);
 }

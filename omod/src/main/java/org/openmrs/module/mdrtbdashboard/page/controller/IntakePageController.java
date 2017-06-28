@@ -2,6 +2,7 @@ package org.openmrs.module.mdrtbdashboard.page.controller;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.*;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
@@ -25,6 +26,7 @@ import java.util.*;
  */
 public class IntakePageController {
     MdrtbDashboardService dashboardService = Context.getService(MdrtbDashboardService.class);
+    ConceptService conceptService = Context.getConceptService();
     MdrtbService mdrtbService = Context.getService(MdrtbService.class);
 
     public String get(
@@ -33,26 +35,25 @@ public class IntakePageController {
             UiUtils ui,
             UiSessionContext session) {
 
-        MdrtbPatientProgram mostRecentProgram = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        MdrtbPatientProgram current = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        PatientProgramDetails details = dashboardService.getPatientProgramDetails(current);
         Location location = session.getSessionLocation();
 
-        if (mostRecentProgram != null && mostRecentProgram.getActive()){
-            model.addAttribute("program", mostRecentProgram.getPatientProgram().getProgram());
+        if (current != null && current.getActive()){
+            model.addAttribute("program", current.getPatientProgram().getProgram());
         }
         else{
             return "redirect:" + ui.pageLink("mdrtbdashboard", "enroll")+"?patient="+patient.getId();
         }
 
-        List <Obs> list = Context.getObsService().getObservationsByPersonAndConcept(patient, mdrtbService.getConcept(MdrtbConcepts.ANATOMICAL_SITE_OF_TB));
-        for (Obs obs : list){
-            if (obs.getObsDatetime().after(mostRecentProgram.getPatientProgram().getDateEnrolled())){
-                return "redirect:" + ui.pageLink("mdrtbdashboard", "enroll")+"?patient="+patient.getId();
-            }
+        if (details.getFacility() != null){
+            return "redirect:" + ui.pageLink("mdrtbdashboard", "main")+"?patient="+patient.getId();
         }
 
         List<LocationFacilities> facilities = dashboardService.getFacilities(location, "active");
 
         Collection<ConceptAnswer> anatomicalSites = mdrtbService.getPossibleAnatomicalSites();
+        Collection<ConceptAnswer> siteConfirmation = mdrtbService.getPossibleAnatomicalSitesConfirmation();
         Collection<ConceptAnswer> directObservers = mdrtbService.getPossibleDirectObservers();
         Collection<ConceptAnswer> smearResults = mdrtbService.getPossibleSmearResults();
         Collection<ConceptAnswer> genXpertResults = mdrtbService.getPossibleGenXpertResults();
@@ -62,11 +63,12 @@ public class IntakePageController {
 
 
         model.addAttribute("patient", patient);
-        model.addAttribute("program", mostRecentProgram.getPatientProgram());
+        model.addAttribute("program", current.getPatientProgram());
         model.addAttribute("location", location);
         model.addAttribute("facilities", facilities);
 
         model.addAttribute("anatomicalSites", anatomicalSites);
+        model.addAttribute("siteConfirmation", siteConfirmation);
         model.addAttribute("directObservers", directObservers);
         model.addAttribute("smearResults", smearResults);
         model.addAttribute("hivTestResults", hivTestResults);
@@ -101,6 +103,18 @@ public class IntakePageController {
         if (StringUtils.equals(weight, "999")){
             weight = "";
         }
+        //Definitions
+        LocationFacilities facility = dashboardService.getFacilityById(Integer.parseInt(request.getParameter("treatment.facility")));
+        Concept sites = conceptService.getConcept(request.getParameter("treatment.site"));
+        Concept confrm = conceptService.getConcept(request.getParameter("confirmation.site"));
+        Concept status = conceptService.getConcept(Integer.parseInt(request.getParameter("exams.hiv.result")));
+        Concept smear = conceptService.getConcept(30);
+        Concept artstt = conceptService.getConcept(126);
+        Concept cptstt = conceptService.getConcept(126);
+
+        if (request.getParameter("exams.sputum.result") != null){
+            smear = conceptService.getConcept(Integer.parseInt(request.getParameter("exams.sputum.result")));
+        }
 
         // Fields for Encounter
         SimpleIntakeForm intake = new SimpleIntakeForm(patient);
@@ -121,7 +135,7 @@ public class IntakePageController {
         intake.setSecondLineRegistrationNumber(request.getParameter("register.number"));
         intake.setDirectObserver(request.getParameter("treatment.dots"));
         intake.setTreatmentStartDate(request.getParameter("treatment.started"));
-        intake.setAnatomicalSite(Context.getConceptService().getConcept(request.getParameter("treatment.site")));
+        intake.setAnatomicalSite(sites);
         intake.setSputumSmear(request.getParameter("exams.sputum.date"), request.getParameter("exams.lab.number"), request.getParameter("exams.sputum.result"));
         intake.setGenXpert(request.getParameter("exams.genxpert.date"), request.getParameter("exams.genxpert.result"));
         intake.setHivResults(request.getParameter("exams.hiv.date"), request.getParameter("exams.hiv.result"));
@@ -129,10 +143,12 @@ public class IntakePageController {
 
         if (!(request.getParameter("exams.art.started").equals("") || request.getParameter("exams.art.started").isEmpty())){
             intake.setPatientStartedOnArt(request.getParameter("exams.art.started"), request.getParameter("exams.art.date"));
+            artstt = conceptService.getConcept(Integer.parseInt(request.getParameter("exams.art.started")));
         }
 
         if (!(request.getParameter("exams.cpt.started").equals("") || request.getParameter("exams.cpt.started").isEmpty())){
             intake.setPatientStartedOnCpt(request.getParameter("exams.cpt.started"), request.getParameter("exams.cpt.date"));
+            cptstt = conceptService.getConcept(Integer.parseInt(request.getParameter("exams.cpt.started")));
         }
 
         //Obs Groups Fields
@@ -141,6 +157,15 @@ public class IntakePageController {
         PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
         ppd.setDaamin(daamin);
         ppd.setDaaminContacts(contacts);
+        ppd.setFacility(facility);
+        ppd.setDiseaseSite(sites);
+        ppd.setConfirmationSite(confrm);
+        ppd.setSputumResults(smear);
+        ppd.setInitialStatus(status);
+        ppd.setCurrentStatus(status);
+        ppd.setArtStarted(artstt);
+        ppd.setCptStarted(cptstt);
+
         ppd = dashboardService.savePatientProgramDetails(ppd);
 
         params.put("patient", patient.getId());

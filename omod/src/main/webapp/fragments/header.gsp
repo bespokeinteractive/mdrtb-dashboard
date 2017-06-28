@@ -48,10 +48,10 @@
 
         <div id="stacont" class="status-container">
             <span class="status active"></span>
-            Registered Location
+            Registered ${patientDetails.facility?'Facility':'Location'}
         </div>
 
-        <div class="tag">${program.location.name}</div>
+        <div class="tag">${patientDetails.facility?patientDetails.facility.name:program.location.name}</div>
     </div>
 
     <div class="identifiers">

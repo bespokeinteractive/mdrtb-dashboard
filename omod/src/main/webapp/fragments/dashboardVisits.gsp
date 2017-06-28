@@ -235,11 +235,11 @@
 					<option value="">&nbsp;</option>
 					<% if (program.program.programId == 1) {%>
 						<% tbbOutcomes.eachWithIndex { outcome, index -> %>
-							<option value="${outcome.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
+							<option value="${outcome.concept.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
 						<% } %>
 					<% } else { %>
 						<% mdrOutcomes.eachWithIndex { outcome, index -> %>
-							<option value="${outcome.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
+							<option value="${outcome.concept.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
 						<% } %>
 					<% } %>
 				</select>
@@ -417,7 +417,7 @@
 				<select id="MdrtbOutcome" class="required" name="program.outcome">
 					<option value="">&nbsp;</option>
 					<% mdrOutcomes.eachWithIndex { outcome, index -> %>
-						<option value="${outcome.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
+						<option value="${outcome.concept.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
 					<% } %>					
 				</select>
 			</li>

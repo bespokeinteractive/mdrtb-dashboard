@@ -1,7 +1,7 @@
 <form method="post" id="intake" class="simple-form-ui" style="margin-top:10px;" action="intake.page?patientId=17&patientProgramId=20&encounterId=-1">
 	<section>
 		<span class="title">Intake Form</span>
-		<fieldset id="visit-details">
+		<fieldset id="visit-description">
 			<legend>Visit Details</legend>			
 			<field>
 				<label for="locationFacility">
@@ -50,7 +50,7 @@
 			<% } %>
 		</fieldset>
 		
-		<fieldset id ="treatment-details">
+		<fieldset id ="treatment-description">
 			<legend>Treatment</legend>
 			<field>
 				<label for="treatmentSupporter">
@@ -113,12 +113,26 @@
 					<% } %>
 				</select>
 			</field>
+			
+			<field>
+				<label for="confirmationSite">
+					Site Confirmation:
+					<span class="mandatory">*</span>
+				</label>
+				
+				<select id="confirmationSite" class="required" name="confirmation.site">
+					<option value="">&nbsp;</option>
+					<% siteConfirmation.eachWithIndex { sites, index -> %>
+						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
+					<% } %>
+				</select>
+			</field>
 		</fieldset>		
 	</section>
 	
 	<section>
 		<span class="title">Examinations</span>
-		<fieldset id= "spaturm-details">
+		<fieldset id= "spaturm-description">
 			<legend>Sputum Smear</legend>			
 			<field>
 				<label for="LabNumber">
@@ -147,7 +161,7 @@
 			</field>
 		</fieldset>
 		
-		<fieldset id = "genXpert-details">
+		<fieldset id = "genXpert-description">
 			<legend>GenXpert</legend>
 			<field>
 				<label for="genXpertResult">
@@ -168,7 +182,7 @@
 			</field>			
 		</fieldset>
 		
-		<fieldset id = "hivResult-details">
+		<fieldset id = "hivResult-description">
 			<legend>HIV Result</legend>
 			<field>
 				<label for="hivResult">
@@ -227,7 +241,7 @@
 			</div>			
 		</fieldset>
 		
-		<fieldset id = "xrayresult-details">
+		<fieldset id = "xrayresult-description">
 			<legend>X-ray Result</legend>
 			<field>
 				<label for="xray-result">

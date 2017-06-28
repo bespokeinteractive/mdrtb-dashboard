@@ -6,14 +6,30 @@
 <hibernate-mapping package="org.openmrs.module.mdrtbdashboard.model">
 	<class name="PatientProgramDetails" table="patient_program_details" batch-size="500">
 		<id name="id" type="int" column="id" unsaved-value="0">
-				<generator class="native" />
+            <generator class="native" />
 		</id>
+
 		<property name="tbmuNumber" column="tbmu_number" type="java.lang.String" />
 		<property name="labNumber" column="lab_number" type="java.lang.String" />
-		<property name="details" column="details" type="java.lang.String" />
+		<property name="description" column="description" type="java.lang.String" />
 		<property name="daamin" column="daamin_name" type="java.lang.String" />
 		<property name="daaminContacts" column="daamin_contacts" type="java.lang.String" />
+
 		<many-to-one name="patientProgram" class="org.openmrs.PatientProgram" column="patient_program_id" cascade="none"  />
 		<many-to-one name="referringProgram" class="org.openmrs.PatientProgram" column="referral_program_id" cascade="none"  />
+
+        <many-to-one name="patientType" class="org.openmrs.ProgramWorkflowState" column="patient_type" cascade="none"  />
+        <many-to-one name="patientCategory" class="org.openmrs.ProgramWorkflowState" column="patient_category" cascade="none"  />
+
+        <many-to-one name="diseaseSite" class="org.openmrs.Concept" column="disease_site" cascade="none"  />
+        <many-to-one name="confirmationSite" class="org.openmrs.Concept" column="site_confirmation" cascade="none"  />
+        <many-to-one name="sputumResults" class="org.openmrs.Concept" column="sputum_result" cascade="none"  />
+		<many-to-one name="initialStatus" class="org.openmrs.Concept" column="initial_status" cascade="none"  />
+		<many-to-one name="currentStatus" class="org.openmrs.Concept" column="current_status" cascade="none"  />
+		<many-to-one name="cptStarted" class="org.openmrs.Concept" column="started_cpt" cascade="none"  />
+		<many-to-one name="artStarted" class="org.openmrs.Concept" column="started_art" cascade="none"  />
+		<many-to-one name="outcome" class="org.openmrs.Concept" column="outcome" cascade="none"  />
+
+		<many-to-one name="facility" class="org.openmrs.module.mdrtbdashboard.model.LocationFacilities" column="facility" cascade="none"  />
 	</class>
 </hibernate-mapping>

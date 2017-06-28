@@ -7,7 +7,7 @@
 		<div class="patient-items first">
 			<span class="span-left">ENROLLED ON</span>
 			<span class="span-right">${ui.formatDatePretty(program.dateEnrolled).toUpperCase()}</span>
-			<span class="right update-details"><a class="popups" href="#"><i class="icon-pencil small"></i>Edit Details</a></span>
+			<span class="right update-description"><a class="popups" href="#"><i class="icon-pencil small"></i>Edit Details</a></span>
 		</div>
 		
 		<div class="patient-items first">

@@ -93,27 +93,27 @@
 	
 	<tr>
 		<td>Pulmonary, Bacteriologically Confirmed</td>		
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
+		<td><small>${report.pbcNew}</small></td>
+		<td><small>${report.pbcRelapse}</small></td>
+		<td><small>${report.pbcPrevTreated}</small></td>
+		<td><small>${report.pbcHistUnknown}</small></td>
+		<td><small>${report.pbcNew + report.pbcRelapse + report.pbcPrevTreated + report.pbcHistUnknown}</small></td>
 	</tr>
 	<tr>
 		<td>Pulmonary, Clinically Diagnosed</td>		
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
+		<td><small>${report.pcdNew}</small></td>
+		<td><small>${report.pcdRelapse}</small></td>
+		<td><small>${report.pcdPrevTreated}</small></td>
+		<td><small>${report.pcdHistUnknown}</small></td>
+		<td><small>${report.pcdNew + report.pcdRelapse + report.pcdPrevTreated + report.pcdHistUnknown}</small></td>
 	</tr>
 	<tr>
 		<td>Extrapulmonary, Confirmed/Diagnosed</td>		
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
+		<td><small>${report.ecdNew}</small></td>
+		<td><small>${report.ecdRelapse}</small></td>
+		<td><small>${report.ecdPrevTreated}</small></td>
+		<td><small>${report.ecdHistUnknown}</small></td>
+		<td><small>${report.ecdNew + report.ecdRelapse + report.ecdPrevTreated + report.ecdHistUnknown}</small></td>
 	</tr>
 </table>
 
@@ -134,28 +134,28 @@
 	
 	<tr>
 		<td>Male</td>		
-		<td>0</td>
-		<td>5</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
+		<td><small>${report.m0004}</small></td>
+		<td><small>${report.m0514}</small></td>
+		<td><small>${report.m1524}</small></td>
+		<td><small>${report.m2534}</small></td>
+		<td><small>${report.m3544}</small></td>
+		<td><small>${report.m4554}</small></td>
+		<td><small>${report.m5564}</small></td>
+		<td><small>${report.m65XX}</small></td>
+		<td><small>${report.m0004 + report.m0514 + report.m1524 + report.m2534 + report.m3544 + report.m4554 + report.m5564 + report.m65XX}</small></td>
 	</tr>
 	
 	<tr>
 		<td>Female</td>		
-		<td>0</td>
-		<td>5</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
-		<td>0</td>
+		<td><small>${report.f0004}</small></td>
+		<td><small>${report.f0514}</small></td>
+		<td><small>${report.f1524}</small></td>
+		<td><small>${report.f2534}</small></td>
+		<td><small>${report.f3544}</small></td>
+		<td><small>${report.f4554}</small></td>
+		<td><small>${report.f5564}</small></td>
+		<td><small>${report.f65XX}</small></td>
+		<td><small>${report.f0004 + report.f0514 + report.f1524 + report.f2534 + report.f3544 + report.f4554 + report.f5564 + report.f65XX}</small></td>
 	</tr>
 </table>
 
@@ -167,8 +167,8 @@
 			<td>Presumptive TB cases with positive bacteriological examination result</td>
 		</tr>
 		<tr>
-			<td>0</td>		
-			<td>0</td>
+			<td><small>0</small></td>		
+			<td><small>0</small></td>
 		</tr>
 	</table>
 </div>
@@ -182,10 +182,10 @@
 			<td>HIV positive TB patients on cotrimoxazole preventive therapy (CPT)</td>
 		</tr>
 		<tr>
-			<td>0</td>		
-			<td>0</td>		
-			<td>0</td>		
-			<td>0</td>
+			<td><small>${report.initialStatus}</small></td>		
+			<td><small>${report.currentStatus}</small></td>		
+			<td><small>${report.startedArt}</small></td>		
+			<td><small>${report.startedCpt}</small></td>
 		</tr>
 	</table>
 </div>

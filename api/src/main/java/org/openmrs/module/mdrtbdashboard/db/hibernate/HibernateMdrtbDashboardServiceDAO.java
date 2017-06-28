@@ -118,6 +118,17 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
+    public  List<PatientProgramDetails> getPatientsFromDetails(Location location, Date startDate, Date endDate, LocationFacilities facility){
+        Criteria criteria = getSession().createCriteria(PatientProgramDetails.class);
+        criteria.createAlias("patientProgram", "pp");
+        criteria.add(Restrictions.eq("pp.location", location));
+        criteria.add(Restrictions.ge("pp.dateEnrolled", startDate));
+        criteria.add(Restrictions.le("pp.dateEnrolled", endDate));
+        criteria.add(Restrictions.le("facility", facility));
+        return criteria.list();
+    }
+
+    @Override
     public List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId, List<Location> locations){
         Vector search = new Vector();
 

@@ -445,10 +445,7 @@ ${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, progra
 					<div class="tbb">
 						<label for="enrollmentPatientType">Type of Patient:</label>
 						<select id="enrollmentPatientType" name="enrollment.type">
-							<option value="" data-uuid=""></option>
-							<% enrollmentPatientType.eachWithIndex { classification, index -> %>
-								<option value="${classification.id}" data-uuid="${classification.uuid}">${classification.concept.displayString}</option>
-							<% } %>
+							<option value="27" data-uuid="db4ace29-9be1-47ef-9922-9553735ec956">TRANSFER IN</option>
 						</select>
 					</div>
 					
