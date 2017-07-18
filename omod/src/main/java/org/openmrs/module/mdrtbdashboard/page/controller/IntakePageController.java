@@ -133,10 +133,18 @@ public class IntakePageController {
         intake.setReferringDepartment(request.getParameter("treatment.referral"));
         intake.setSecondLineRegistrationDate(request.getParameter("register.date"));
         intake.setSecondLineRegistrationNumber(request.getParameter("register.number"));
+        intake.setFacilityRegisterNumber(request.getParameter("facility.number"));
         intake.setDirectObserver(request.getParameter("treatment.dots"));
         intake.setTreatmentStartDate(request.getParameter("treatment.started"));
         intake.setAnatomicalSite(sites);
-        intake.setSputumSmear(request.getParameter("exams.sputum.date"), request.getParameter("exams.lab.number"), request.getParameter("exams.sputum.result"));
+
+        if (request.getParameter("exams.sputum.result") != null){
+            intake.setSputumSmear(request.getParameter("exams.sputum.date"), request.getParameter("exams.lab.number"), request.getParameter("exams.sputum.result"));
+        }
+        else {
+            intake.setLabNumber(request.getParameter("exams.lab.number"));
+        }
+
         intake.setGenXpert(request.getParameter("exams.genxpert.date"), request.getParameter("exams.genxpert.result"));
         intake.setHivResults(request.getParameter("exams.hiv.date"), request.getParameter("exams.hiv.result"));
         intake.setXrayResults(request.getParameter("exams.xray.date"), request.getParameter("exams.xray.result"));

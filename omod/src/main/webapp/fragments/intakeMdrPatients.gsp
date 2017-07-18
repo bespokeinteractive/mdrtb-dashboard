@@ -4,11 +4,11 @@
 		<fieldset id="visit-description">
 			<legend>Visit Details</legend>
 			<field>
-				<label for="vitalsWeight">
-					Register Number :
+				<label for="secondlineNumber">
+					Second Line No. :
 					<span class="mandatory">*</span>
 				</label>
-				<input id="registerNumber" class="required" name="register.number" type="text" placeholder="Second Line Register No.">
+				<input id="secondlineNumber" class="required" name="register.number" type="text" placeholder="Second Line Register Number">
 			</field>
 			
 			<field>
@@ -28,6 +28,13 @@
 				</select>
 				<input id="locationName" name="treatment.location" type="hidden" value="${location.name}" readonly="" class="locations" />
 				<input name="patient.id" type="hidden" value="${patient.id}" />
+			</field>
+			
+			<field>
+				<label for="registerNumber">
+					Register Number :
+				</label>
+				<input id="registerNumber" name="facility.number" type="text" placeholder="Facilty Register Number">
 				<div class="separater"></div>
 			</field>
 			
@@ -100,10 +107,7 @@
 					<span class="mandatory">*</span>
 				</label>
 				<select id="treatmentDots" class="required" name="treatment.dots">
-					<option value="">&nbsp;</option>
-					<% directObservers.eachWithIndex { sites, index -> %>
-						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name.toString().toUpperCase()}</option>
-					<% } %>
+					<option value="1160667" data-uuid="5234b4e7-d544-4e18-b79f-78c5df68fd3d">TB CENTER / TBMU</option>
 				</select>
 			</field>
 			
@@ -145,6 +149,14 @@
 		<span class="title">Examinations</span>
 		<fieldset id = "genXpert-description">
 			<legend>GenXpert</legend>
+			<field>
+				<label for="LabNumber">
+					Lab. No.:
+					<span class="mandatory">*</span>
+				</label>
+				<input id="LabNumber" class="required" name="exams.lab.number" type="text" placeholder="Laboratory Number" />
+			</field>
+			
 			<field>
 				<label for="genXpertResult">
 					GenXpert Result:
@@ -310,7 +322,7 @@
 									<td>N/A</td>
 								</tr>
 
-								<tr style="${program.program.programId == 2?'display:none':''}">
+								<tr style="${programDetails.programDetails.programId == 2?'display:none':''}">
 									<td><span class="status active"></span>Sputum Smear</td>
 									<td>N/A</td>
 								</tr>

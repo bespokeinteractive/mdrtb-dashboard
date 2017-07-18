@@ -8,8 +8,6 @@ import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
-import sun.swing.plaf.synth.Paint9Painter;
-
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;

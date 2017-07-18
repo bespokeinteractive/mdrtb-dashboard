@@ -61,7 +61,6 @@
 				catg.append(jq('<option></option>').attr("value", '').text(''));
 				catg.append(jq('<option></option>').attr("value", '48').attr("data-uuid", '3745a3bc-c9ad-4011-85ee-c8dcbfd1ed98').text('PEDIATRIC PATIENT'));
 				catg.append(jq('<option></option>').attr("value", '21').attr("data-uuid", 'd4f92bdd-1e22-4578-a535-93dbb44c1fd4').text('PREVIOUSLY TREATED WITH FIRST LINE DRUGS'));
-				catg.append(jq('<option></option>').attr("value", '22').attr("data-uuid", '8b418fa9-e4fb-4da8-89ea-7d5dd2545554').text('PREVIOUSLY TREATED WITH SECOND LINE DRUGS'));
 			}
 			else {
 				catg.append(jq('<option></option>').attr("value", '').text(''));
@@ -70,7 +69,6 @@
 				}
 				catg.append(jq('<option></option>').attr("value", '48').attr("data-uuid", '3745a3bc-c9ad-4011-85ee-c8dcbfd1ed98').text('PEDIATRIC PATIENT'));
 				catg.append(jq('<option></option>').attr("value", '21').attr("data-uuid", 'd4f92bdd-1e22-4578-a535-93dbb44c1fd4').text('PREVIOUSLY TREATED WITH FIRST LINE DRUGS'));
-				catg.append(jq('<option></option>').attr("value", '22').attr("data-uuid", '8b418fa9-e4fb-4da8-89ea-7d5dd2545554').text('PREVIOUSLY TREATED WITH SECOND LINE DRUGS'));
 			}
 		});
 		
@@ -519,7 +517,7 @@
 				</div>
 				
 				<div class="mdrtb">
-					<label for="enrollmentClassifications">Registration Group:</label>
+					<label for="enrollmentClassifications">Registration Category:</label>
 					<select id="enrollmentClassifications" name="enrollment.Classifications">
 						<option value="" data-uuid=""></option>
 						<% enrollmentClassifications.eachWithIndex { classification, index -> %>

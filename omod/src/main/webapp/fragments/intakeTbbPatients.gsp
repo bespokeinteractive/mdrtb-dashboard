@@ -17,6 +17,13 @@
 				</select>
 				<input id="locationName" class="locations" name="treatment.location" type="hidden" value="${location.name}" readonly="" />
 				<input name="patient.id" type="hidden" value="${patient.id}" />
+			</field>
+			
+			<field>
+				<label for="registerNumber">
+					Register Number :
+				</label>
+				<input id="registerNumber" name="facility.number" type="text" placeholder="Facilty Register No.">
 				<div class="separater"></div>
 			</field>
 			
@@ -277,7 +284,7 @@
 					<div class="info-body">
 						<table id="summaryTable">
 							<tbody>
-								<tr style="${program.program.programId == 1?'display:none':''}">
+								<tr style="${programDetails.programDetails.programId == 1?'display:none':''}">
 									<td><span class="status active"></span>Register No.</td>
 									<td>N/A</td>
 								</tr>

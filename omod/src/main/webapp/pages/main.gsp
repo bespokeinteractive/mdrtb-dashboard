@@ -135,7 +135,7 @@
 						url: '${ui.actionLink("mdrtbdashboard", "dashboardVisits", "addPatientVisit")}',
 						data: ({
 							patientId:			${patient.id},
-							programId:			${current.program.patientProgramId},
+							programId:			${current.programDetails.patientProgramId},
 							labNumber: 			jq('#LabNumber').val(),
 							testedOn: 			jq('#sputum-date-field').val(),
 							testResult:			jq('#sputumResult').val(),
@@ -183,7 +183,7 @@
 						url: '${ui.actionLink("mdrtbdashboard", "dashboardVisits", "exitMdrtbPatients")}',
 						data: ({
 							patientId:			${patient.id},
-							programId:			${current.program.patientProgramId},
+							programId:			${current.programDetails.patientProgramId},
 							outcomeDate:		jq('#exit-date-field').val(),
 							outcomeResult:		jq('#MdrtbOutcome').val(),
 							outcomeRemarks:		jq('#MdrtbRemarks').val()
@@ -659,7 +659,7 @@
     </div>
 </div>
 
-${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: program.patientProgramId]) }
+${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: programDetails.patientProgramId]) }
 
 <div class="mdrtb-tabs">
 	<ul>

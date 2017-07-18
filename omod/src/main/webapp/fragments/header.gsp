@@ -51,7 +51,7 @@
             Registered ${patientDetails.facility?'Facility':'Location'}
         </div>
 
-        <div class="tag">${patientDetails.facility?patientDetails.facility.name:program.location.name}</div>
+        <div class="tag">${patientDetails.facility?patientDetails.facility.name:programDetails.location.name}</div>
     </div>
 
     <div class="identifiers">
@@ -60,7 +60,7 @@
         <br>
 
         <div class="catg">
-            <i class="icon-tags small" style="font-size: 16px"></i><small>Enrolled: ${program.program.programId==1?'TB Programme':'MDR-TB Programme'}</small>
+            <i class="icon-tags small" style="font-size: 16px"></i><small>Enrolled: ${programDetails.programDetails.programId==1?'TB Programme':'MDR-TB Programme'}</small>
         </div>
     </div>
 </div>

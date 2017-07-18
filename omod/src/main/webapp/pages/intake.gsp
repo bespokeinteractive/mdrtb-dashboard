@@ -316,9 +316,9 @@
 	}
 </style>
 
-${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: program.patientProgramId]) }
+${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: programDetails.patientProgramId]) }
 
-<% if (program.program.id == 1) { %>
+<% if (programDetails.programDetails.id == 1) { %>
 	${ui.includeFragment("mdrtbdashboard","intakeTbbPatients", [patient: patient.patientId])}
 <% } else { %>
 	${ui.includeFragment("mdrtbdashboard","intakeMdrPatients", [patient: patient.patientId])}
