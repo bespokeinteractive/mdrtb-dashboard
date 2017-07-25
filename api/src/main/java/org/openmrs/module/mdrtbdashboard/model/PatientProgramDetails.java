@@ -17,6 +17,7 @@ public class PatientProgramDetails implements Serializable {
     private ProgramWorkflowState patientCategory;
     private PatientProgram patientProgram;
     private PatientProgram referringProgram;
+    private PatientProgramRegimen regimen;
     private LocationFacilities facility;
     private String tbmuNumber;
     private String labNumber;
@@ -183,5 +184,13 @@ public class PatientProgramDetails implements Serializable {
 
     public void setOutcome(Concept outcome) {
         this.outcome = outcome;
+    }
+
+    public PatientProgramRegimen getRegimen() {
+        return regimen;
+    }
+
+    public void setRegimen(PatientProgramRegimen regimen) {
+        this.regimen = regimen;
     }
 }

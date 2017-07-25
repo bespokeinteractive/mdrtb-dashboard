@@ -31,5 +31,6 @@
 		<many-to-one name="outcome" class="org.openmrs.Concept" column="outcome" cascade="none"  />
 
 		<many-to-one name="facility" class="org.openmrs.module.mdrtbdashboard.model.LocationFacilities" column="facility" cascade="none"  />
+		<many-to-one name="regimen" class="org.openmrs.module.mdrtbdashboard.model.PatientProgramRegimen" column="regimen" cascade="none"  />
 	</class>
 </hibernate-mapping>

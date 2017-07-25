@@ -41,7 +41,8 @@
 		LocationCentres.hbm.xml
 		LocationCentresRegions.hbm.xml
 		LocationCentresAgencies.hbm.xml
-
+		RegimentType.hbm.xml
+		PatientProgramRegimen.hbm.xml
 		PatientProgramDetails.hbm.xml
 	</mappingFiles>
 

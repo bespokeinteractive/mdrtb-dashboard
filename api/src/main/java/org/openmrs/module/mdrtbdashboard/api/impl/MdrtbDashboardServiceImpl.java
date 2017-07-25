@@ -1,9 +1,6 @@
 package org.openmrs.module.mdrtbdashboard.api.impl;
 
-import org.openmrs.Encounter;
-import org.openmrs.Location;
-import org.openmrs.Obs;
-import org.openmrs.PatientProgram;
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
@@ -81,6 +78,31 @@ public class MdrtbDashboardServiceImpl
     @Override
     public PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails) {
         return dao.savePatientProgramDetails(patientProgramDetails);
+    }
+
+    @Override
+    public RegimentType getRegimenType(Concept concept, Program program){
+        return dao.getRegimenType(concept, program);
+    }
+
+    @Override
+    public List<RegimentType> getRegimenTypes(Concept concept, Program program){
+        return dao.getRegimenTypes(concept, program);
+    }
+
+    @Override
+    public PatientProgramDetails getPatientProgramDetails(Integer ppid){
+        return dao.getPatientProgramDetails(ppid);
+    }
+
+    @Override
+    public List<PatientProgramRegimen> getPatientProgramRegimens(PatientProgramDetails pd, Boolean active){
+        return dao.getPatientProgramRegimens(pd, active);
+    }
+
+    @Override
+    public PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen){
+        return dao.savePatientProgramRegimen(patientProgramRegimen);
     }
 
     @Override

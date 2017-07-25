@@ -12,12 +12,16 @@ import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.model.LocationFacilities;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtbdashboard.model.PatientProgramRegimen;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -60,7 +64,7 @@ public class IntakePageController {
         Collection<ConceptAnswer> xrayTestResults = mdrtbService.getPossibleXRayTestResults();
         Collection<ConceptAnswer> hivTestResults = mdrtbService.getPossibleHivTestResults();
         Collection<ConceptAnswer> referringDepartments = mdrtbService.getPossibleReferringDepartments();
-
+        Collection<ConceptAnswer> regimenTypes = mdrtbService.getPossibleTbTreatmentTypes();
 
         model.addAttribute("patient", patient);
         model.addAttribute("program", current.getPatientProgram());
@@ -70,6 +74,7 @@ public class IntakePageController {
         model.addAttribute("anatomicalSites", anatomicalSites);
         model.addAttribute("siteConfirmation", siteConfirmation);
         model.addAttribute("directObservers", directObservers);
+        model.addAttribute("regimenTypes", regimenTypes);
         model.addAttribute("smearResults", smearResults);
         model.addAttribute("hivTestResults", hivTestResults);
         model.addAttribute("xrayTestResults", xrayTestResults);
@@ -159,10 +164,13 @@ public class IntakePageController {
             cptstt = conceptService.getConcept(Integer.parseInt(request.getParameter("exams.cpt.started")));
         }
 
+
+
         //Obs Groups Fields
         Encounter encounter = Context.getEncounterService().saveEncounter(intake.getEncounter());
         MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
         PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
+        PatientProgramRegimen ppr = new PatientProgramRegimen();
         ppd.setDaamin(daamin);
         ppd.setDaaminContacts(contacts);
         ppd.setFacility(facility);
@@ -173,6 +181,19 @@ public class IntakePageController {
         ppd.setCurrentStatus(status);
         ppd.setArtStarted(artstt);
         ppd.setCptStarted(cptstt);
+
+        if (!(request.getParameter("regimen.type").equals("")) || request.getParameter("regimen.type").isEmpty()){
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            Date date = df.parse(request.getParameter("regimen.started"), new ParsePosition(0));
+
+            ppr.setProgramDetails(ppd);
+            ppr.setName(request.getParameter("regimen.name"));
+            ppr.setType(conceptService.getConcept(Integer.parseInt(request.getParameter("regimen.type"))));
+            ppr.setStartedOn(date);
+            ppr = dashboardService.savePatientProgramRegimen(ppr);
+
+            ppd.setRegimen(ppr);
+        }
 
         ppd = dashboardService.savePatientProgramDetails(ppd);
 

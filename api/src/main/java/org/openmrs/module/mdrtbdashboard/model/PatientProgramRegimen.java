@@ -1,7 +1,15 @@
 package org.openmrs.module.mdrtbdashboard.model;
 
+import org.openmrs.Concept;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Dennis Henry
@@ -11,9 +19,11 @@ public class PatientProgramRegimen implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer id;
     private String name;
+    private Concept type;
     private PatientProgramDetails programDetails;
     private Date startedOn;
     private Date finishedOn;
+    private String remarks = "N/A";
 
     public Integer getId() {
         return id;
@@ -53,5 +63,21 @@ public class PatientProgramRegimen implements Serializable {
 
     public void setFinishedOn(Date finishedOn) {
         this.finishedOn = finishedOn;
+    }
+
+    public Concept getType() {
+        return type;
+    }
+
+    public void setType(Concept type) {
+        this.type = type;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
 }

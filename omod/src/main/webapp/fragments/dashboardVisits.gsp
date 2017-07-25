@@ -1,16 +1,16 @@
 <div id="em-title" class="visits">
 	<i class='icon-file-alt small'></i>
 	<span class="section-title">VISIT INFORMATION</span>
-	<% if (current.programDetails.programDetails.programId == 1) { %>
-		<span class="right update-vitals" style="margin-top: 6px;"><a class="popups add-visit href="#"><i class="icon-pencil small"></i>Add Visit</a></span>
+	<% if (current.program.program.programId == 1) { %>
+		<span class="right update-vitals" style="margin-top: 6px;"><a class="popups add-visit" href="addVisit.page?patient=${patient.id}"><i class="icon-pencil small"></i>Add Visit</a></span>
 	<% } else { %>
 		<div style="float: right; margin-top: -3px;">
 			<div style="position: static" class="dropdown">
 				<span class="dropdown-name"><i class="icon-cog"></i>Actions<i class="icon-sort-down"></i></span>
 				<ul style="z-index: 99">
-					<li><a data-value="1"><i class="icon-file-text"></i>Add GenXpert</a></li>
-					<li><a data-value="2"><i class="icon-file-text"></i>Add Culture</a></li>
-					<li><a data-value="3"><i class="icon-retweet"></i>Add D.S.T</a></li>
+					<li><a data-value="0" href="addVisit.page?patient=${patient.id}"><i class="icon-file-text"></i>Add Visit</a></li>
+					<li><a data-value="2"><i class="icon-file-text"></i>Update Culture</a></li>
+					<li><a data-value="3"><i class="icon-retweet"></i>Update D.S.T</a></li>
 					<li><a data-value="4"><i class="icon-reply"></i>Exit from Program</a></li>
 				</ul>
 			</div>
@@ -231,9 +231,9 @@
 					Treatment Outcome:
 				</label>
 				
-				<select id="outcomeResults" class="required" name="programDetails.outcome">
+				<select id="outcomeResults" class="required" name="program.outcome">
 					<option value="">&nbsp;</option>
-					<% if (programDetails.programDetails.programId == 1) {%>
+					<% if (program.program.programId == 1) {%>
 						<% tbbOutcomes.eachWithIndex { outcome, index -> %>
 							<option value="${outcome.concept.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
 						<% } %>
@@ -249,7 +249,7 @@
 				<label for="outcomeRemarks">
 					Outcome Remarks :
 				</label>
-				<textarea id="outcomeRemarks" name="programDetails.remarks" placeholder="Remarks" style="height:100px; resize:none;"></textarea>
+				<textarea id="outcomeRemarks" name="program.remarks" placeholder="Remarks" style="height:100px; resize:none;"></textarea>
 			</li>
 			
 			<li>
@@ -414,7 +414,7 @@
 					Outcome:
 				</label>
 				
-				<select id="MdrtbOutcome" class="required" name="programDetails.outcome">
+				<select id="MdrtbOutcome" class="required" name="program.outcome">
 					<option value="">&nbsp;</option>
 					<% mdrOutcomes.eachWithIndex { outcome, index -> %>
 						<option value="${outcome.concept.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
@@ -424,9 +424,9 @@
 			
 			<li>
 				<label for="MdrtbRemarks">
-					Outcome Remarks :
+					Remarks :
 				</label>
-				<textarea id="MdrtbRemarks" name="programDetails.remarks" placeholder="Remarks" style="height:100px; resize:none;"></textarea>
+				<textarea id="MdrtbRemarks" name="program.remarks" placeholder="Remarks" style="height:100px; resize:none;"></textarea>
 			</li>
         </ul>
 

@@ -1,5 +1,5 @@
 <%
-    ui.decorateWith("appui", "standardEmrPage", [title: "Intake Form"])
+    ui.decorateWith("appui", "standardEmrPage", [title: "Add Visit"])
 	
 	ui.includeJavascript("uicommons", "handlebars/handlebars.min.js", Integer.MAX_VALUE - 1)
     ui.includeJavascript("uicommons", "navigator/validators.js", Integer.MAX_VALUE - 19)
@@ -21,47 +21,8 @@
 	emrMessages["requiredField"] = "Required Field";
 	emrMessages["numberField"] = "Value not a number";
 	
-	jq(function() {
+	jq(function(){
 		NavigatorController = new KeyboardController();
-		
-		jq("#session-location ul.select").on('click', 'li', function (event) {
-			setTimeout(function() {
-				jq.ajax({
-					type: "GET",
-					url: '${ ui.actionLink("mdrtbdashboard", "dashboard", "getSelectedLocation") }',
-					dataType: "json",
-					success: function (data) {
-						jq('#location').val(data);
-						jq('.locations').val(data);
-					},
-					error: function (xhr, ajaxOptions, thrownError) {
-						alert(thrownError);
-						return false;
-					}
-				});
-				
-				jq.ajax({
-					type: "GET",
-					url: '${ ui.actionLink("mdrtbdashboard", "dashboard", "getSelectedLocationFacilities") }',
-					dataType: "json",
-					success: function (data) {
-						jq('#locationFacility').empty();
-						jq('#locationFacility').append('<option value=""></option>');
-						
-						for (index in data.facilities) {
-							var item = data.facilities[index];
-							
-							var row = '<option value="' + item.id + '">' + item.name + '</option>';
-							jq('#locationFacility').append(row);
-						}
-					},
-					error: function (xhr, ajaxOptions, thrownError) {
-						alert(thrownError);
-					}
-				});				
-			}, 1500);
-			
-		});
 		
 		jq('#regimenType').change(function(){
 			jq('#regimenTypeField').html('');
@@ -229,52 +190,43 @@
 			}
 		});
 		
-		jq('#visit-description input').change(function(){
-			jq('#summaryTable tr:eq(0) td:eq(1)').text(jq('#registerNumber').val());
-			jq('#summaryTable tr:eq(1) td:eq(1)').text(jq('#locationFacility :selected').text());
-			jq('#summaryTable tr:eq(2) td:eq(1)').text(jq('#vitalsWeight').val());
-			jq('#summaryTable tr:eq(3) td:eq(1)').text(jq('#vitalsHeight').val());
-			jq('#summaryTable tr:eq(4) td:eq(1)').text(jq('#bmi').val());
-		
+		jq('#visit-description input, #visit-description select').change(function(){
+			var w = jq('#vitalsWeight').val()?jq('#vitalsWeight').val():'N/A';
+			var h = jq('#vitalsHeight').val()?jq('#vitalsHeight').val():'N/A';
+			var b = jq('#bmi').val()?jq('#bmi').val():'N/A';
+			var r = jq('#regimenName').val()?jq('#regimenName').val():jq('#regimenCurrent').val();
+			
+			jq('#summaryTable tr:eq(0) td:eq(1)').text(w);
+			jq('#summaryTable tr:eq(1) td:eq(1)').text(h);
+			jq('#summaryTable tr:eq(2) td:eq(1)').text(b);
+			jq('#summaryTable tr:eq(3) td:eq(1)').text(r);		
 		});
 
-		jq('#treatment-description input, #treatment-description select').change(function(){
-            jq('#summaryTable tr:eq(5) td:eq(1)').text(jq('#treatmentSupporter').val());
-            jq('#summaryTable tr:eq(6) td:eq(1)').text(jq('#treatmentReferral :selected').text());
-            jq('#summaryTable tr:eq(7) td:eq(1)').text(jq('#treatmentDots :selected').text());
-            jq('#summaryTable tr:eq(8) td:eq(1)').text(jq('#treatmentSite :selected').text());
-        
-        });
-
         jq('#spaturm-description input, #spaturm-description select').change(function(){
-            jq('#summaryTable tr:eq(9) td:eq(1)').text(jq('#LabNumber').val());
-            jq('#summaryTable tr:eq(10) td:eq(1)').text(jq('#sputumResult :selected').text());
-        
+            jq('#summaryTable tr:eq(4) td:eq(1)').text(jq('#LabNumber').val());
+            jq('#summaryTable tr:eq(5) td:eq(1)').text(jq('#sputumResult :selected').text());        
         });
-        
 
         jq('#genXpert-description input, #genXpert-description select').change(function(){
-            jq('#summaryTable tr:eq(11) td:eq(1)').text(jq('#genXpertResult :selected').text());
-        
+            jq('#summaryTable tr:eq(6) td:eq(1)').text(jq('#genXpertResult :selected').text());        
         });
 
         jq('#hivResult-description input, #hivResult-description select').change(function(){
-			var artStatus = jq('#artStatus :selected').text();
-			var cptStatus = jq('#cptStatus :selected').text();
+			var artStatus = jq('#artStatus :selected').text().trim();
+			var cptStatus = jq('#cptStatus :selected').text().trim();
 			
-            jq('#summaryTable tr:eq(12) td:eq(1)').text(jq('#hivResult :selected').text());
-            jq('#summaryTable tr:eq(13) td:eq(1)').text(artStatus);
-            jq('#summaryTable tr:eq(14) td:eq(1)').text(cptStatus);        
+            jq('#summaryTable tr:eq(7) td:eq(1)').text(jq('#hivResult :selected').text());
+            jq('#summaryTable tr:eq(8) td:eq(1)').text(artStatus?artStatus:'N/A');
+            jq('#summaryTable tr:eq(9) td:eq(1)').text(cptStatus?cptStatus:'N/A');        
         });
 
         jq('#xrayresult-description input, #xrayresult-description select').change(function(){
-            jq('#summaryTable tr:eq(15) td:eq(1)').text(jq('#xray-result :selected').text());
-        
+            jq('#summaryTable tr:eq(10) td:eq(1)').text(jq('#xray-result :selected').text());        
         });
-        
-        
+		
+		
 		jq('.submit').click(function(){
-			jq("#intake").submit();		
+			jq("#visit").submit();		
 		});
 	});
 	
@@ -393,15 +345,49 @@
 		margin-left: 24.5%;
 		padding-left: 15px;
 	}
+	#regimenTypeName {
+		color: #AAA;
+		font-size: 0.9em;
+		margin-left: 24.5%;
+		padding-left: 15px;
+	}
 	field.regimen{
 		display: none;
 	}
+	#confirmation .confirm {
+		margin-left: 4px;
+	}	
+	.button.cancel, button.cancel, input.cancel[type="submit"], input.cancel[type="button"], input.cancel[type="submit"], a.button.cancel {
+		float: right;
+	}
 </style>
+
+<div class="clear"></div>
+<div>
+    <div class="example">
+        <ul id="breadcrumbs">
+            <li>
+                <a href="${ui.pageLink('referenceapplication', 'home')}">
+                <i class="icon-home small"></i></a>
+            </li>
+			
+			<li>
+				<i class="icon-chevron-right link"></i>
+				<a href="${ui.pageLink('mdrtbdashboard', 'main', ['patient':patient.id])}">Patient Dashboard</a>
+            </li>
+
+            <li>
+                <i class="icon-chevron-right link"></i>
+                Add Visit
+            </li>
+        </ul>
+    </div>
+</div>
 
 ${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: program.patientProgramId]) }
 
 <% if (program.program.id == 1) { %>
-	${ui.includeFragment("mdrtbdashboard","intakeTbbPatients", [patient: patient.patientId])}
+	${ui.includeFragment("mdrtbdashboard","addVisitTbbPatients", [patient: patient.patientId])}
 <% } else { %>
-	${ui.includeFragment("mdrtbdashboard","intakeMdrPatients", [patient: patient.patientId])}
+	${ui.includeFragment("mdrtbdashboard","addVisitMdrPatients", [patient: patient.patientId])}
 <% } %>

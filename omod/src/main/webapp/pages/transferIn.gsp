@@ -394,7 +394,7 @@
     </div>
 </div>
 
-${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: programDetails.patientProgramId]) }
+${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: program.patientProgramId]) }
 
 <div>
 	<div id="div-left-menu" style="padding-top: 15px; color: #363463;" class="col15 clear">
@@ -438,10 +438,10 @@ ${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, progra
 				
 				<div>
 					<label for="patientProgram">Patient Program:</label>
-					<input type="text" id="patientProgram" name="patient.programDetails" readonly="" value="${programDetails.programDetails.concept.name}" />
+					<input type="text" id="patientProgram" name="patient.program" readonly="" value="${program.program.concept.name}" />
 				</div>
 				
-				<% if (programDetails.programDetails.programId == 1) { %>
+				<% if (programDetails.program.programId == 1) { %>
 					<div class="tbb">
 						<label for="enrollmentPatientType">Type of Patient:</label>
 						<select id="enrollmentPatientType" name="enrollment.type">

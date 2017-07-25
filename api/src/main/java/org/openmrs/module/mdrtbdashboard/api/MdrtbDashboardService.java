@@ -1,9 +1,6 @@
 package org.openmrs.module.mdrtbdashboard.api;
 
-import org.openmrs.Encounter;
-import org.openmrs.Location;
-import org.openmrs.Obs;
-import org.openmrs.PatientProgram;
+import org.openmrs.*;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtbdashboard.model.*;
@@ -31,10 +28,17 @@ public interface MdrtbDashboardService
     LocationCentresAgencies getAgency(Integer agentId);
     LocationCentresRegions getRegion(Integer regionId);
 
+    PatientProgramDetails getPatientProgramDetails(Integer ppid);
     PatientProgramDetails getPatientProgramDetails(PatientProgram pp);
     PatientProgramDetails getPatientProgramDetails(MdrtbPatientProgram mpp);
 
     PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails);
+    PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen);
+    List<PatientProgramRegimen> getPatientProgramRegimens(PatientProgramDetails pd, Boolean active);
+
+    RegimentType getRegimenType(Concept concept, Program program);
+    List<RegimentType> getRegimenTypes(Concept concept, Program program);
+
     Integer getNextTbmuNumberCount(String header);
     LocationFacilities getFacilityById(Integer facilityId);
 

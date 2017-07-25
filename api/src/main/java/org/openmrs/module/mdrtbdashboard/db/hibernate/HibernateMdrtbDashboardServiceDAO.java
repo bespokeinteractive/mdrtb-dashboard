@@ -82,6 +82,13 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
+    public PatientProgramDetails getPatientProgramDetails(Integer ppid){
+        Criteria criteria = getSession().createCriteria(PatientProgramDetails.class);
+        criteria.add(Restrictions.eq("id", ppid));
+        return (PatientProgramDetails) criteria.uniqueResult();
+    }
+
+    @Override
     public PatientProgramDetails getPatientProgramDetails(PatientProgram patientProgram){
         Criteria criteria = getSession().createCriteria(PatientProgramDetails.class);
         criteria.add(Restrictions.eq("patientProgram", patientProgram));
@@ -98,6 +105,42 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     @Override
     public PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails) {
         return (PatientProgramDetails)getSession().merge(patientProgramDetails);
+    }
+
+    @Override
+    public RegimentType getRegimenType(Concept concept, Program program){
+        Criteria criteria = getSession().createCriteria(RegimentType.class);
+        criteria.add(Restrictions.eq("concept", concept));
+        criteria.add(Restrictions.eq("program", program));
+        criteria.add(Restrictions.eq("voided", 0));
+
+        return (RegimentType)criteria.uniqueResult();
+    }
+
+    @Override
+    public List<RegimentType> getRegimenTypes(Concept concept, Program program){
+        Criteria criteria = getSession().createCriteria(RegimentType.class);
+        criteria.add(Restrictions.eq("concept", concept));
+        criteria.add(Restrictions.eq("program", program));
+        criteria.add(Restrictions.eq("voided", 0));
+
+        return criteria.list();
+    }
+
+    @Override
+    public List<PatientProgramRegimen> getPatientProgramRegimens(PatientProgramDetails pd, Boolean active){
+        Criteria criteria = getSession().createCriteria(PatientProgramRegimen.class);
+        criteria.add(Restrictions.eq("programDetails", pd));
+        if (active){
+            criteria.add(Restrictions.isNull("finishedOn"));
+        }
+
+        return criteria.list();
+    }
+
+    @Override
+    public PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen){
+        return (PatientProgramRegimen)getSession().merge(patientProgramRegimen);
     }
 
     @Override

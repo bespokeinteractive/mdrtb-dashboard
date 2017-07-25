@@ -6,16 +6,16 @@
 	<div class="col2">
 		<div class="patient-items first">
 			<span class="span-left">ENROLLED ON</span>
-			<span class="span-right">${ui.formatDatePretty(programDetails.dateEnrolled).toUpperCase()}</span>
+			<span class="span-right">${ui.formatDatePretty(program.dateEnrolled).toUpperCase()}</span>
 			<span class="right update-description"><a class="popups" href="#"><i class="icon-pencil small"></i>Edit Details</a></span>
 		</div>
 		
 		<div class="patient-items first">
 			<span class="span-left">LOCATION</span>
-			<span class="span-right">${programDetails.location.name.toUpperCase()}</span>
+			<span class="span-right">${program.location.name.toUpperCase()}</span>
 		</div>
 		
-		<% if (current.programDetails.programDetails.programId == 1) { %>
+		<% if (current.program.program.programId == 1) { %>
 			<div class="patient-items">
 				<span class="span-left">PATIENT TYPE</span>
 				<span class="span-right">${current.getClassificationAccordingToPatientType()?current.getClassificationAccordingToPatientType().concept.name:'NEW'}</span>
@@ -43,7 +43,7 @@
 <div id="em-title" class="">
 	<i class='icon-file-alt small'></i>
 	<span class="section-title">DIAGNOSIS</span>
-	<span class="right" style="padding-right: 15px; padding-top: 10px;"><small><i class=" icon-random  small"></i>Resistance Type: </small><span class="title-answer">${programDetails.programDetails.programId==1?'N/A':'MULTIDRUG RESISTANT'}</span></span>
+	<span class="right" style="padding-right: 15px; padding-top: 10px;"><small><i class=" icon-random  small"></i>Resistance Type: </small><span class="title-answer">${program.program.programId==1?'N/A':'MULTIDRUG RESISTANT'}</span></span>
 	<span class="right" style="margin-right: 15px; padding-top: 10px;"><small><i class=" icon-retweet small"></i>Site: </small><span class="title-answer">${current.getCurrentAnatomicalSiteDuringProgram().name}</span></span>
 </div>
 
@@ -57,7 +57,7 @@
 			<td>RESULT</td>
 		</tr>
 		
-		<% if (current.programDetails.programDetails.programId == 1) { %>
+		<% if (current.program.program.programId == 1) { %>
 			<tr class="table-content">
 				<td>${ui.formatDatePretty(current.getInitialSputumSmearDateDuringProgram()).toUpperCase()}</td>
 				<td>SPUTUM SMEAR</td>
@@ -127,7 +127,7 @@
 <div id="em-title" class="">
 	<i class='icon-medicine small'></i>
 	<span class="section-title">TREATMENT STATUS</span>
-	<span class="section-descr"> :: CURRENTLY NOT ON TREATMENT</span>
+	<span class="section-descr"> :: ${details.regimen?'ON TREATMENT':'CURRENTLY NOT ON TREATMENT'} </span>
 	<span class="right update-treatment" style="margin-top: 6px;"><a class="popups" href="#"><i class="icon-pencil small"></i>Update Treatment</a></span>
 </div>
 
@@ -135,15 +135,26 @@
 	<table width="100%">
 	  <tbody>
 		  <tr class="table-title">
-			<td width="1px">DATE</td>
-			<td width="20%">DETAILS</td>
-			<td width="20%">DOSAGE</td>
+			<td width="1px">TREATMENT PERIOD</td>
+			<td width="15%">TYPE</td>
+			<td width="25%">DOSAGE</td>
 			<td width="*">NOTES</td>
 		  </tr>
 		  
-		  <tr class="table-content">
-			<td colspan="4" class="warning">No treatment Regimen Records Found</td>
-		  </tr>
+		  <% if (details.regimen){ %>
+			<% regimens.eachWithIndex { regx, index -> %>
+				<tr class="table-content">
+				  <td>${ui.formatDatePretty(regx.startedOn).toUpperCase()} &mdash; ${regx.finishedOn?ui.formatDatePretty(regx.finishedOn).toUpperCase():'ACTIVE'}</td>
+				  <td>${regx.type.name}</td>
+				  <td>${regx.name}</td>
+				  <td>${regx.remarks.toUpperCase()}</td>
+				</tr>
+			<% } %>
+		  <% } else { %>
+			<tr class="table-content">
+			  <td colspan="4" class="warning">No treatment Regimen Records Found</td>
+			</tr>		  
+		  <% } %>		  
 		  
 		  <tr class="table-content">
 			<td>&nbsp;</td>
@@ -156,3 +167,71 @@
 </div>
 
 <div class="clear"></div>
+
+<div id="update-regimen-dialog" class="dialog" style="display:none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>UPDATE REGIMEN</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+				<label for="regimenPatient">
+					Patient :
+				</label>
+				<input type="text" name="regimen.patient" id="regimenPatient" readonly="" value="${patient.familyName} ${patient.givenName} ${patient.middleName ? patient.middleName : ''}" />
+			</li>
+			
+			<li>
+				<label for="regimenCurrent">
+					Current :
+				</label>
+				<input type="text" name="regimen.name" id="regimenCurrent" readonly="" value="${details.regimen?details.regimen.name:'NOT ON TREATMENT'}" />
+			</li>
+			
+			<li>
+				<div style="width: 100%; border-top: 1px dotted; margin: 5px 0;"></div>
+			</li>
+				
+            <li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'regimen.date', id: 'regimen-date', label: 'Start Date:', useTime: false, defaultToday: true, endDate: new Date()])}
+            </li>
+			
+			<li>
+				<label for="regimenCurrent">
+					Type :
+				</label>
+				<select id="regimenType" class="required" name="regimen.type">
+					<option value="">&nbsp;</option>
+					<% regimenTypes.eachWithIndex { types, index -> %>
+						<option value="${types.answerConcept}">${types.answerConcept.name.toString().toUpperCase()}</option>
+					<% } %>
+				</select>
+			</li>
+			
+			<li>
+				<label for="regimenNew">
+					Regimen :
+				</label>
+				
+				<% if (program.program.programId == 2) { %>
+					<select id="regimenSelect">
+						<option value="">&nbsp;</option>
+					</select>				
+				<% } %>
+				<input type="text" name="regimen.new" id="regimenNew" readonly="" placeholder="Specify Regimen" />
+			</li>
+			
+			<li>
+				<label for="regimenRemarks">
+					Remarks :
+				</label>
+				<textarea id="regimenRemarks" name="regimen.remarks" placeholder="Remarks" style="height:100px; resize:none;"></textarea>
+			</li>
+        </ul>
+
+        <label class="button confirm right">Confirm</label>
+        <label class="button cancel">Cancel</label>
+    </div>
+</div>

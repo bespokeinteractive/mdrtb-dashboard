@@ -1,6 +1,6 @@
 package org.openmrs.module.mdrtbdashboard.fragment.controller;
 
-import net.sourceforge.jtds.jdbc.DateTime;
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.*;
 
 import java.text.ParsePosition;
@@ -11,11 +11,8 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
-import org.openmrs.module.mdrtb.util.DrugSensitivityModel;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
-import org.openmrs.module.mdrtbdashboard.model.LocationFacilities;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtbdashboard.model.*;
 import org.openmrs.module.mdrtbdashboard.VisitDetails;
 import org.openmrs.module.mdrtbdashboard.util.DrugTestingResults;
 import org.openmrs.module.mdrtbdashboard.util.LocationModel;
@@ -26,6 +23,8 @@ import java.text.SimpleDateFormat;
 import org.openmrs.ui.framework.UiUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by Dennis Henry
@@ -53,6 +52,53 @@ public class DashboardFragmentController {
         Integer integerTbmnuNumber = dashboardService.getNextTbmuNumberCount(stringTbmnuNumber);
 
         return  stringTbmnuNumber + "/0"  + ((calendar.get(Calendar.MONTH)/3)+1) + "/" + String.format("%04d", integerTbmnuNumber);
+    }
+
+    public SimpleObject updatePatientRegimen(@RequestParam(value = "ppdId") Integer ppdId,
+                                             @RequestParam(value = "type") Concept type,
+                                             @RequestParam(value = "name") String name,
+                                             @RequestParam(value = "start") String start,
+                                             @RequestParam(value = "remarks", required = false) String remarks){
+        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(ppdId);
+        List<PatientProgramRegimen> regimens = dashboardService.getPatientProgramRegimens(ppd, true);
+
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date date = df.parse(start, new ParsePosition(0));
+
+        for (PatientProgramRegimen regimen : regimens){
+            regimen.setFinishedOn(date);
+            dashboardService.savePatientProgramRegimen(regimen);
+        }
+
+        if (StringUtils.isEmpty(remarks)){
+            remarks = "N/A";
+        }
+
+        PatientProgramRegimen regimen = new PatientProgramRegimen();
+        regimen.setProgramDetails(ppd);
+        regimen.setType(type);
+        regimen.setName(name);
+        regimen.setStartedOn(date);
+        regimen.setRemarks(remarks);
+        regimen = dashboardService.savePatientProgramRegimen(regimen);
+
+        ppd.setRegimen(regimen);
+        dashboardService.savePatientProgramDetails(ppd);
+
+        return SimpleObject.create("status", "success", "message", "Patient visit successfully updated!");
+    }
+
+    public String getRegimenName(@RequestParam(value = "concept") Concept concept,
+                                 @RequestParam(value = "program") Program program){
+        RegimentType regimentType = dashboardService.getRegimenType(concept, program);
+        return regimentType.getName();
+    }
+
+    public List<SimpleObject> getRegimenNames(@RequestParam(value = "concept") Concept concept,
+                                              @RequestParam(value = "program") Program program,
+                                              UiUtils ui){
+        List<RegimentType> types = dashboardService.getRegimenTypes(concept, program);
+        return SimpleObject.fromCollection(types, ui,"id", "name");
     }
 
     public SimpleObject enrollPatient(@RequestParam(value = "programId") Program program,
@@ -183,6 +229,5 @@ public class DashboardFragmentController {
 
         return SimpleObject.create("details", details, "drugTest", drugTest);
     }
-
 }
 

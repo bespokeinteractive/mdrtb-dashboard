@@ -1,66 +1,54 @@
-<form method="post" id="intake" class="simple-form-ui" style="margin-top:10px;" action="intake.page?patientId=17&patientProgramId=20&encounterId=-1">
+<form method="post" id="visit" class="simple-form-ui" style="margin-top:10px;" action="addVisit.page?patient=${patient.patientId}">
 	<section>
-		<span class="title">Intake Form</span>
+		<span class="title">Visit Details</span>
 		<fieldset id="visit-description">
-			<legend>Visit Details</legend>			
-			<field>
-				<label for="locationFacility">
-					Treatment Facility:
-					<span class="mandatory">*</span>
-				</label>
-				
-				<select id="locationFacility" class="required" name="treatment.facility">
-					<% facilities.eachWithIndex { sites, index -> %>
-						<option value="${sites.id}">${sites.name.toString().toUpperCase()}</option>
-					<% } %>
-				</select>
-				<input id="locationName" class="locations" name="treatment.location" type="hidden" value="${location.name}" readonly="" />
-				<input name="patient.id" type="hidden" value="${patient.id}" />
-			</field>
-			
-			<field>
-				<label for="registerNumber">
-					Register Number :
-				</label>
-				<input id="registerNumber" name="facility.number" type="text" placeholder="Facilty Register No.">
-				<div class="separater"></div>
-			</field>
+			<legend>Vitals/Regimen</legend>
 			
 			<field>
 				<label for="vitalsWeight">
 					Weight :
-					<span class="mandatory">*</span>
+					<span class="mandatory"></span>
 				</label>
-				<input id="vitalsWeight" class="required" name="vitals.weight" type="text" placeholder="Weight">
+				<input id="vitalsWeight" class="" name="vitals.weight" type="text" placeholder="Weight">
 				<span class="append-label">KG</span>
+				<input type="hidden" name="patient.id" value="${patient.patientId}">
 			</field>
 			
 			<field>
 				<label for="vitalsHeight">
 					Height :
-					<span class="mandatory">*</span>
+					<span class="mandatory"></span>
 				</label>
-				<input id="vitalsHeight" class="required" name="vitals.height" type="text" placeholder="Height">
+				<input id="vitalsHeight" class="" name="vitals.height" type="text" placeholder="Height">
 				<span class="append-label">CM</span>
 			</field>
 			
 			<field>
 				<label for="bmi">
 					${patient.age>5?"B.M.I":"MUAC"} :
-					<span class="mandatory">*</span>
+					<span class="mandatory"></span>
 				</label>
-				<input id="${patient.age>5?'bmi':'muac'}" class="required" type="text" name="vitals.${patient.age>5?'bmi':'muac'}" placeholder="${patient.age>5?'B.M.I':'M.U.A.C'}" ${patient.age>5?'readonly=""':''} />
+				<input id="${patient.age>5?'bmi':'muac'}" class="" type="text" name="vitals.${patient.age>5?'bmi':'muac'}" placeholder="${patient.age>5?'B.M.I':'M.U.A.C'}" ${patient.age>5?'readonly=""':''} />
 				<span class="append-label">${patient.age>5?'':'CM'}</span>
 				<div class="separater"></div>
 			</field>
 			
+			<div>
+				<label for="regimenCurrent">
+					Regimen :
+					<span class="mandatory"></span>
+				</label>
+				<input id="regimenCurrent" class="" name="regimen.current" type="text" readonly="" value="${details.regimen?details.regimen.name:'NOT ON TREATMENT'}">
+				<div id="regimenTypeName">${details.regimen?details.regimen.type.name:''}</div>
+			</div>
+			
 			<field>
 				<label for="regimenType">
-					Regimen :
-					<span class="mandatory">*</span>
+					Change To :
+					<span class="mandatory"></span>
 				</label>
 				
-				<select id="regimenType" class="required" name="regimen.type">
+				<select id="regimenType" class="" name="regimen.type">
 					<option value="">&nbsp;</option>
 					<% regimenTypes.eachWithIndex { types, index -> %>
 						<option value="${types.answerConcept.id}" data-uuid="${types.answerConcept.uuid}">${types.answerConcept.name.toString().toUpperCase()}</option>
@@ -73,94 +61,15 @@
 			<field class="regimen">
 				<label for="regimenName">
 					Specify :
-					<span class="mandatory">*</span>
-				</label>
-				<input id="regimenName" class="required" name="regimen.name" type="text" placeholder="Specify Regimen">
-			</field>
-			
-			<field>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'regimen.started', id: 'regimen-started', label: 'Start Date:', useTime: false, defaultToday: true, endDate: new Date()])}
-			</field>
-		</fieldset>
-		
-		<fieldset id ="treatment-description">
-			<legend>Treatment</legend>
-			<field>
-				<label for="treatmentSupporter">
-					Treatment Supporter:
-					<span class="mandatory">*</span>
-				</label>
-				<input id="treatmentSupporter" class="required" name="treatment.supporter" type="text" placeholder="Treatment Supporter (Damiin)">
-			</field>
-			
-			<field>
-				<label for="treatmentSupporterContacts">
-					Supporter Contacts:
 					<span class="mandatory"></span>
 				</label>
-				<input id="treatmentSupporterContacts" class="" name="treatment.supporter.contacts" type="text" placeholder="Damiin Contacts" />
-				<div class="separater"></div>
+				<input id="regimenName" class="" name="regimen.name" type="text" placeholder="Specify Regimen">
 			</field>
 			
-			<field>
-				<label for="treatmentReferral">
-					Referred By:
-					<span class="mandatory">*</span>
-				</label>
-				
-				<select id="treatmentReferral" class="required" name="treatment.referral">
-					<option value="">&nbsp;</option>
-					<% referringDepartments.eachWithIndex { sites, index -> %>
-						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name.toString().toUpperCase()}</option>
-					<% } %>
-				</select>
-			</field>
-			
-			<field>
-				<label for="treatmentDots">
-					D.O.T.S By:
-					<span class="mandatory">*</span>
-				</label>
-				<select id="treatmentDots" class="required" name="treatment.dots">
-					<option value="">&nbsp;</option>
-					<% directObservers.eachWithIndex { sites, index -> %>
-						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name.toString().toUpperCase()}</option>
-					<% } %>
-				</select>
-			</field>
-			
-			<field>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'treatment.started', id: 'date-started', label: 'Started On:', useTime: false, defaultToday: true, endDate: new Date()])}
-			</field>
-			
-			<field>
-				<label for="treatmentSite">
-					Disease Site:
-					<span class="mandatory">*</span>
-				</label>
-				
-				<select id="treatmentSite" class="required" name="treatment.site">
-					<option value="">&nbsp;</option>
-					<% anatomicalSites.eachWithIndex { sites, index -> %>
-						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
-					<% } %>
-				</select>
-			</field>
-			
-			<field>
-				<label for="confirmationSite">
-					Site Confirmation:
-					<span class="mandatory">*</span>
-				</label>
-				
-				<select id="confirmationSite" class="required" name="confirmation.site">
-					<option value="">&nbsp;</option>
-					<% siteConfirmation.eachWithIndex { sites, index -> %>
-						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
-					<% } %>
-				</select>
-			</field>
-		</fieldset>		
+			<div>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'regimen.started', id: 'regimen-started', label: 'Start Date:', useTime: false, defaultToday: true, endDate: new Date()])}
+			</div>
+		</fieldset>
 	</section>
 	
 	<section>
@@ -189,9 +98,9 @@
 				</select>
 			</field>
 			
-			<field class="smear-date">
+			<div class="smear-date">
 				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.sputum.date', id: 'sputum-date', label: 'Exam Date:', useTime: false, defaultToday: true, endDate: new Date()])}
-			</field>
+			</div>
 		</fieldset>
 		
 		<fieldset id = "genXpert-description">
@@ -210,9 +119,9 @@
 				</select>
 			</field>
 			
-			<field class="genxpert-date">
+			<div class="genxpert-date">
 				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.genxpert.date', id: 'genXpertDate', label: 'Exam Date:', useTime: false, defaultToday: true, endDate: new Date()])}
-			</field>			
+			</div>			
 		</fieldset>
 		
 		<fieldset id = "hivResult-description">
@@ -231,9 +140,9 @@
 				</select>
 			</field>
 			
-			<field class="hivtest-date">
+			<div class="hivtest-date">
 				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.hiv.date', id: 'hivDate', label: 'Exam Date:', useTime: false, defaultToday: true, endDate: new Date()])}
-			</field>
+			</div>
 			
 			<div class="hiv-positive-section" style="display:none;">
 				<div class="separater"></div>
@@ -251,9 +160,9 @@
 					</select>
 				</field>
 				
-				<field>
+				<div>
 					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.art.date', id: 'artDate', label: 'ART Start Date:', useTime: false, defaultToday: true, endDate: new Date()])}
-				</field>
+				</div>
 				
 				<field>
 					<label for="cptStatus">
@@ -268,9 +177,9 @@
 					</select>
 				</field>
 				
-				<field>
+				<div>
 					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'exams.cpt.date', id: 'cptDate', label: 'CPT Start Date:', useTime: false, defaultToday: true, endDate: new Date()])}
-				</field>
+				</div>
 			</div>			
 		</fieldset>
 		
@@ -310,16 +219,6 @@
 					<div class="info-body">
 						<table id="summaryTable">
 							<tbody>
-								<tr style="${program.program.programId == 1?'display:none':''}">
-									<td><span class="status active"></span>Register No.</td>
-									<td>N/A</td>
-								</tr>
-
-								<tr>
-									<td><span class="status active"></span>Facility</td>
-									<td>N/A</td>
-								</tr>
-
 								<tr>
 									<td><span class="status active"></span>Weight</td>
 									<td>N/A</td>
@@ -331,29 +230,13 @@
 								</tr>
 
 								<tr>
-									<td><span class="status active"></span>
-										${patient.age>5?'B.M.I':'M.U.A.C'}</td>
+									<td><span class="status active"></span>${patient.age>5?'B.M.I':'M.U.A.C'}</td>
 									<td>N/A</td>
 								</tr>
 
-								<tr>
-									<td><span class="status active"></span>Supporter</td>
-									<td>N/A</td>
-								</tr>
-
-								<tr>
-									<td><span class="status active"></span>Referred by</td>
-									<td>N/A</td>
-								</tr>
-
-								<tr>
-									<td><span class="status active"></span>D.O.T.S</td>
-									<td>N/A</td>
-								</tr>
-
-								<tr>
-									<td><span class="status active"></span>Disease Sites</td>
-									<td>N/A</td>
+								<tr >
+									<td><span class="status active"></span>Regimen</td>
+									<td>${details.regimen?details.regimen.name:'N/A'}</td>
 								</tr>
 
 								<tr>

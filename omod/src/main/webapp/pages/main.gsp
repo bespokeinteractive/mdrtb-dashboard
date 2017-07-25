@@ -39,16 +39,86 @@
 			}			
 		});
 		
-		jq(".add-visit").on("click", function(e) {
+		jq('.update-treatment').on('click', function(e){
 			e.preventDefault();
 			
-			jq('#lastVisit').attr('checked', false);
-			jq('.outcome').hide();
-			jq('#outcomeResults').val('');
-			jq('#outcomeRemarks').val('');
-			
-			visitDialog.show();
+			jq('#regimenType').val('').change();
+			jq('#regimenRemarks').val('');
+						
+			updateRegimenDialog.show();
 		});
+		
+		jq('#regimenType').change(function(){
+			jq('#regimenNew').val('');
+			jq("#regimenNew").attr("readonly", true);
+			jq('#regimenSelect').empty();
+			
+			if (jq('#regimenType').val() == ""){
+				return false;
+			}			
+			
+			if (${program.program.programId == 1}){
+				if (jq('#regimenType').val() == 56){
+					jq("#regimenNew").attr("readonly", false); 
+					return false;
+				}
+				
+				jq.ajax({
+					type: "GET",
+					url: '${ ui.actionLink("mdrtbdashboard", "dashboard", "getRegimenName") }',
+					data: ({
+						concept: jq('#regimenType').val(),
+						program: ${program.program.programId}
+					}),
+					dataType: "json",
+					success: function (data) {
+						jq('#regimenNew').val(data);
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						return false;
+					}
+				});
+			
+			}
+			else {
+				if (jq('#regimenType').val() == 56){
+					jq('#regimenNew').show();
+					jq('#regimenSelect').hide();
+				}
+				else {
+					jq('#regimenNew').hide();
+					jq('#regimenSelect').show();
+				}
+				
+				jq.ajax({
+					type: "GET",
+					url: '${ ui.actionLink("mdrtbdashboard", "dashboard", "getRegimenNames") }',
+					data: ({
+						concept: jq('#regimenType').val(),
+						program: ${program.program.programId}
+					}),
+					dataType: "json",
+					success: function (data) {
+						jq.each(data, function(key,item) {
+							jq('#regimenSelect').append(jq('<option>', { 
+								value: item.name,
+								text : item.name 
+							}));
+						}); 
+						
+						jq('#regimenSelect').change();
+					},
+					error: function (xhr, ajaxOptions, thrownError) {
+						return false;
+					}
+				});
+			}
+			
+		}).change();
+		
+		jq('#regimenSelect').change(function(){
+			jq('#regimenNew').val(jq(this).val())
+		}).change();
 		
 		jq('#genxpert-date-display').change(function(){
 			loadGenXpertDialog();
@@ -110,6 +180,65 @@
 			});
 		}
 		
+		var updateRegimenDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+			selector: '#update-regimen-dialog',
+			actions: {
+				confirm: function() {
+					if (jq('#regimenType').val() == ''){
+						jq().toastmessage('showErrorToast', 'Ensure that you have specified the Regimen Type');
+						jq('#regimenType').focus();
+						return false;
+					}
+					
+					if (jq('#regimenNew').val() == ''){
+						jq().toastmessage('showErrorToast', 'Ensure that you have specified the Custom Regimen');
+						jq('#regimenNew').focus();
+						return false;
+					}
+					
+					if (jq('#regimenNew').val() === jq('#regimenCurrent').val()){
+						jq().toastmessage('showErrorToast', "You can't change a Regimen to the same Regimen");
+						jq('#regimenNew').focus();
+						return false;
+					}
+					
+					jq.ajax({
+						type: "POST",
+						url: '${ui.actionLink("mdrtbdashboard", "dashboard", "updatePatientRegimen")}',
+						data: ({
+							ppdId:	${details.id},
+							type:	jq('#regimenType').val(),
+							name: 	jq('#regimenNew').val(),
+							start:	jq('#regimen-date-field').val(),
+							remarks:jq('#regimenRemarks').val()
+						}),
+						dataType: "json",
+						success: function(data) {
+							if (data.status == "success"){
+								jq().toastmessage('showSuccessToast', data.message);
+								window.location.href = "main.page?patient=${patient.id}";					
+							}
+							else {
+								jq().toastmessage('showErrorToast', 'x:'+ data.message);
+							}							
+						},
+						error: function(data){
+							jq().toastmessage('showErrorToast', "Post Failed. " + data.statusText);
+						}
+					});
+					
+					visitDialog.close();
+				},
+				cancel: function() {
+					visitDialog.close();
+				}
+			}
+		});
+		
 		var visitDialog = emr.setupConfirmationDialog({
 			dialogOpts: {
 				overlayClose: false,
@@ -135,7 +264,7 @@
 						url: '${ui.actionLink("mdrtbdashboard", "dashboardVisits", "addPatientVisit")}',
 						data: ({
 							patientId:			${patient.id},
-							programId:			${current.programDetails.patientProgramId},
+							programId:			${current.program.patientProgramId},
 							labNumber: 			jq('#LabNumber').val(),
 							testedOn: 			jq('#sputum-date-field').val(),
 							testResult:			jq('#sputumResult').val(),
@@ -146,7 +275,7 @@
 						success: function(data) {
 							if (data.status == "success"){
 								jq().toastmessage('showSuccessToast', data.message);
-								window.location.href = "main.page?patient=${patient.id}";					
+								window.location.href = "main.page?patient=${patient.id}";
 							}
 							else {
 								jq().toastmessage('showErrorToast', 'x:'+ data.message);
@@ -183,7 +312,7 @@
 						url: '${ui.actionLink("mdrtbdashboard", "dashboardVisits", "exitMdrtbPatients")}',
 						data: ({
 							patientId:			${patient.id},
-							programId:			${current.programDetails.patientProgramId},
+							programId:			${current.program.patientProgramId},
 							outcomeDate:		jq('#exit-date-field').val(),
 							outcomeResult:		jq('#MdrtbOutcome').val(),
 							outcomeRemarks:		jq('#MdrtbRemarks').val()
@@ -349,6 +478,10 @@
 		}
 		else if ('${tabs}' == 'chart'){
 			tabs.tabs('option','selected',3);
+		}
+		
+		if (${program.program.programId} == 2){
+			jq('#regimenNew').hide();
 		}
 		
 		jq(".visit-summary")[0].click();
@@ -640,6 +773,12 @@
 		cursor: pointer;
 		width: 100%;
 	}
+	.add-visit {
+		cursor: pointer;
+	}
+	.dropdown ul li {
+		width: 180px;
+	}
 </style>
 
 <div class="clear"></div>
@@ -659,7 +798,7 @@
     </div>
 </div>
 
-${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: programDetails.patientProgramId]) }
+${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: program.patientProgramId]) }
 
 <div class="mdrtb-tabs">
 	<ul>
