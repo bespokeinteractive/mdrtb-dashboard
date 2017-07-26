@@ -1,6 +1,7 @@
 package org.openmrs.module.mdrtbdashboard;
 
 import org.apache.commons.lang.StringUtils;
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.mdrtb.model.PersonLocation;
@@ -8,9 +9,12 @@ import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtbdashboard.model.PatientProgramRegimen;
+
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +24,7 @@ import java.util.logging.Logger;
  */
 public class MdrtbPatientWrapper {
     private MdrtbPatientProgram patientProgram;
+    private PatientProgramDetails patientDetails;
     private String wrapperIdentifier = "N/A";
     private String wrapperNames = "N/A";
     private String wrapperStatus = "Completed";
@@ -27,6 +32,13 @@ public class MdrtbPatientWrapper {
     private Date visitDate = new Date();
     private Integer wrapperLocationId;
     private String wrapperLocationName;
+    private String wrapperAddress;
+    private String wrapperArt = "—";
+    private String wrapperCpt = "—";
+    private String wrapperOutcome = "—";
+    private String wrapperRegisterDate = "N/A";
+    private String wrapperCompletedDate = "N/A";
+    private String wrapperTreatmentDate = "N/A";
 
     MdrtbDashboardService dashboardService = Context.getService(MdrtbDashboardService.class);
     MdrtbService mdrtbService = Context.getService(MdrtbService.class);
@@ -36,30 +48,57 @@ public class MdrtbPatientWrapper {
     public MdrtbPatientWrapper(MdrtbPatientProgram patientProgram){
         this.patientProgram = patientProgram;
         this.getPatientDefaultLocation();
-
-        try{
-            this.wrapperIdentifier = dashboardService.getPatientProgramDetails(patientProgram.getPatientProgram()).getTbmuNumber();
-        }
-        catch (Exception e){ }
+        this.getPatientProgramDetails();
     }
 
     public MdrtbPatientWrapper(MdrtbPatientProgram patientProgram, Date visitDate){
-        this.patientProgram = patientProgram;
+        this(patientProgram);
         this.visitDate = visitDate;
-        this.getPatientDefaultLocation();
-
-        try {
-            this.wrapperIdentifier = dashboardService.getPatientProgramDetails(patientProgram.getPatientProgram()).getTbmuNumber();
-        }
-        catch (Exception e){ }
     }
 
-    public void getPatientDefaultLocation(){
+    private void getPatientDefaultLocation(){
         Patient patient = patientProgram.getPatient();
         PersonLocation pl = mdrtbService.getPersonLocation(patient);
 
         this.wrapperLocationId = pl.getLocation().getId();
         this.wrapperLocationName = pl.getLocation().getName();
+    }
+
+    private void getPatientProgramDetails(){
+        try{
+            this.patientDetails = dashboardService.getPatientProgramDetails(patientProgram.getPatientProgram());
+            this.wrapperIdentifier = patientDetails.getTbmuNumber();
+
+            if (patientDetails.getInitialStatus() != null || patientDetails.getCurrentStatus() != null) {
+                if (patientDetails.getInitialStatus().getId() == 28 && patientDetails.getCurrentStatus().getId() == 28){
+                    this.wrapperArt = patientDetails.getArtStarted().getDisplayString();
+                    this.wrapperCpt = patientDetails.getCptStarted().getDisplayString();
+                }
+            }
+
+            if (patientProgram.getPatientProgram().getDateCompleted() != null){
+                this.wrapperCompletedDate = returnFormattedDate(patientProgram.getPatientProgram().getDateCompleted());
+            }
+
+            if (patientDetails.getOutcome() != null){
+                this.wrapperOutcome = patientDetails.getOutcome().getDisplayString();
+            }
+        }
+        catch (Exception e){ }
+    }
+
+    public String returnFormattedDate(Date date){
+        Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+
+        try{
+            return formatter.format(date);
+        }catch(Exception e){
+            if(date != null){
+                return date.toString();
+            } else{
+                return "N/A";
+            }
+        }
     }
 
     public String getWrapperIdentifier() {
@@ -71,19 +110,8 @@ public class MdrtbPatientWrapper {
     }
 
     public String getFormartedVisitDate() {
-        Format formatter = new SimpleDateFormat("dd/MM/yyyy");
-        try{
-            formartedVisitDate = formatter.format(visitDate);
-        }catch(Exception e){
-            if(visitDate!=null){
-                formartedVisitDate = visitDate.toString();
-            }     else{
-                formartedVisitDate = "N/A";
-            }
-            log.log( Level.SEVERE, e.toString(), e );
-        }
-
-        return formartedVisitDate;
+        this.formartedVisitDate = returnFormattedDate(visitDate);
+        return this.formartedVisitDate;
     }
 
     public MdrtbPatientProgram getPatientProgram() {
@@ -151,6 +179,79 @@ public class MdrtbPatientWrapper {
 
     public void setWrapperLocationName(String wrapperLocationName) {
         this.wrapperLocationName = wrapperLocationName;
+    }
+
+    public String getWrapperAddress() {
+        this.wrapperAddress = patientProgram.getPatient().getPersonAddress().getAddress1();
+        return  this.wrapperAddress;
+    }
+
+    public void setWrapperAddress(String wrapperAddress) {
+        this.wrapperAddress = wrapperAddress;
+    }
+
+    public PatientProgramDetails getPatientDetails() {
+        return patientDetails;
+    }
+
+    public void setPatientDetails(PatientProgramDetails patientDetails) {
+        this.patientDetails = patientDetails;
+    }
+
+    public String getWrapperRegisterDate() {
+        this.wrapperRegisterDate = returnFormattedDate(patientProgram.getDateEnrolled());
+        return wrapperRegisterDate;
+    }
+
+    public void setWrapperRegisterDate(String wrapperRegisterDate) {
+        this.wrapperRegisterDate = wrapperRegisterDate;
+    }
+
+    public String getWrapperTreatmentDate() {
+        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(patientProgram.getPatientProgram());
+        List<PatientProgramRegimen> list = dashboardService.getPatientProgramRegimens(ppd,false);
+
+        if (!list.isEmpty()){
+            wrapperTreatmentDate = returnFormattedDate(list.get(0).getStartedOn());
+        }
+
+        return wrapperTreatmentDate;
+    }
+
+    public void setWrapperTreatmentDate(String wrapperTreatmentDate) {
+        this.wrapperTreatmentDate = wrapperTreatmentDate;
+    }
+
+    public String getWrapperArt() {
+        return wrapperArt;
+    }
+
+    public void setWrapperArt(String wrapperArt) {
+        this.wrapperArt = wrapperArt;
+    }
+
+    public String getWrapperCpt() {
+        return wrapperCpt;
+    }
+
+    public void setWrapperCpt(String wrapperCpt) {
+        this.wrapperCpt = wrapperCpt;
+    }
+
+    public String getWrapperOutcome() {
+        return wrapperOutcome;
+    }
+
+    public void setWrapperOutcome(String wrapperOutcome) {
+        this.wrapperOutcome = wrapperOutcome;
+    }
+
+    public String getWrapperCompletedDate() {
+        return wrapperCompletedDate;
+    }
+
+    public void setWrapperCompletedDate(String wrapperCompletedDate) {
+        this.wrapperCompletedDate = wrapperCompletedDate;
     }
 
 }
