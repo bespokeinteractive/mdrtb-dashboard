@@ -17,12 +17,12 @@ public class DateRangeModel {
         this.year = year;
         this.quarter = qtr;
 
-        Integer mnth = (qtr * 3) - 4;
+        Integer mnth = (qtr * 3) - 3;
         Calendar cal = Calendar.getInstance();
         cal.set(year, mnth, 1,0,0);
         this.startDate = cal.getTime();
 
-        cal.add(Calendar.MONTH, 4);
+        cal.add(Calendar.MONTH, 3);
         cal.add(Calendar.DATE, -1);
         this.endDate = cal.getTime();
     }
