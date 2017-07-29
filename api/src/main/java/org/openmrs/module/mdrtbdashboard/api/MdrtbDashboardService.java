@@ -43,6 +43,8 @@ public interface MdrtbDashboardService
     LocationFacilities getFacilityById(Integer facilityId);
 
     List<MdrtbPatientProgram> getMdrtbPatients(String nameOrIdentifier, String gender, int age, int rangeAge, String lastDayOfVisit, int lastVisit, int programId, List<Location> locations);
+    List<MdrtbPatientProgram> getMdrtbPatients(String gender, int age, int rangeAge, int programId, List<Location> locations);
+
     List<DrugTestingResults> getDrugSensitivityOutcome(Encounter encounter);
     List<PatientProgramDetails> getPatientsFromDetails(Location location, Date startDate, Date endDate, LocationFacilities facility);
 

@@ -9,6 +9,7 @@ import java.util.*;
 import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
+import org.openmrs.module.mdrtb.MdrtbConcepts;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
@@ -174,27 +175,31 @@ public class DashboardFragmentController {
                                         UiSessionContext session,
                                         SessionStatus status)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        MdrtbPatientProgram current = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
         Location location = session.getSessionLocation();
 
         if (mdrtbService.getPersonLocation(patient).getLocation().equals(location)){
             return SimpleObject.create("status", "failed", "message", "You can't transfer to the same Location!");
         }
 
-        if (current.getDateCompleted() != null){
-            //Close previous Entry
-            Date completedOn = new Date();
+        if (mpp.getDateCompleted() == null){
+            Date completedOn;
             Calendar cal = Calendar.getInstance();
             cal.setTime(enrolledOn);
             cal.add(Calendar.DATE, -1);
             completedOn = cal.getTime();
 
-            current.setDateCompleted(completedOn);
-            current.setOutcome(workflowService.getStateByUuid("341a7f5a-0370-102d-b0e3-001ec94a0cc1"));
-            workflowService.savePatientProgram(current.getPatientProgram());
+            PatientProgram pp = mpp.getPatientProgram();
+            pp.setDateCompleted(completedOn);
+            pp.setOutcome(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.PATIENT_TRANSFERRED_OUT));
+            Context.getProgramWorkflowService().savePatientProgram(pp);
+
+            PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
+            ppd.setOutcome(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.PATIENT_TRANSFERRED_OUT));
+            ppd = dashboardService.savePatientProgramDetails(ppd);
         }
 
-        this.patientEnrollment(current.getPatientProgram().getProgram(), patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, session);
+        this.patientEnrollment(mpp.getPatientProgram().getProgram(), patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, session);
 
         // Return Object for Success
         return SimpleObject.create("status", "success", "message", "Patient successfully transferred!");

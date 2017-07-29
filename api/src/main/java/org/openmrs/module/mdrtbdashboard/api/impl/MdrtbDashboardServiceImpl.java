@@ -111,6 +111,11 @@ public class MdrtbDashboardServiceImpl
     }
 
     @Override
+    public List<MdrtbPatientProgram> getMdrtbPatients(String gender, int age, int rangeAge, int programId, List<Location> locations){
+        return dao.getMdrtbPatients(gender, age, rangeAge, programId, locations);
+    }
+
+    @Override
     public List<DrugTestingResults> getDrugSensitivityOutcome(Encounter encounter){
         List<DrugTestingResults> outcomes = new ArrayList<DrugTestingResults>();
 

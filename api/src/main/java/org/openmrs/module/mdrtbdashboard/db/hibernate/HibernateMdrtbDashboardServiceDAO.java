@@ -285,4 +285,58 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
 
         return search;
     }
+
+    @Override
+    public List<MdrtbPatientProgram> getMdrtbPatients(String gender, int age, int rangeAge, int programId, List<Location> locations){
+        Vector search = new Vector();
+
+        String[] searchSplit = "".split("\\s+");
+        String hql = "SELECT p.patient_id,pi.identifier,pn.given_name ,pn.middle_name ,pn.family_name ,ps.gender,ps.birthdate,ps.dead,pp.patient_program_id, pn.person_name_id, EXTRACT(YEAR FROM (FROM_DAYS(DATEDIFF(NOW(),ps.birthdate)))) age FROM patient_program pp INNER JOIN patient p ON pp.patient_id=p.patient_id INNER JOIN person ps ON p.patient_id = ps.person_id INNER JOIN patient_identifier PI ON p.patient_id = pi.patient_id INNER JOIN person_name pn ON p.patient_id = pn.person_id WHERE p.patient_id>0 ";
+        if(StringUtils.isNotBlank(gender)) {
+            hql = hql + " AND ps.gender = \'" + gender + "\' ";
+        }
+        if(age > 0) {
+            hql = hql + " AND EXTRACT(YEAR FROM (FROM_DAYS(DATEDIFF(NOW(),ps.birthdate)))) BETWEEN " + (age - rangeAge) + " AND " + (age + rangeAge) + " ";
+        }
+
+        if (locations.size()>0){
+            String oLocation = "0";
+            for (Location location: locations){
+                oLocation += ","+location.getId();
+            }
+
+            hql += " AND pp.location_id IN (" + oLocation + ")";
+        }
+
+        hql += " ORDER BY pn.given_name ASC, pn.family_name ASC, pn.middle_name ASC LIMIT 0, 50";
+
+        SQLQuery sqlquery = this.sessionFactory.getCurrentSession().createSQLQuery(hql);
+        List listquery = sqlquery.list();
+        if(CollectionUtils.isNotEmpty(listquery)) {
+            Iterator iterator = listquery.iterator();
+
+            while(iterator.hasNext()) {
+                Object o = iterator.next();
+                Object[] obj = (Object[])((Object[])o);
+                if(obj != null && obj.length > 0) {
+                    MdrtbPatientProgram pp = Context.getService(MdrtbService.class).getMdrtbPatientProgram((Integer)obj[8]);
+                    if (programId == -1){
+                        if (pp.getPatientProgram() != null && pp.getActive()){
+                            search.add(pp);
+                        }
+                    }
+                    else if (programId > 0){
+                        if (pp.getPatientProgram() != null && pp.getActive() && pp.getPatientProgram().getProgram() == Context.getProgramWorkflowService().getProgram(programId)){
+                            search.add(pp);
+                        }
+                    }
+                    else{
+                        search.add(pp);
+                    }
+                }
+            }
+        }
+
+        return search;
+    }
 }
