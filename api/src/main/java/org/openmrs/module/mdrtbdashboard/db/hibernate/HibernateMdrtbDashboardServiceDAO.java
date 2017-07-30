@@ -308,7 +308,7 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
             hql += " AND pp.location_id IN (" + oLocation + ")";
         }
 
-        hql += " ORDER BY pn.given_name ASC, pn.family_name ASC, pn.middle_name ASC LIMIT 0, 50";
+        hql += " ORDER BY pn.given_name ASC, pn.family_name ASC, pn.middle_name ASC";
 
         SQLQuery sqlquery = this.sessionFactory.getCurrentSession().createSQLQuery(hql);
         List listquery = sqlquery.list();
