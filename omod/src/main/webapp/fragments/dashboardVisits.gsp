@@ -2,7 +2,15 @@
 	<i class='icon-file-alt small'></i>
 	<span class="section-title">VISIT INFORMATION</span>
 	<% if (current.program.program.programId == 1) { %>
-		<span class="right update-vitals" style="margin-top: 6px;"><a class="popups add-visit" href="addVisit.page?patient=${patient.id}"><i class="icon-pencil small"></i>Add Visit</a></span>
+		<div style="float: right; margin-top: -3px;">
+			<div style="position: static" class="dropdown">
+				<span class="dropdown-name"><i class="icon-cog"></i>Actions<i class="icon-sort-down"></i></span>
+				<ul style="z-index: 99">
+					<li><a data-value="0" href="addVisit.page?patient=${patient.id}"><i class="icon-file-text"></i>Add Visit</a></li>
+					<li><a data-value="1"><i class="icon-reply"></i>Exit from Program</a></li>
+				</ul>
+			</div>
+		</div>
 	<% } else { %>
 		<div style="float: right; margin-top: -3px;">
 			<div style="position: static" class="dropdown">
@@ -197,7 +205,7 @@
 <div id="visit-dialog" class="dialog" style="display:none;">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
-        <h3>UPDATE VISIT</h3>
+        <h3>UPDATE FINAL VISIT</h3>
     </div>
 
     <div class="dialog-content">
@@ -226,36 +234,30 @@
 				</select>
 			</li>
 			
-			<li class="outcome" style="width:100%; border-top:1px dotted; padding-top:6px; margin-top:15px;">
+			<li style="width:100%; border-top:1px dotted; padding-top:6px; margin-top:8px;">
 				<label for="outcomeResults">
-					Treatment Outcome:
+					Outcome:
 				</label>
 				
 				<select id="outcomeResults" class="required" name="program.outcome">
 					<option value="">&nbsp;</option>
 					<% if (program.program.programId == 1) {%>
 						<% tbbOutcomes.eachWithIndex { outcome, index -> %>
-							<option value="${outcome.concept.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
+							<option value="${outcome.concept}">${outcome.concept.name.toString().toUpperCase()}</option>
 						<% } %>
 					<% } else { %>
 						<% mdrOutcomes.eachWithIndex { outcome, index -> %>
-							<option value="${outcome.concept.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
+							<option value="${outcome.concept}">${outcome.concept.name.toString().toUpperCase()}</option>
 						<% } %>
 					<% } %>
 				</select>
 			</li>
 			
-			<li class="outcome">
+			<li>
 				<label for="outcomeRemarks">
-					Outcome Remarks :
+					Remarks :
 				</label>
 				<textarea id="outcomeRemarks" name="program.remarks" placeholder="Remarks" style="height:100px; resize:none;"></textarea>
-			</li>
-			
-			<li>
-				<label style="width: 100%; border-top: 1px dotted; margin-top: 6px;">
-					<input type="checkbox" id="lastVisit" style="margin-left: 168px;"> This is the Last Visit
-				</label>
 			</li>
         </ul>
 
@@ -417,7 +419,7 @@
 				<select id="MdrtbOutcome" class="required" name="program.outcome">
 					<option value="">&nbsp;</option>
 					<% mdrOutcomes.eachWithIndex { outcome, index -> %>
-						<option value="${outcome.concept.uuid}">${outcome.concept.name.toString().toUpperCase()}</option>
+						<option value="${outcome.concept}">${outcome.concept.name.toString().toUpperCase()}</option>
 					<% } %>					
 				</select>
 			</li>

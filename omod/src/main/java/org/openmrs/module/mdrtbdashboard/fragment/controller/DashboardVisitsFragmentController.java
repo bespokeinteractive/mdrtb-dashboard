@@ -80,17 +80,17 @@ public class DashboardVisitsFragmentController {
 
         if (StringUtils.isNotEmpty(outcomeResults)){
             DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+            Concept outcome = Context.getConceptService().getConcept(Integer.parseInt(outcomeResults));
 
-            MdrtbPatientProgram program = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
-            PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(program);
+            MdrtbPatientProgram mpp = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
+            PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
 
-            program.setDateCompleted(df.parse(testedOn, new ParsePosition(0)));
-            program.setOutcome(Context.getProgramWorkflowService().getStateByUuid(outcomeResults));
-            ppd.setOutcome(Context.getConceptService().getConceptByUuid(outcomeResults));
-            ppd = dashboardService.savePatientProgramDetails(ppd);
-
-            // save the actual update
-            Context.getProgramWorkflowService().savePatientProgram(program.getPatientProgram());
+            PatientProgram pp = mpp.getPatientProgram();
+            pp.setDateCompleted(df.parse(testedOn, new ParsePosition(0)));
+            pp.setOutcome(outcome);
+            ppd.setOutcome(outcome);
+            Context.getProgramWorkflowService().savePatientProgram(pp);
+            dashboardService.savePatientProgramDetails(ppd);
         }
 
         //Return Answer
@@ -229,16 +229,20 @@ public class DashboardVisitsFragmentController {
                                           UiSessionContext session,
                                           SessionStatus status)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        MdrtbPatientProgram program = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
-        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(program.getPatientProgram());
+        MdrtbPatientProgram mpp = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
+        PatientProgramDetails pd = dashboardService.getPatientProgramDetails(mpp.getPatientProgram());
+        PatientProgram pp = mpp.getPatientProgram();
+        Concept outcome = Context.getConceptService().getConcept(Integer.parseInt(outcomeResults));
 
-        program.setDateCompleted(outcomeDate);
-        program.setOutcome(Context.getProgramWorkflowService().getStateByUuid(outcomeResults));
-        ppd.setOutcome(Context.getConceptService().getConceptByUuid(outcomeResults));
-        ppd = dashboardService.savePatientProgramDetails(ppd);
+        pp.setDateCompleted(outcomeDate);
+        pp.setOutcome(outcome);
+        pd.setOutcome(outcome);
 
-        // save the actual update
-        Context.getProgramWorkflowService().savePatientProgram(program.getPatientProgram());
+        //Save Patient Details
+        dashboardService.savePatientProgramDetails(pd);
+
+        //Save the actual update
+        Context.getProgramWorkflowService().savePatientProgram(pp);
 
         //Return Answer
         return SimpleObject.create("status", "success", "message", "Patient visit successfully updated!");

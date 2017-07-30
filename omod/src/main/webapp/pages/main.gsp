@@ -44,7 +44,7 @@
 			
 			jq('#regimenType').val('').change();
 			jq('#regimenRemarks').val('');
-						
+			
 			updateRegimenDialog.show();
 		});
 		
@@ -133,7 +133,7 @@
 			
 			if (selected == 1){
 				jq('#genxpertResult').val('');
-				loadGenXpertDialog();
+				loadTBExitDialog();
 			}
 			else if (selected == 2){
 				jq('#cultureResult').val('');
@@ -149,6 +149,16 @@
 				outcomeDialog.show();
 			}
 		});
+		
+		function loadTBExitDialog(){
+			jq.getJSON('${ ui.actionLink("mdrtbdashboard", "dashboardVisits", "getObsLabNumber") }', { 
+				patientId	: ${patient.id},
+				date		: jq('#sputum-date-field').val()
+			}).success(function (data) {
+				jq('#LabNumber').val(data);
+				visitDialog.show();				
+			});
+		}
 		
 		function loadGenXpertDialog(){
 			jq.getJSON('${ ui.actionLink("mdrtbdashboard", "dashboardVisits", "getObsLabNumber") }', { 
@@ -231,10 +241,10 @@
 						}
 					});
 					
-					visitDialog.close();
+					updateRegimenDialog.close();
 				},
 				cancel: function() {
-					visitDialog.close();
+					updateRegimenDialog.close();
 				}
 			}
 		});
@@ -247,16 +257,9 @@
 			selector: '#visit-dialog',
 			actions: {
 				confirm: function() {
-					if (jq('#LabNumber').val() == '' || jq('#sputumResult').val() == ''){
+					if (jq('#LabNumber').val() == '' || jq('#sputumResult').val() == '' || jq('#outcomeResults').val() == ''){
 						jq().toastmessage('showErrorToast', 'Ensure all fields have been properly filled before you continue');
 						return false;
-					}
-					
-					if (jq('#lastVisit').attr('checked')){						
-						if (jq('#outcomeResults').val() == ''){
-							jq().toastmessage('showErrorToast', 'Ensure all fields have been properly filled before you continue');
-							return false;
-						}
 					}
 					
 					jq.ajax({
@@ -275,7 +278,7 @@
 						success: function(data) {
 							if (data.status == "success"){
 								jq().toastmessage('showSuccessToast', data.message);
-								window.location.href = "main.page?patient=${patient.id}";
+								window.location.href = "../referenceapplication/home.page";
 							}
 							else {
 								jq().toastmessage('showErrorToast', 'x:'+ data.message);
@@ -321,7 +324,7 @@
 						success: function(data) {
 							if (data.status == "success"){
 								jq().toastmessage('showSuccessToast', data.message);
-								window.location.href = "main.page?patient=${patient.id}";
+								window.location.href = "../referenceapplication/home.page";
 							}
 							else {
 								jq().toastmessage('showErrorToast', 'x:'+ data.message);

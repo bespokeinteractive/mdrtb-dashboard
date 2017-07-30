@@ -28,6 +28,7 @@ public class MainPageController {
 
     public String get(
             @RequestParam(value = "patient", required = true) Patient patient,
+            @RequestParam(value = "programId", required = false) Integer programId,
             @RequestParam(value = "tabs", required = false) String tabs,
             PageModel model,
             UiUtils ui) {
@@ -36,6 +37,10 @@ public class MainPageController {
         Collection<ConceptAnswer> regimenTypes = mdrtbService.getPossibleTbTreatmentTypes();
 
         MdrtbPatientProgram current = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        if (programId != null){
+            current = mdrtbService.getMdrtbPatientProgram(programId);
+        }
+
         PatientProgramDetails details = dashboard.getPatientProgramDetails(current);
 
         List<PatientProgramRegimen> regimens = dashboard.getPatientProgramRegimens(details, false);
