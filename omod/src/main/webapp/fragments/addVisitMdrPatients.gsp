@@ -11,7 +11,7 @@
 				</label>
 				<input id="vitalsWeight" class="" name="vitals.weight" type="text" placeholder="Weight">
 				<span class="append-label">KG</span>
-				<input type="hidden" name="patient.id" value="${patient.patientId}">
+				<input type="hidden" name="program.id" value="${current.program.patientProgramId}">
 			</field>
 			
 			<field>

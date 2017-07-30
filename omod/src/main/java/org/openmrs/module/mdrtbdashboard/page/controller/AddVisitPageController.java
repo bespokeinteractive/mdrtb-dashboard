@@ -33,11 +33,11 @@ public class AddVisitPageController {
     MdrtbService mdrtbService = Context.getService(MdrtbService.class);
     ConceptService conceptService = Context.getConceptService();
 
-    public String get(@RequestParam(value = "patient", required = true) Patient patient,
+    public String get(@RequestParam(value = "programId", required = true) Integer programId,
                       PageModel model,
                       UiUtils ui) {
-        MdrtbPatientProgram current = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
-        PatientProgramDetails details = dashboardService.getPatientProgramDetails(current);
+        MdrtbPatientProgram mpp = mdrtbService.getMdrtbPatientProgram(programId);
+        PatientProgramDetails details = dashboardService.getPatientProgramDetails(mpp);
 
         Collection<ConceptAnswer> regimenTypes = mdrtbService.getPossibleTbTreatmentTypes();
         Collection<ConceptAnswer> smearResults = mdrtbService.getPossibleSmearResults();
@@ -46,19 +46,19 @@ public class AddVisitPageController {
         Collection<ConceptAnswer> hivTestResults = mdrtbService.getPossibleHivTestResults();
 
         // Test if patient is Enrolled in Any program
-        if (!(current != null && current.getActive())){
-            return "redirect:" + ui.pageLink("mdrtbdashboard", "enroll")+"?patient="+patient.getId();
+        if (!(mpp != null && mpp.getActive())){
+            return "redirect:" + ui.pageLink("mdrtbdashboard", "enroll")+"?patient="+mpp.getPatient().getId();
         }
 
         // Test if Intake Form was ever filled
         if (details.getFacility() == null){
-            return "redirect:" + ui.pageLink("mdrtbdashboard", "intake")+"?patient="+patient.getId();
+            return "redirect:" + ui.pageLink("mdrtbdashboard", "intake")+"?patient="+mpp.getPatient().getId();
         }
 
-        model.addAttribute("patient", patient);
-        model.addAttribute("current", current);
+        model.addAttribute("patient", mpp.getPatient());
+        model.addAttribute("current", mpp);
         model.addAttribute("details", details);
-        model.addAttribute("program", current.getPatientProgram());
+        model.addAttribute("program", mpp.getPatientProgram());
         model.addAttribute("regimenTypes", regimenTypes);
         model.addAttribute("smearResults", smearResults);
         model.addAttribute("hivTestResults", hivTestResults);
@@ -71,8 +71,7 @@ public class AddVisitPageController {
     public String post(HttpServletRequest request,
                        UiUtils ui,
                        UiSessionContext session) throws IOException {
-        Patient patient = Context.getPatientService().getPatient(Integer.parseInt(request.getParameter("patient.id")));
-        MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        MdrtbPatientProgram mpp = mdrtbService.getMdrtbPatientProgram(Integer.parseInt(request.getParameter("program.id")));
         PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
         PatientProgramRegimen ppr = new PatientProgramRegimen();
 
@@ -102,7 +101,7 @@ public class AddVisitPageController {
         Concept cptstt;
         Concept hivConcept;
 
-        SimpleFollowUpForm followup = new SimpleFollowUpForm(patient);
+        SimpleFollowUpForm followup = new SimpleFollowUpForm(mpp.getPatient());
         //Set up Encounter
         followup.setLocation(session.getSessionLocation());
         followup.setProvider(Context.getPersonService().getPerson(3));
@@ -158,7 +157,8 @@ public class AddVisitPageController {
         Encounter encounter = Context.getEncounterService().saveEncounter(followup.getEncounter());
         ppd = dashboardService.savePatientProgramDetails(ppd);
 
-        params.put("patient", patient.getId());
+        params.put("programId", mpp.getPatientProgram().getId());
+        params.put("patient", mpp.getPatient().getId());
         return "redirect:" + ui.pageLink("mdrtbdashboard", "main", params);
     }
 }
