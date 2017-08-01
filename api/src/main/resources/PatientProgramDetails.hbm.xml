@@ -14,16 +14,17 @@
 		<property name="description" column="description" type="java.lang.String" />
 		<property name="daamin" column="daamin_name" type="java.lang.String" />
 		<property name="daaminContacts" column="daamin_contacts" type="java.lang.String" />
+		<property name="transferred" column="transfer_out" type="java.lang.Boolean" />
 
 		<many-to-one name="patientProgram" class="org.openmrs.PatientProgram" column="patient_program_id" cascade="none"  />
 		<many-to-one name="referringProgram" class="org.openmrs.PatientProgram" column="referral_program_id" cascade="none"  />
 
-        <many-to-one name="patientType" class="org.openmrs.ProgramWorkflowState" column="patient_type" cascade="none"  />
-        <many-to-one name="patientCategory" class="org.openmrs.ProgramWorkflowState" column="patient_category" cascade="none"  />
+		<many-to-one name="patientType" class="org.openmrs.ProgramWorkflowState" column="patient_type" cascade="none"  />
+		<many-to-one name="patientCategory" class="org.openmrs.ProgramWorkflowState" column="patient_category" cascade="none"  />
 
-        <many-to-one name="diseaseSite" class="org.openmrs.Concept" column="disease_site" cascade="none"  />
-        <many-to-one name="confirmationSite" class="org.openmrs.Concept" column="site_confirmation" cascade="none"  />
-        <many-to-one name="sputumResults" class="org.openmrs.Concept" column="sputum_result" cascade="none"  />
+		<many-to-one name="diseaseSite" class="org.openmrs.Concept" column="disease_site" cascade="none"  />
+		<many-to-one name="confirmationSite" class="org.openmrs.Concept" column="site_confirmation" cascade="none"  />
+		<many-to-one name="sputumResults" class="org.openmrs.Concept" column="sputum_result" cascade="none"  />
 		<many-to-one name="initialStatus" class="org.openmrs.Concept" column="initial_status" cascade="none"  />
 		<many-to-one name="currentStatus" class="org.openmrs.Concept" column="current_status" cascade="none"  />
 		<many-to-one name="cptStarted" class="org.openmrs.Concept" column="started_cpt" cascade="none"  />

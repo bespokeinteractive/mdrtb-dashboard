@@ -32,6 +32,7 @@ public class PatientProgramDetails implements Serializable {
     private Concept cptStarted;
     private Concept artStarted;
     private Concept outcome;
+    private Boolean transferred;
 
     // Start of Getters & Setters
     public Integer getId() {
@@ -192,5 +193,13 @@ public class PatientProgramDetails implements Serializable {
 
     public void setRegimen(PatientProgramRegimen regimen) {
         this.regimen = regimen;
+    }
+
+    public Boolean getTransferred() {
+        return transferred;
+    }
+
+    public void setTransferred(Boolean transferred) {
+        this.transferred = transferred;
     }
 }

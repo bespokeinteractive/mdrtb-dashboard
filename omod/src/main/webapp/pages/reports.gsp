@@ -171,7 +171,7 @@
 <div class="clear"></div>
 <div class="report-container">
 	<% if (report == "cohort") { %>
-		${ui.includeFragment("mdrtbdashboard", "reportCohort", [patient: 0])}
+		${ui.includeFragment("mdrtbdashboard", "reportCohort", [qtr: mnth, year: year, facility: facility.id])}
 	<% } else if (report == "casefinding") { %>
 		${ui.includeFragment("mdrtbdashboard", "reportCasefinding", [qtr: mnth, year: year, facility: facility.id])}
 	<% } else if (report == "distribution") { %>

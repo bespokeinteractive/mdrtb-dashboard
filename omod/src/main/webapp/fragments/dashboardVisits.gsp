@@ -6,7 +6,7 @@
 			<div style="position: static" class="dropdown">
 				<span class="dropdown-name"><i class="icon-cog"></i>Actions<i class="icon-sort-down"></i></span>
 				<ul style="z-index: 99">
-					<li><a data-value="0" href="addVisit.page?programId=${current.program.patientProgramId}"><i class="icon-file-text"></i>Add Visit</a></li>
+					<li><a data-value="0" href="addVisit.page?programId=${current.program.patientProgramId}"><i class="icon-file-text"></i>Add Follow-up Visit</a></li>
 					<li><a data-value="1"><i class="icon-reply"></i>Exit from Program</a></li>
 				</ul>
 			</div>
@@ -16,7 +16,7 @@
 			<div style="position: static" class="dropdown">
 				<span class="dropdown-name"><i class="icon-cog"></i>Actions<i class="icon-sort-down"></i></span>
 				<ul style="z-index: 99">
-					<li><a data-value="0" href="addVisit.page?programId=${current.program.patientProgramId}"><i class="icon-file-text"></i>Add Visit</a></li>
+					<li><a data-value="0" href="addVisit.page?programId=${current.program.patientProgramId}"><i class="icon-file-text"></i>Add Follow-up Visit</a></li>
 					<li><a data-value="2"><i class="icon-file-text"></i>Update Culture</a></li>
 					<li><a data-value="3"><i class="icon-retweet"></i>Update D.S.T</a></li>
 					<li><a data-value="4"><i class="icon-reply"></i>Exit from Program</a></li>

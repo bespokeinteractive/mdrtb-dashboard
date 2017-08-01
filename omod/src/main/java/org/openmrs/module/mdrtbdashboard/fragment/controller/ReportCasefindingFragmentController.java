@@ -23,7 +23,7 @@ public class ReportCasefindingFragmentController {
     MdrtbDashboardService dashboard = Context.getService(MdrtbDashboardService.class);
     MdrtbService mdrtbService = Context.getService(MdrtbService.class);
 
-    public String get(FragmentModel model,
+    public void get(FragmentModel model,
                       FragmentConfiguration config,
                       UiUtils ui,
                       UiSessionContext session){
@@ -48,10 +48,10 @@ public class ReportCasefindingFragmentController {
             Boolean pbc = false;
             Boolean pcd = false;
 
-            if (patient.getDiseaseSite().equals(mdrtbService.getConcept(MdrtbConcepts.PULMONARY_TB)) && patient.getSputumResults().equals(mdrtbService.getConcept(MdrtbConcepts.POSITIVE))){
+            if (patient.getDiseaseSite().equals(mdrtbService.getConcept(MdrtbConcepts.PULMONARY_TB)) && patient.getConfirmationSite().equals(mdrtbService.getConcept(MdrtbConcepts.BACTERIOLOGICAL_CONFIRMED))){
                 pbc = true;
             }
-            else if (patient.getDiseaseSite().equals(mdrtbService.getConcept(MdrtbConcepts.PULMONARY_TB)) && !patient.getSputumResults().equals(mdrtbService.getConcept(MdrtbConcepts.POSITIVE))){
+            else if (patient.getDiseaseSite().equals(mdrtbService.getConcept(MdrtbConcepts.PULMONARY_TB)) && patient.getConfirmationSite().equals(mdrtbService.getConcept(MdrtbConcepts.CLINICALLY_DIAGNOSED))){
                 pcd = true;
             }
 
@@ -187,7 +187,6 @@ public class ReportCasefindingFragmentController {
         }
 
         model.addAttribute("report", report);
-        return null;
     }
 
     public static Integer getEstimateAgeDuringEnrollment(Date birthDate, Date enrollmentDate) {
