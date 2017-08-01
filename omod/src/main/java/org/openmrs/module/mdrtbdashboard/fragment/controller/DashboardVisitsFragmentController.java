@@ -19,6 +19,7 @@ import org.openmrs.ui.framework.fragment.FragmentConfiguration;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
+import sun.security.krb5.internal.PAEncTSEnc;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
@@ -90,6 +91,12 @@ public class DashboardVisitsFragmentController {
             pp.setDateCompleted(date);
             pp.setOutcome(outcome);
             ppd.setOutcome(outcome);
+
+            if (outcome.equals(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.DIED))){
+                patient.setDead(true);
+                Context.getPatientService().savePatient(patient);
+            }
+
             Context.getProgramWorkflowService().savePatientProgram(pp);
             dashboardService.savePatientProgramDetails(ppd);
             dashboardService.saveParentProgramOutcome(ppd, outcome, date);
@@ -239,6 +246,11 @@ public class DashboardVisitsFragmentController {
         pp.setDateCompleted(outcomeDate);
         pp.setOutcome(outcome);
         pd.setOutcome(outcome);
+
+        if (outcome.equals(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.DIED))){
+            patient.setDead(true);
+            Context.getPatientService().savePatient(patient);
+        }
 
         //Save Patient Details
         dashboardService.savePatientProgramDetails(pd);
