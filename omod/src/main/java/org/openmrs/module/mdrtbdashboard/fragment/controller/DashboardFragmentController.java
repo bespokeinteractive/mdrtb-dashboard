@@ -117,7 +117,7 @@ public class DashboardFragmentController {
             return SimpleObject.create("status", "failed", "message", "Patient already enrolled in Program!");
         }
 
-        this.patientEnrollment(program, patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, session);
+        this.patientEnrollment(program, patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, null, session);
 
         // Return Object for Success
         return SimpleObject.create("status", "success", "message", "Patient successfully enrolled!");
@@ -130,8 +130,9 @@ public class DashboardFragmentController {
                                   String classification,
                                   String patientType,
                                   String treatmentCategory,
+                                  PatientProgram referredFrom,
                                   UiSessionContext session){
-        PatientProgramDetails details = new PatientProgramDetails();
+        PatientProgramDetails ppd = new PatientProgramDetails();
         MdrtbPatientProgram mpp = new MdrtbPatientProgram(program);
         Location location = session.getSessionLocation();
 
@@ -145,25 +146,29 @@ public class DashboardFragmentController {
             mpp.setClassificationAccordingToPreviousDrugUse(workflowService.getStateByUuid(classification));
             mpp.setClassificationAccordingToPreviousTreatment(workflowService.getStateByUuid(previousTreatment));
 
-            details.setPatientType(mpp.getClassificationAccordingToPreviousDrugUse());
-            details.setPatientCategory(mpp.getClassificationAccordingToPreviousTreatment());
+            ppd.setPatientType(mpp.getClassificationAccordingToPreviousDrugUse());
+            ppd.setPatientCategory(mpp.getClassificationAccordingToPreviousTreatment());
         }
         else {
             // set program workflows if the Patient is an TB Patient
             mpp.setClassificationAccordingToPatientType(workflowService.getStateByUuid(patientType));
             mpp.setClassificationAccordingToTreatmentCategory(workflowService.getStateByUuid(treatmentCategory));
 
-            details.setPatientType(mpp.getClassificationAccordingToPatientType());
-            details.setPatientCategory(mpp.getClassificationAccordingToTreatmentCategory());
+            ppd.setPatientType(mpp.getClassificationAccordingToPatientType());
+            ppd.setPatientCategory(mpp.getClassificationAccordingToTreatmentCategory());
+        }
+
+        if (referredFrom != null){
+            ppd.setReferringProgram(referredFrom);
         }
 
         // save the actual update
         PatientProgram pp = workflowService.savePatientProgram(mpp.getPatientProgram());
 
         // set the patient program details parameters & save
-        details.setTbmuNumber(generateTbmuNumber(enrolledOn, location));
-        details.setPatientProgram(pp);
-        dashboardService.savePatientProgramDetails(details);
+        ppd.setTbmuNumber(generateTbmuNumber(enrolledOn, location));
+        ppd.setPatientProgram(pp);
+        dashboardService.savePatientProgramDetails(ppd);
     }
 
     public SimpleObject transferPatient(@RequestParam(value = "patientId") Patient patient,
@@ -176,6 +181,7 @@ public class DashboardFragmentController {
                                         SessionStatus status)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        PatientProgram ref = new PatientProgram();
         Location location = session.getSessionLocation();
 
         if (mdrtbService.getPersonLocation(patient).getLocation().equals(location)){
@@ -195,11 +201,14 @@ public class DashboardFragmentController {
             Context.getProgramWorkflowService().savePatientProgram(pp);
 
             PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
+            ppd.setTransferred(true);
             ppd.setOutcome(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.PATIENT_TRANSFERRED_OUT));
-            ppd = dashboardService.savePatientProgramDetails(ppd);
+            dashboardService.savePatientProgramDetails(ppd);
+
+            ref = pp;
         }
 
-        this.patientEnrollment(mpp.getPatientProgram().getProgram(), patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, session);
+        this.patientEnrollment(mpp.getPatientProgram().getProgram(), patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, ref, session);
 
         // Return Object for Success
         return SimpleObject.create("status", "success", "message", "Patient successfully transferred!");
