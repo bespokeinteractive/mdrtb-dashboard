@@ -80,17 +80,19 @@ public class DashboardVisitsFragmentController {
 
         if (StringUtils.isNotEmpty(outcomeResults)){
             DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+            Date date = df.parse(testedOn, new ParsePosition(0));
             Concept outcome = Context.getConceptService().getConcept(Integer.parseInt(outcomeResults));
 
             MdrtbPatientProgram mpp = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
             PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
 
             PatientProgram pp = mpp.getPatientProgram();
-            pp.setDateCompleted(df.parse(testedOn, new ParsePosition(0)));
+            pp.setDateCompleted(date);
             pp.setOutcome(outcome);
             ppd.setOutcome(outcome);
             Context.getProgramWorkflowService().savePatientProgram(pp);
             dashboardService.savePatientProgramDetails(ppd);
+            dashboardService.saveParentProgramOutcome(ppd, outcome, date);
         }
 
         //Return Answer
@@ -240,6 +242,7 @@ public class DashboardVisitsFragmentController {
 
         //Save Patient Details
         dashboardService.savePatientProgramDetails(pd);
+        dashboardService.saveParentProgramOutcome(pd, outcome, outcomeDate);
 
         //Save the actual update
         Context.getProgramWorkflowService().savePatientProgram(pp);

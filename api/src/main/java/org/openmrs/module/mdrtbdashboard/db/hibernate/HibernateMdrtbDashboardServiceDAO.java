@@ -12,6 +12,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.db.DAOException;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
+import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.db.MdrtbDashboardServiceDAO;
 import org.openmrs.module.mdrtbdashboard.model.*;
 
@@ -141,6 +142,23 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     @Override
     public PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen){
         return (PatientProgramRegimen)getSession().merge(patientProgramRegimen);
+    }
+
+    @Override
+    public PatientProgramDetails saveParentProgramOutcome(PatientProgramDetails ppd, Concept outcome, Date completedOn){
+        while (ppd.getReferringProgram() != null){
+            ppd = Context.getService(MdrtbDashboardService.class).getPatientProgramDetails(ppd.getReferringProgram());
+            ppd.setOutcome(outcome);
+
+            PatientProgram pp = ppd.getPatientProgram();
+            pp.setOutcome(outcome);
+            pp.setDateCompleted(completedOn);
+
+            Context.getProgramWorkflowService().savePatientProgram(pp);
+            Context.getService(MdrtbDashboardService.class).savePatientProgramDetails(ppd);
+        }
+
+        return ppd;
     }
 
     @Override

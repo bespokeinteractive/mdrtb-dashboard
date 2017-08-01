@@ -81,6 +81,11 @@ public class MdrtbDashboardServiceImpl
     }
 
     @Override
+    public PatientProgramDetails saveParentProgramOutcome(PatientProgramDetails ppd, Concept outcome, Date completedOn){
+        return dao.saveParentProgramOutcome(ppd, outcome, completedOn);
+    }
+
+    @Override
     public RegimentType getRegimenType(Concept concept, Program program){
         return dao.getRegimenType(concept, program);
     }

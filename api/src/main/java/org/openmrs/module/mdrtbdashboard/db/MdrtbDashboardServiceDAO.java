@@ -28,6 +28,7 @@ public interface MdrtbDashboardServiceDAO {
     PatientProgramDetails getPatientProgramDetails(Integer ppid);
     PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails);
     PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen);
+    PatientProgramDetails saveParentProgramOutcome(PatientProgramDetails ppd, Concept outcome, Date completedOn);
 
     RegimentType getRegimenType(Concept concept, Program program);
     List<RegimentType> getRegimenTypes(Concept concept, Program program);
