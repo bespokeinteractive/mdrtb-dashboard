@@ -66,6 +66,8 @@
 				data: ({
 					patientId:			${patient.id},
 					enrolledOn: 		jq('#date-enrolled-field').val(),
+					treatmentSite: 		jq('#treatmentSite').val(),
+					confirmationSite: 	jq('#confirmationSite').val(),
 					previousTreatment:	jq('option:selected', '#enrollmentPreviousTreatment').data('uuid'),					
 					classification:		jq('option:selected', '#enrollmentClassifications').data('uuid'),
 					patientType:		jq('option:selected', '#enrollmentPatientType').data('uuid'),
@@ -75,7 +77,7 @@
 				success: function(data) {
 					if (data.status == "success"){
 						jq().toastmessage('showSuccessToast', data.message);
-						window.location.href = "main.page?patient=${patient.id}";					
+						window.location.href = "main.page?patient=${patient.id}&programId=" + data.programId;					
 					}
 					else {
 						jq().toastmessage('showErrorToast', data.message);
@@ -109,6 +111,9 @@
 		jq('#enrollmentClassifications').val(class01);		
 		jq('#enrollmentTreatmentCategory').val(class02);
 		jq('#enrollmentPreviousTreatment').val(class02);
+		
+		jq('#treatmentSite').val(${pd.diseaseSite});
+		jq('#confirmationSite').val(${pd.confirmationSite});
 	});
 	
 </script>
@@ -395,14 +400,35 @@ ${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, progra
 					<label for="tbmuNo">New TBMU No.:</label>
 					<input type="text" id="tbmuNo" name="patient.tbmu_number" readonly="" />
 				</div>
+				
 				<div>
 					<label for="date-enrolled-display">Transfer Date :</label>
 					${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'date-enrolled', id: 'date-enrolled', label: 'Date of Enrollment', useTime: false, defaultToday: true, endDate: new Date()])}
 				</div>
 				
 				<div>
-					<label for="patientProgram">Patient Program:</label>
-					<input type="text" id="patientProgram" name="patient.program" readonly="" value="${program.program.concept.name}" />
+					<label for="treatmentSite">Tuberculosis Type :</label>					
+					<select id="treatmentSite" class="required" name="treatment.site">
+						<option value="">&nbsp;</option>
+						<% anatomicalSites.eachWithIndex { sites, index -> %>
+							<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
+						<% } %>
+					</select>
+				</div>
+				
+				<div>
+					<label for="confirmationSite">Classification of TB:</label>					
+					<select id="confirmationSite" class="required" name="confirmation.site">
+						<option value="">&nbsp;</option>
+						<% siteConfirmation.eachWithIndex { sites, index -> %>
+							<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
+						<% } %>
+					</select>
+				</div>
+				
+				<div>
+					<label for="patientProgram">Resistance Profile:</label>
+					<input type="text" id="patientProgram" name="patient.program" readonly="" value="${program.program.programId ==1?'DRUG SENSITIVE TUBERCULOSIS':'DRUG RESISTANT TUBERCULOSIS'}" />
 				</div>
 				
 				<% if (program.program.programId == 1) { %>

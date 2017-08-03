@@ -53,7 +53,12 @@ public class MainPageController {
 
         // Test if Intake Form was ever filled
         if (details.getFacility() == null){
-            return "redirect:" + ui.pageLink("mdrtbdashboard", "intake")+"?patient="+patient.getId();
+            if (programId == null){
+                return "redirect:" + ui.pageLink("mdrtbdashboard", "intake")+"?patient="+patient.getId();
+            }
+            else {
+                return "redirect:" + ui.pageLink("mdrtbdashboard", "intake")+"?patient="+patient.getId()+"&programId="+programId;
+            }
         }
 
         model.addAttribute("patient", patient);

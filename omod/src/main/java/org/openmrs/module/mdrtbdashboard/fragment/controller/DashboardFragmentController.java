@@ -105,6 +105,8 @@ public class DashboardFragmentController {
     public SimpleObject enrollPatient(@RequestParam(value = "programId") Program program,
                                       @RequestParam(value = "patientId") Patient patient,
                                       @RequestParam(value = "enrolledOn") Date enrolledOn,
+                                      @RequestParam(value = "treatmentSite") Concept site,
+                                      @RequestParam(value = "confirmationSite") Concept confirmation,
                                       @RequestParam(value = "enrollmentNotes", required = false) String enrollmentNotes,
                                       @RequestParam(value = "previousTreatment", required = false) String previousTreatment,
                                       @RequestParam(value = "classification",required = false) String classification,
@@ -117,21 +119,23 @@ public class DashboardFragmentController {
             return SimpleObject.create("status", "failed", "message", "Patient already enrolled in Program!");
         }
 
-        this.patientEnrollment(program, patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, null, session);
+        PatientProgramDetails ppd = this.patientEnrollment(program, patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, null, site, confirmation, session);
 
         // Return Object for Success
-        return SimpleObject.create("status", "success", "message", "Patient successfully enrolled!");
+        return SimpleObject.create("status", "success", "message", "Patient successfully enrolled!", "programId", ppd.getId());
     }
 
-    public void patientEnrollment(Program program,
-                                  Patient patient,
-                                  Date enrolledOn,
-                                  String previousTreatment,
-                                  String classification,
-                                  String patientType,
-                                  String treatmentCategory,
-                                  PatientProgram referredFrom,
-                                  UiSessionContext session){
+    public PatientProgramDetails patientEnrollment(Program program,
+                                                   Patient patient,
+                                                   Date enrolledOn,
+                                                   String previousTreatment,
+                                                   String classification,
+                                                   String patientType,
+                                                   String treatmentCategory,
+                                                   PatientProgram referredFrom,
+                                                   Concept site,
+                                                   Concept confirmation,
+                                                   UiSessionContext session){
         PatientProgramDetails ppd = new PatientProgramDetails();
         MdrtbPatientProgram mpp = new MdrtbPatientProgram(program);
         Location location = session.getSessionLocation();
@@ -168,11 +172,16 @@ public class DashboardFragmentController {
         // set the patient program details parameters & save
         ppd.setTbmuNumber(generateTbmuNumber(enrolledOn, location));
         ppd.setPatientProgram(pp);
-        dashboardService.savePatientProgramDetails(ppd);
+        ppd.setDiseaseSite(site);
+        ppd.setConfirmationSite(confirmation);
+
+        return dashboardService.savePatientProgramDetails(ppd);
     }
 
     public SimpleObject transferPatient(@RequestParam(value = "patientId") Patient patient,
                                         @RequestParam(value = "enrolledOn") Date enrolledOn,
+                                        @RequestParam(value = "treatmentSite") Concept site,
+                                        @RequestParam(value = "confirmationSite") Concept confirmation,
                                         @RequestParam(value = "previousTreatment", required = false) String previousTreatment,
                                         @RequestParam(value = "classification",required = false) String classification,
                                         @RequestParam(value = "patientType", required = false) String patientType,
@@ -181,6 +190,7 @@ public class DashboardFragmentController {
                                         SessionStatus status)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        PatientProgramDetails pd = dashboardService.getPatientProgramDetails(mpp);
         PatientProgram ref = new PatientProgram();
         Location location = session.getSessionLocation();
 
@@ -208,7 +218,7 @@ public class DashboardFragmentController {
             ref = pp;
         }
 
-        this.patientEnrollment(mpp.getPatientProgram().getProgram(), patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, ref, session);
+        this.patientEnrollment(mpp.getPatientProgram().getProgram(), patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, ref, site, confirmation,  session);
 
         // Return Object for Success
         return SimpleObject.create("status", "success", "message", "Patient successfully transferred!");

@@ -73,6 +73,16 @@
 		});
 		
 		jq('.confirm').click(function(){
+			if (jq('#treatmentSite').val() == ''){
+				jq().toastmessage('showErrorToast', 'Kindly select the type of TB the Patient is suffering from');
+				return false;				
+			}
+			
+			if (jq('#confirmationSite').val() == ''){
+				jq().toastmessage('showErrorToast', 'Kindly select the classification of the Type of Tb for the Patient');
+				return false;				
+			}
+			
 			if (jq('#enrollmentType').val() == ''){
 				jq().toastmessage('showErrorToast', 'Kindly select the group you want to Enroll the Patient');
 				return false;				
@@ -85,6 +95,8 @@
 					patientId:			${patient.id},
 					programId: 			jq('#enrollmentType').val(),
 					enrolledOn: 		jq('#date-enrolled-field').val(),
+					treatmentSite: 		jq('#treatmentSite').val(),
+					confirmationSite: 	jq('#confirmationSite').val(),
 					enrollmentNotes:	'',
 					previousTreatment:	jq('option:selected', '#enrollmentPreviousTreatment').data('uuid'),					
 					classification:		jq('option:selected', '#enrollmentClassifications').data('uuid'),
@@ -358,6 +370,7 @@
 	span.date input {
 		display: inline-block;
 		padding: 5px 10px;
+		text-transform: uppercase;
 	}
 	.info-header h3{
 		color: #f26522;
@@ -373,7 +386,10 @@
 	}
 	.info-body div label{
 		display: inline-block;
+		font-weight: bold;
+		font-size: 0.85em;
 		padding-left: 10px;
+		text-transform: uppercase;
 		width: 190px;
 	}
 	.dashboard .info-section {
@@ -488,16 +504,42 @@
 				</div>
 				
 				<div>
-					<label for="enrollmentType">Patient Program:</label>
+					<label for="treatmentSite">Tuberculosis Type :</label>					
+					<select id="treatmentSite" class="required" name="treatment.site">
+						<option value="">&nbsp;</option>
+						<% anatomicalSites.eachWithIndex { sites, index -> %>
+							<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
+						<% } %>
+					</select>
+				</div>
+				
+				<div>
+					<label for="confirmationSite">Classification of TB:</label>					
+					<select id="confirmationSite" class="required" name="confirmation.site">
+						<option value="">&nbsp;</option>
+						<% siteConfirmation.eachWithIndex { sites, index -> %>
+							<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
+						<% } %>
+					</select>
+				</div>
+				
+				
+				
+				
+				
+				
+				
+				<div>
+					<label for="enrollmentType">Resistance Profile:</label>
 					<select id="enrollmentType" name="enrollment.Type">
 						<option value=""></option>
-						<option value="1">TB PATIENT</option>
-						<option value="2">MDR-TB PATIENT</option>
+						<option value="1">DRUG SENSITIVE TUBERCULOSIS</option>
+						<option value="2">DRUG RESISTANT TUBERCULOSIS</option>
 					</select>
 				</div>
 				
 				<div class="tbb">
-					<label for="enrollmentPatientType">Type of Patient:</label>
+					<label for="enrollmentPatientType">Patient Classification:</label>
 					<select id="enrollmentPatientType" name="enrollment.type">
 						<option value="" data-uuid=""></option>
 						<% enrollmentPatientType.eachWithIndex { classification, index -> %>

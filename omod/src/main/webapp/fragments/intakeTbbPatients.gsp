@@ -128,38 +128,6 @@
 					<% } %>
 				</select>
 			</field>
-			
-			<field>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'treatment.started', id: 'date-started', label: 'Started On:', useTime: false, defaultToday: true, endDate: new Date()])}
-			</field>
-			
-			<field>
-				<label for="treatmentSite">
-					Disease Site:
-					<span class="mandatory">*</span>
-				</label>
-				
-				<select id="treatmentSite" class="required" name="treatment.site">
-					<option value="">&nbsp;</option>
-					<% anatomicalSites.eachWithIndex { sites, index -> %>
-						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
-					<% } %>
-				</select>
-			</field>
-			
-			<field>
-				<label for="confirmationSite">
-					Site Confirmation:
-					<span class="mandatory">*</span>
-				</label>
-				
-				<select id="confirmationSite" class="required" name="confirmation.site">
-					<option value="">&nbsp;</option>
-					<% siteConfirmation.eachWithIndex { sites, index -> %>
-						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
-					<% } %>
-				</select>
-			</field>
 		</fieldset>		
 	</section>
 	

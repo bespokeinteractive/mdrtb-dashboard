@@ -21,8 +21,8 @@
 					<span class="mandatory">*</span>
 				</label>
 				<select id="locationFacility" class="required" name="treatment.facility">
-					<% facilities.eachWithIndex { sites, index -> %>
-						<option value="${sites.id}">${sites.name.toString().toUpperCase()}</option>
+					<% facilities.eachWithIndex { fac, index -> %>
+						<option value="${fac.id}">${fac.name.toString().toUpperCase()}</option>
 					<% } %>
 				</select>
 				<input id="locationName" name="treatment.location" type="hidden" value="${location.name}" readonly="" class="locations" />
@@ -134,38 +134,6 @@
 				</label>
 				<select id="treatmentDots" class="required" name="treatment.dots">
 					<option value="1160667" data-uuid="5234b4e7-d544-4e18-b79f-78c5df68fd3d">TB CENTER / TBMU</option>
-				</select>
-			</field>
-			
-			<field>
-				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'treatment.started', id: 'date-started', label: 'Started On:', useTime: false, defaultToday: true, endDate: new Date()])}
-			</field>
-			
-			<field>
-				<label for="treatmentSite">
-					Disease Site:
-					<span class="mandatory">*</span>
-				</label>
-				
-				<select id="treatmentSite" class="required" name="treatment.site">
-					<option value="">&nbsp;</option>
-					<% anatomicalSites.eachWithIndex { sites, index -> %>
-						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
-					<% } %>
-				</select>
-			</field>
-			
-			<field>
-				<label for="confirmationSite">
-					Site Confirmation:
-					<span class="mandatory">*</span>
-				</label>
-				
-				<select id="confirmationSite" class="required" name="confirmation.site">
-					<option value="">&nbsp;</option>
-					<% siteConfirmation.eachWithIndex { sites, index -> %>
-						<option value="${sites.answerConcept.id}" data-uuid="${sites.answerConcept.uuid}">${sites.answerConcept.name}</option>
-					<% } %>
 				</select>
 			</field>
 		</fieldset>		

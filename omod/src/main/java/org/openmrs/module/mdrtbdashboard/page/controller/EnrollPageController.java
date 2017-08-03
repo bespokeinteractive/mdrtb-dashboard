@@ -1,5 +1,6 @@
 package org.openmrs.module.mdrtbdashboard.page.controller;
 
+import org.openmrs.ConceptAnswer;
 import org.openmrs.Patient;
 import java.util.Collection;
 
@@ -15,19 +16,23 @@ import org.springframework.web.bind.annotation.RequestParam;
  * Created by Dennis Henry on 12/19/2016.
  */
 public class EnrollPageController {
+    MdrtbService mdrtbService = Context.getService(MdrtbService.class);
+
     public String get(
             @RequestParam(value = "patient") Patient patient,
             PageModel model,
             UiUtils ui) {
-        MdrtbPatientProgram mostRecentProgram = Context.getService(MdrtbService.class).getMostRecentMdrtbPatientProgram(patient);
+        MdrtbPatientProgram mostRecentProgram = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
         if (mostRecentProgram != null && mostRecentProgram.getActive()){
             return "redirect:" + ui.pageLink("mdrtbdashboard", "main")+"?patient="+patient.getId();
         }
 
-        Collection<ProgramWorkflowState> enrollmentPreviousTreatment = Context.getService(MdrtbService.class).getPossibleClassificationsAccordingToPreviousTreatment();
-        Collection<ProgramWorkflowState> enrollmentClassifications = Context.getService(MdrtbService.class).getPossibleClassificationsAccordingToPreviousDrugUse();
-        Collection<ProgramWorkflowState> enrollmentPatientType = Context.getService(MdrtbService.class).getPossibleClassificationsAccordingToPatientType();
-        Collection<ProgramWorkflowState> enrollmentTreatmentCategory = Context.getService(MdrtbService.class).getPossibleClassificationsAccordingToTreatmentCategory();
+        Collection<ProgramWorkflowState> enrollmentPreviousTreatment = mdrtbService.getPossibleClassificationsAccordingToPreviousTreatment();
+        Collection<ProgramWorkflowState> enrollmentClassifications = mdrtbService.getPossibleClassificationsAccordingToPreviousDrugUse();
+        Collection<ProgramWorkflowState> enrollmentPatientType = mdrtbService.getPossibleClassificationsAccordingToPatientType();
+        Collection<ProgramWorkflowState> enrollmentTreatmentCategory = mdrtbService.getPossibleClassificationsAccordingToTreatmentCategory();
+        Collection<ConceptAnswer> anatomicalSites = mdrtbService.getPossibleAnatomicalSites();
+        Collection<ConceptAnswer> siteConfirmation = mdrtbService.getPossibleAnatomicalSitesConfirmation();
 
         String gender = "Male";
         if (patient.getGender().equals("F")){
@@ -36,6 +41,8 @@ public class EnrollPageController {
 
         model.addAttribute("patient", patient);
         model.addAttribute("gender", gender);
+        model.addAttribute("anatomicalSites", anatomicalSites);
+        model.addAttribute("siteConfirmation", siteConfirmation);
         model.addAttribute("enrollmentPreviousTreatment", enrollmentPreviousTreatment);
         model.addAttribute("enrollmentClassifications", enrollmentClassifications);
         model.addAttribute("enrollmentPatientType", enrollmentPatientType);

@@ -35,23 +35,34 @@ public class IntakePageController {
 
     public String get(
             @RequestParam(value = "patient") Patient patient,
+            @RequestParam(value = "programId", required = false) Integer programId,
             PageModel model,
             UiUtils ui,
             UiSessionContext session) {
 
-        MdrtbPatientProgram current = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
-        PatientProgramDetails details = dashboardService.getPatientProgramDetails(current);
+        MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        PatientProgramDetails details = dashboardService.getPatientProgramDetails(mpp);
         Location location = session.getSessionLocation();
 
-        if (current != null && current.getActive()){
-            model.addAttribute("program", current.getPatientProgram().getProgram());
+        if (programId != null){
+            mpp = mdrtbService.getMdrtbPatientProgram(programId);
+            patient = mpp.getPatient();
+        }
+
+        if (mpp != null && mpp.getActive()){
+            model.addAttribute("program", mpp.getPatientProgram().getProgram());
         }
         else{
             return "redirect:" + ui.pageLink("mdrtbdashboard", "enroll")+"?patient="+patient.getId();
         }
 
         if (details.getFacility() != null){
-            return "redirect:" + ui.pageLink("mdrtbdashboard", "main")+"?patient="+patient.getId();
+            if (programId == null){
+                return "redirect:" + ui.pageLink("mdrtbdashboard", "main")+"?patient="+patient.getId();
+            }
+            else {
+                return "redirect:" + ui.pageLink("mdrtbdashboard", "main")+"?patient="+patient.getId();
+            }
         }
 
         List<LocationFacilities> facilities = dashboardService.getFacilities(location, "active");
@@ -67,7 +78,7 @@ public class IntakePageController {
         Collection<ConceptAnswer> regimenTypes = mdrtbService.getPossibleTbTreatmentTypes();
 
         model.addAttribute("patient", patient);
-        model.addAttribute("program", current.getPatientProgram());
+        model.addAttribute("program", mpp.getPatientProgram());
         model.addAttribute("location", location);
         model.addAttribute("facilities", facilities);
 
@@ -89,6 +100,9 @@ public class IntakePageController {
                        UiSessionContext session) throws IOException {
         Map<String, Object> params=new HashMap<String, Object>();
         Patient patient = Context.getPatientService().getPatient(Integer.parseInt(request.getParameter("patient.id")));
+        MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
+        PatientProgramRegimen ppr = new PatientProgramRegimen();
 
         String height = request.getParameter("vitals.height");
         String weight = request.getParameter("vitals.weight");
@@ -110,8 +124,6 @@ public class IntakePageController {
         }
         //Definitions
         LocationFacilities facility = dashboardService.getFacilityById(Integer.parseInt(request.getParameter("treatment.facility")));
-        Concept sites = conceptService.getConcept(request.getParameter("treatment.site"));
-        Concept confrm = conceptService.getConcept(request.getParameter("confirmation.site"));
         Concept status = conceptService.getConcept(Integer.parseInt(request.getParameter("exams.hiv.result")));
         Concept smear = conceptService.getConcept(30);
         Concept artstt = conceptService.getConcept(126);
@@ -140,8 +152,7 @@ public class IntakePageController {
         intake.setSecondLineRegistrationNumber(request.getParameter("register.number"));
         intake.setFacilityRegisterNumber(request.getParameter("facility.number"));
         intake.setDirectObserver(request.getParameter("treatment.dots"));
-        intake.setTreatmentStartDate(request.getParameter("treatment.started"));
-        intake.setAnatomicalSite(sites);
+        intake.setAnatomicalSite(ppd.getDiseaseSite());
 
         if (request.getParameter("exams.sputum.result") != null){
             intake.setSputumSmear(request.getParameter("exams.sputum.date"), request.getParameter("exams.lab.number"), request.getParameter("exams.sputum.result"));
@@ -164,18 +175,12 @@ public class IntakePageController {
             cptstt = conceptService.getConcept(Integer.parseInt(request.getParameter("exams.cpt.started")));
         }
 
-
-
         //Obs Groups Fields
         Encounter encounter = Context.getEncounterService().saveEncounter(intake.getEncounter());
-        MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
-        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
-        PatientProgramRegimen ppr = new PatientProgramRegimen();
+
         ppd.setDaamin(daamin);
         ppd.setDaaminContacts(contacts);
         ppd.setFacility(facility);
-        ppd.setDiseaseSite(sites);
-        ppd.setConfirmationSite(confrm);
         ppd.setSputumResults(smear);
         ppd.setInitialStatus(status);
         ppd.setCurrentStatus(status);
@@ -185,6 +190,7 @@ public class IntakePageController {
         if (!(request.getParameter("regimen.type").equals("")) || request.getParameter("regimen.type").isEmpty()){
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             Date date = df.parse(request.getParameter("regimen.started"), new ParsePosition(0));
+            intake.setTreatmentStartDate(request.getParameter("regimen.started"));
 
             ppr.setProgramDetails(ppd);
             ppr.setName(request.getParameter("regimen.name"));
@@ -195,7 +201,7 @@ public class IntakePageController {
             ppd.setRegimen(ppr);
         }
 
-        ppd = dashboardService.savePatientProgramDetails(ppd);
+        this.dashboardService.savePatientProgramDetails(ppd);
 
         params.put("patient", patient.getId());
         return "redirect:" + ui.pageLink("mdrtbdashboard", "main", params);
