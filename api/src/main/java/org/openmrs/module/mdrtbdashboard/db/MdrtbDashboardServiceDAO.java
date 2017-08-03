@@ -29,10 +29,16 @@ public interface MdrtbDashboardServiceDAO {
     PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails);
     PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen);
     PatientProgramDetails saveParentProgramOutcome(PatientProgramDetails ppd, Concept outcome, Date completedOn);
+    PatientProgramVisits savePatientProgramVisits(PatientProgramVisits patientProgramVisit);
 
     RegimentType getRegimenType(Concept concept, Program program);
     List<RegimentType> getRegimenTypes(Concept concept, Program program);
     List<PatientProgramRegimen> getPatientProgramRegimens(PatientProgramDetails pd, Boolean active);
+
+    PatientProgramVisits getPatientProgramVisit(PatientProgram patientProgram, VisitTypes visitType);
+
+    List<VisitTypes> getVisitTypes(Program program, Boolean initial, Boolean finals, Boolean voided);
+    VisitTypes getVisitType(Integer id);
 
     PatientProgramDetails getPatientProgramDetails(PatientProgram patientProgram);
     Integer getNextTbmuNumberCount(String header);

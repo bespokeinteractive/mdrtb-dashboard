@@ -86,6 +86,11 @@ public class MdrtbDashboardServiceImpl
     }
 
     @Override
+    public PatientProgramVisits savePatientProgramVisits(PatientProgramVisits patientProgramVisit){
+        return dao.savePatientProgramVisits(patientProgramVisit);
+    }
+
+    @Override
     public RegimentType getRegimenType(Concept concept, Program program){
         return dao.getRegimenType(concept, program);
     }
@@ -93,6 +98,21 @@ public class MdrtbDashboardServiceImpl
     @Override
     public List<RegimentType> getRegimenTypes(Concept concept, Program program){
         return dao.getRegimenTypes(concept, program);
+    }
+
+    @Override
+    public List<VisitTypes> getVisitTypes(Program program, Boolean initial, Boolean finals, Boolean voided){
+        return dao.getVisitTypes(program, initial, finals, voided);
+    }
+
+    @Override
+    public VisitTypes getVisitType(Integer id){
+        return dao.getVisitType(id);
+    }
+
+    @Override
+    public PatientProgramVisits getPatientProgramVisit(PatientProgram patientProgram, VisitTypes visitType){
+        return dao.getPatientProgramVisit(patientProgram, visitType);
     }
 
     @Override

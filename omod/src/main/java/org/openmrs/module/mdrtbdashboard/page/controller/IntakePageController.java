@@ -10,9 +10,7 @@ import org.openmrs.module.mdrtb.form.SimpleIntakeForm;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.LocationFacilities;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramRegimen;
+import org.openmrs.module.mdrtbdashboard.model.*;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -103,6 +101,14 @@ public class IntakePageController {
         MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
         PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
         PatientProgramRegimen ppr = new PatientProgramRegimen();
+        List<VisitTypes> visitTypes = dashboardService.getVisitTypes(mpp.getPatientProgram().getProgram(),true,false,false);
+        PatientProgramVisits ppv = dashboardService.getPatientProgramVisit(mpp.getPatientProgram(), visitTypes.get(0));
+
+        if (ppv == null){
+            ppv = new PatientProgramVisits();
+            ppv.setPatientProgram(mpp.getPatientProgram());
+            ppv.setVisitType(visitTypes.get(0));
+        }
 
         String height = request.getParameter("vitals.height");
         String weight = request.getParameter("vitals.weight");
@@ -110,6 +116,7 @@ public class IntakePageController {
         String bmi = request.getParameter("vitals.bmi");
         String daamin = request.getParameter("treatment.supporter");
         String contacts = request.getParameter("treatment.supporter.contacts");
+        String labNumber = request.getParameter("exams.lab.number");
 
         if (StringUtils.equals(muac, "999")){
             muac = "";
@@ -155,10 +162,13 @@ public class IntakePageController {
         intake.setAnatomicalSite(ppd.getDiseaseSite());
 
         if (request.getParameter("exams.sputum.result") != null){
-            intake.setSputumSmear(request.getParameter("exams.sputum.date"), request.getParameter("exams.lab.number"), request.getParameter("exams.sputum.result"));
+            intake.setSputumSmear(request.getParameter("exams.sputum.date"), labNumber, request.getParameter("exams.sputum.result"));
+            ppv.setExamDate(getDateFromStrings(request.getParameter("exams.sputum.date")));
+            ppv.setSputumResult(smear);
         }
         else {
-            intake.setLabNumber(request.getParameter("exams.lab.number"));
+            intake.setLabNumber(labNumber);
+            ppv.setExamDate(getDateFromStrings(request.getParameter("exams.genxpert.date")));
         }
 
         intake.setGenXpert(request.getParameter("exams.genxpert.date"), request.getParameter("exams.genxpert.result"));
@@ -187,9 +197,14 @@ public class IntakePageController {
         ppd.setArtStarted(artstt);
         ppd.setCptStarted(cptstt);
 
+        ppv.setEncounter(encounter);
+        ppv.setLabNumber(labNumber);
+        ppv.setGeneXpertResult(conceptService.getConcept(Integer.parseInt(request.getParameter("exams.genxpert.result"))));
+        ppv.setHivResults(conceptService.getConcept(Integer.parseInt(request.getParameter("exams.hiv.result"))));
+        ppv.setXrayResults(conceptService.getConcept(Integer.parseInt(request.getParameter("exams.xray.result"))));
+
         if (mpp.getPatientProgram().getProgram().getId() == 2){
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-            Date date = df.parse(request.getParameter("register.date"), new ParsePosition(0));
+            Date date = getDateFromStrings(request.getParameter("register.date"));
 
             ppd.setSecondLineDate(date);
             ppd.setSecondLineNumber(request.getParameter("register.number"));
@@ -210,8 +225,14 @@ public class IntakePageController {
         }
 
         this.dashboardService.savePatientProgramDetails(ppd);
+        this.dashboardService.savePatientProgramVisits(ppv);
 
         params.put("patient", patient.getId());
         return "redirect:" + ui.pageLink("mdrtbdashboard", "main", params);
+    }
+
+    public Date getDateFromStrings(String stringDate){
+        DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+        return df.parse(stringDate, new ParsePosition(0));
     }
 }

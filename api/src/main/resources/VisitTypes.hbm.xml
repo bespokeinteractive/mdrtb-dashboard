@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.openmrs.module.mdrtbdashboard.model">
+	<class name="VisitTypes" table="visit_types" batch-size="500">
+		<id name="id" type="int" column="id" unsaved-value="0">
+            <generator class="native" />
+		</id>
+		<many-to-one name="program" class="org.openmrs.Program" column="program_id" cascade="none"  />
+		<property name="name" column="name" type="java.lang.String" />
+		<property name="initialVisit" column="initial" type="java.lang.Boolean" />
+		<property name="finalVisit" column="final" type="java.lang.Boolean" />
+		<property name="voided" column="void" type="java.lang.Boolean" />
+	</class>
+</hibernate-mapping>

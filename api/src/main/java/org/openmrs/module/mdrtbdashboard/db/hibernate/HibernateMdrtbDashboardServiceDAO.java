@@ -140,6 +140,38 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
+    public List<VisitTypes> getVisitTypes(Program program, Boolean initial, Boolean finals, Boolean voided){
+        Criteria criteria = getSession().createCriteria(VisitTypes.class);
+        criteria.add(Restrictions.eq("program", program));
+        if (initial != null){
+            criteria.add(Restrictions.eq("initialVisit", initial));
+        }
+        if (finals != null){
+            criteria.add(Restrictions.eq("finalVisit", finals));
+        }
+        criteria.add(Restrictions.eq("voided", voided));
+
+        return criteria.list();
+    }
+
+    @Override
+    public VisitTypes getVisitType(Integer id){
+        Criteria criteria = getSession().createCriteria(VisitTypes.class);
+        criteria.add(Restrictions.eq("id", id));
+
+        return (VisitTypes)criteria.uniqueResult();
+    }
+
+    @Override
+    public PatientProgramVisits getPatientProgramVisit(PatientProgram patientProgram, VisitTypes visitType){
+        Criteria criteria = getSession().createCriteria(PatientProgramVisits.class);
+        criteria.add(Restrictions.eq("patientProgram", patientProgram));
+        criteria.add(Restrictions.eq("visitType", visitType));
+
+        return (PatientProgramVisits)criteria.uniqueResult();
+    }
+
+    @Override
     public PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen){
         return (PatientProgramRegimen)getSession().merge(patientProgramRegimen);
     }
@@ -159,6 +191,11 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
         }
 
         return ppd;
+    }
+
+    @Override
+    public PatientProgramVisits savePatientProgramVisits(PatientProgramVisits patientProgramVisit){
+        return (PatientProgramVisits)getSession().merge(patientProgramVisit);
     }
 
     @Override
