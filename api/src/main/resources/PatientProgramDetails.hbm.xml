@@ -10,6 +10,8 @@
 		</id>
 
 		<property name="tbmuNumber" column="tbmu_number" type="java.lang.String" />
+		<property name="secondLineDate" column="second_line_date" type="java.util.Date" />
+		<property name="secondLineNumber" column="second_line_number" type="java.lang.String" />
 		<property name="labNumber" column="lab_number" type="java.lang.String" />
 		<property name="description" column="description" type="java.lang.String" />
 		<property name="daamin" column="daamin_name" type="java.lang.String" />

@@ -187,6 +187,14 @@ public class IntakePageController {
         ppd.setArtStarted(artstt);
         ppd.setCptStarted(cptstt);
 
+        if (mpp.getPatientProgram().getProgram().getId() == 2){
+            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+            Date date = df.parse(request.getParameter("register.date"), new ParsePosition(0));
+
+            ppd.setSecondLineDate(date);
+            ppd.setSecondLineNumber(request.getParameter("register.number"));
+        }
+
         if (!(request.getParameter("regimen.type").equals("")) || request.getParameter("regimen.type").isEmpty()){
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
             Date date = df.parse(request.getParameter("regimen.started"), new ParsePosition(0));

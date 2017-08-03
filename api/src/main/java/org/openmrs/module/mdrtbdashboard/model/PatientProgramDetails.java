@@ -5,6 +5,7 @@ import org.openmrs.PatientProgram;
 import org.openmrs.ProgramWorkflowState;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Dennis Henry
@@ -21,6 +22,8 @@ public class PatientProgramDetails implements Serializable {
     private LocationFacilities facility;
     private String tbmuNumber;
     private String labNumber;
+    private String secondLineNumber = "N/A";
+    private Date secondLineDate;
     private String description;
     private String daamin;
     private String daaminContacts;
@@ -33,7 +36,6 @@ public class PatientProgramDetails implements Serializable {
     private Concept artStarted;
     private Concept outcome;
     private Boolean transferred;
-
     // Start of Getters & Setters
     public Integer getId() {
         return id;
@@ -201,5 +203,21 @@ public class PatientProgramDetails implements Serializable {
 
     public void setTransferred(Boolean transferred) {
         this.transferred = transferred;
+    }
+
+    public String getSecondLineNumber() {
+        return secondLineNumber;
+    }
+
+    public void setSecondLineNumber(String secondLineNumber) {
+        this.secondLineNumber = secondLineNumber;
+    }
+
+    public Date getSecondLineDate() {
+        return secondLineDate;
+    }
+
+    public void setSecondLineDate(Date secondLineDate) {
+        this.secondLineDate = secondLineDate;
     }
 }
