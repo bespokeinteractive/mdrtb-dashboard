@@ -131,6 +131,7 @@
 	p.reportTitle{
 		font-family: "OpenSansBold";
 		margin: 10px 0;
+		text-align: center;
 	}
 	span.underline{
 		border-bottom: 1px solid #f00;
