@@ -172,6 +172,22 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
+    public PatientProgramVisits getPatientProgramVisit(Encounter encounter){
+        Criteria criteria = getSession().createCriteria(PatientProgramVisits.class);
+        criteria.add(Restrictions.eq("encounter", encounter));
+
+        return (PatientProgramVisits)criteria.uniqueResult();
+    }
+
+    @Override
+    public List<PatientProgramVisits> getPatientProgramVisits(PatientProgram patientProgram){
+        Criteria criteria = getSession().createCriteria(PatientProgramVisits.class);
+        criteria.add(Restrictions.eq("patientProgram", patientProgram));
+
+        return criteria.list();
+    }
+
+    @Override
     public PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen){
         return (PatientProgramRegimen)getSession().merge(patientProgramRegimen);
     }

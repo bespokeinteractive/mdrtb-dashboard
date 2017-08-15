@@ -14,6 +14,8 @@ import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramRegimen;
+import org.openmrs.module.mdrtbdashboard.model.PatientProgramVisits;
+import org.openmrs.module.mdrtbdashboard.model.VisitTypes;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,6 +47,19 @@ public class AddVisitPageController {
         Collection<ConceptAnswer> xrayTestResults = mdrtbService.getPossibleXRayTestResults();
         Collection<ConceptAnswer> hivTestResults = mdrtbService.getPossibleHivTestResults();
 
+        List<PatientProgramVisits> ppvList = dashboardService.getPatientProgramVisits(mpp.getPatientProgram());
+        List<VisitTypes> visitTypes = dashboardService.getVisitTypes(mpp.getPatientProgram().getProgram(), false, false, false);
+        List<VisitTypes> visitFilter = new ArrayList<VisitTypes>();
+
+        looper: for (VisitTypes type : visitTypes){
+            for (PatientProgramVisits ppv: ppvList){
+                if (ppv.getVisitType().equals(type)){
+                    continue looper;
+                }
+            }
+            visitFilter.add(type);
+        }
+
         // Test if patient is Enrolled in Any program
         if (!(mpp != null && mpp.getActive())){
             return "redirect:" + ui.pageLink("mdrtbdashboard", "enroll")+"?patient="+mpp.getPatient().getId();
@@ -59,6 +74,7 @@ public class AddVisitPageController {
         model.addAttribute("current", mpp);
         model.addAttribute("details", details);
         model.addAttribute("program", mpp.getPatientProgram());
+        model.addAttribute("visitTypes", visitFilter);
         model.addAttribute("regimenTypes", regimenTypes);
         model.addAttribute("smearResults", smearResults);
         model.addAttribute("hivTestResults", hivTestResults);
@@ -71,9 +87,18 @@ public class AddVisitPageController {
     public String post(HttpServletRequest request,
                        UiUtils ui,
                        UiSessionContext session) throws IOException {
+        VisitTypes vt = dashboardService.getVisitType(Integer.parseInt(request.getParameter("visit.type")));
+
         MdrtbPatientProgram mpp = mdrtbService.getMdrtbPatientProgram(Integer.parseInt(request.getParameter("program.id")));
         PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
         PatientProgramRegimen ppr = new PatientProgramRegimen();
+        PatientProgramVisits ppv = dashboardService.getPatientProgramVisit(mpp.getPatientProgram(), vt);
+
+        if (ppv == null){
+            ppv = new PatientProgramVisits();
+            ppv.setPatientProgram(mpp.getPatientProgram());
+            ppv.setVisitType(vt);
+        }
 
         Map<String, Object> params=new HashMap<String, Object>();
 

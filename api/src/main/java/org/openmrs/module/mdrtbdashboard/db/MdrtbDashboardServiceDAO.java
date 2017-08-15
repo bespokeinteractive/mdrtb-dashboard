@@ -1,9 +1,6 @@
 package org.openmrs.module.mdrtbdashboard.db;
 
-import org.openmrs.Concept;
-import org.openmrs.Location;
-import org.openmrs.PatientProgram;
-import org.openmrs.Program;
+import org.openmrs.*;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtbdashboard.model.*;
 
@@ -36,6 +33,8 @@ public interface MdrtbDashboardServiceDAO {
     List<PatientProgramRegimen> getPatientProgramRegimens(PatientProgramDetails pd, Boolean active);
 
     PatientProgramVisits getPatientProgramVisit(PatientProgram patientProgram, VisitTypes visitType);
+    PatientProgramVisits getPatientProgramVisit(Encounter encounter);
+    List<PatientProgramVisits> getPatientProgramVisits(PatientProgram patientProgram);
 
     List<VisitTypes> getVisitTypes(Program program, Boolean initial, Boolean finals, Boolean voided);
     VisitTypes getVisitType(Integer id);

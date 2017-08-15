@@ -12,7 +12,8 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 
 /**
- * Created by Dennis Henry on 1/31/2017.
+ * Created by Dennis Henry
+ * Createed on 1/31/2017.
  */
 public class VisitDetails {
     private Double weight = 0.0;

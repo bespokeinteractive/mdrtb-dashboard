@@ -1,9 +1,10 @@
 package org.openmrs.module.mdrtbdashboard;
 
 import org.apache.commons.lang.StringUtils;
-import org.omg.CORBA.PUBLIC_MEMBER;
+import org.openmrs.Concept;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.mdrtb.MdrtbConcepts;
 import org.openmrs.module.mdrtb.model.PersonLocation;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
@@ -15,7 +16,6 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -28,6 +28,7 @@ public class MdrtbPatientWrapper {
     private String wrapperIdentifier = "N/A";
     private String wrapperNames = "N/A";
     private String wrapperStatus = "Completed";
+    private String wrapperReason = "Confirmed";
     private String formartedVisitDate;
     private Date visitDate = new Date();
     private Integer wrapperLocationId;
@@ -39,11 +40,15 @@ public class MdrtbPatientWrapper {
     private String wrapperRegisterDate = "N/A";
     private String wrapperCompletedDate = "N/A";
     private String wrapperTreatmentDate = "N/A";
+    private String wrapperSecondLineDate = "N/A";
+
 
     MdrtbDashboardService dashboardService = Context.getService(MdrtbDashboardService.class);
     MdrtbService mdrtbService = Context.getService(MdrtbService.class);
 
     private static final Logger log = Logger.getLogger(MdrtbPatientWrapper.class.getName());
+    public MdrtbPatientWrapper(){
+    }
 
     public MdrtbPatientWrapper(MdrtbPatientProgram patientProgram){
         this.patientProgram = patientProgram;
@@ -83,12 +88,23 @@ public class MdrtbPatientWrapper {
             if (patientDetails.getOutcome() != null){
                 this.wrapperOutcome = patientDetails.getOutcome().getDisplayString();
             }
+
+            if (patientDetails.getSecondLineDate() != null){
+                this.wrapperSecondLineDate = returnFormattedDate(patientDetails.getSecondLineDate());
+            }
+
+            if (patientDetails.getConfirmationSite().equals(mdrtbService.getConcept(MdrtbConcepts.BACTERIOLOGICAL_CONFIRMED))){
+                this.wrapperReason = "CONFIRMED";
+            }
+            else {
+                this.wrapperReason = "PRESUMPTIVE";
+            }
         }
         catch (Exception e){ }
     }
 
     public String returnFormattedDate(Date date){
-        Format formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Format formatter = new SimpleDateFormat("dd/MM/yy");
 
         try{
             return formatter.format(date);
@@ -98,6 +114,30 @@ public class MdrtbPatientWrapper {
             } else{
                 return "N/A";
             }
+        }
+    }
+
+    public String returnShortenedConceptName(Concept concept){
+        if (concept.equals(mdrtbService.getConcept(MdrtbConcepts.POSITIVE))){
+            return "POS";
+        }
+        else if (concept.equals(mdrtbService.getConcept(MdrtbConcepts.NEGATIVE))){
+            return "NEG";
+        }
+        else if (concept.equals(mdrtbService.getConcept(MdrtbConcepts.NOT_DONE))){
+            return "N/D";
+        }
+        else if (concept.equals(mdrtbService.getConcept(MdrtbConcepts.SUGGESTIVE))){
+            return "SUGGESTIVE";
+        }
+        else if (concept.equals(mdrtbService.getConcept(MdrtbConcepts.NOT_SUGGESTIVE))){
+            return "N/S";
+        }
+        else if (concept.equals(mdrtbService.getConcept(MdrtbConcepts.INVALID))){
+            return "INVALID";
+        }
+        else {
+            return "N/A";
         }
     }
 
@@ -252,6 +292,22 @@ public class MdrtbPatientWrapper {
 
     public void setWrapperCompletedDate(String wrapperCompletedDate) {
         this.wrapperCompletedDate = wrapperCompletedDate;
+    }
+
+    public String getWrapperSecondLineDate() {
+        return wrapperSecondLineDate;
+    }
+
+    public void setWrapperSecondLineDate(String wrapperSecondLineDate) {
+        this.wrapperSecondLineDate = wrapperSecondLineDate;
+    }
+
+    public String getWrapperReason() {
+        return wrapperReason;
+    }
+
+    public void setWrapperReason(String wrapperReason) {
+        this.wrapperReason = wrapperReason;
     }
 
 }

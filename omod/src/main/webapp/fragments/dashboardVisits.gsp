@@ -28,16 +28,16 @@
 
 <div class="aside">
 	<ul id="ul-left-menu" class="left-menu">
-		<% visitSummaries.each { summary -> %>
+		<% wrapperList.each { summary -> %>
 			<li class="menu-item visit-summary" visitid="54">
-				<input type="hidden" class="encounter-id" value="${summary.encounterId}" >
+				<input type="hidden" class="encounter-id" value="${summary.encounter.encounterId}" >
 				<span class="menu-date">
 					<i class="icon-time"></i>
-					${ui.formatDatetimePretty(summary.encounterDatetime)}
+					${ui.formatDatetimePretty(summary.encounter.encounterDatetime)}
 				</span>
 				<span class="menu-title">
 					<i class="icon-retweet"></i>
-					${summary.encounterType.description}
+					${summary.wrapperVisitName}
 				</span>
 				<span class="arrow-border"></span>
 				<span class="arrow"></span>

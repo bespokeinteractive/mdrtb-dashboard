@@ -116,6 +116,16 @@ public class MdrtbDashboardServiceImpl
     }
 
     @Override
+    public PatientProgramVisits getPatientProgramVisit(Encounter encounter){
+        return dao.getPatientProgramVisit(encounter);
+    }
+
+    @Override
+    public List<PatientProgramVisits> getPatientProgramVisits(PatientProgram patientProgram){
+        return dao.getPatientProgramVisits(patientProgram);
+    }
+
+    @Override
     public PatientProgramDetails getPatientProgramDetails(Integer ppid){
         return dao.getPatientProgramDetails(ppid);
     }

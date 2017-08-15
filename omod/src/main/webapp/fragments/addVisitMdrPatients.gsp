@@ -5,6 +5,20 @@
 			<legend>Vitals/Regimen</legend>
 			
 			<field>
+				<label for="visitType">
+					Visit Type :
+					<span class="mandatory">*</span>
+				</label>
+				
+				<select id="visitType" class="required" name="visit.type">
+					<option value="">&nbsp;</option>
+					<% visitTypes.eachWithIndex { visit, index -> %>
+						<option value="${visit.id}">${visit.name.toString().toUpperCase()}</option>
+					<% } %>
+				</select>
+			</field>
+			
+			<field>
 				<label for="vitalsWeight">
 					Weight :
 					<span class="mandatory"></span>

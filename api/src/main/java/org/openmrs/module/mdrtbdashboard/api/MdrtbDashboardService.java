@@ -45,6 +45,8 @@ public interface MdrtbDashboardService
     VisitTypes getVisitType(Integer id);
 
     PatientProgramVisits getPatientProgramVisit(PatientProgram patientProgram, VisitTypes visitType);
+    PatientProgramVisits getPatientProgramVisit(Encounter encounter);
+    List<PatientProgramVisits> getPatientProgramVisits(PatientProgram patientProgram);
 
     Integer getNextTbmuNumberCount(String header);
     LocationFacilities getFacilityById(Integer facilityId);

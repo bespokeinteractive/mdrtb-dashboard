@@ -9,6 +9,7 @@ import org.openmrs.module.mdrtb.form.SimpleFollowUpForm;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtb.util.DrugSensitivityModel;
+import org.openmrs.module.mdrtbdashboard.VisitDetailsWrapper;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 import org.openmrs.module.mdrtbdashboard.util.ResultModelWrapper;
@@ -41,6 +42,8 @@ public class DashboardVisitsFragmentController {
         MdrtbPatientProgram mpp = Context.getService(MdrtbService.class).getMostRecentMdrtbPatientProgram(patient);
 
         List<Encounter> visitSummaries = Context.getEncounterService().getEncounters(patient, null, mpp.getDateEnrolled(), mpp.getDateCompleted(), null, null, false);
+        List<VisitDetailsWrapper> wrapperList = getVisitDetailsWrappers(visitSummaries);
+
         Collection<ConceptAnswer> smearResults = Context.getService(MdrtbService.class).getPossibleSmearResults();
         Collection<ConceptAnswer> genXpertResults = Context.getService(MdrtbService.class).getPossibleGenXpertResults();
         Collection<ConceptAnswer> cultureResults = Context.getService(MdrtbService.class).getPossibleCultureResults();
@@ -48,8 +51,10 @@ public class DashboardVisitsFragmentController {
         List<Concept> dstDrugs = Context.getService(MdrtbService.class).getDstDrugs();
 
         Collections.reverse(visitSummaries);
+        Collections.reverse(wrapperList);
 
         model.addAttribute("visitSummaries", visitSummaries);
+        model.addAttribute("wrapperList", wrapperList);
         model.addAttribute("dstDrugs", dstDrugs);
         model.addAttribute("smearResults", smearResults);
         model.addAttribute("cultureResults", cultureResults);
@@ -63,8 +68,7 @@ public class DashboardVisitsFragmentController {
                                         @RequestParam(value = "testResult") String result,
                                         @RequestParam(value = "outcomeResults", required = false) String outcomeResults,
                                         @RequestParam(value = "outcomeRemarks", required = false) String outcomeRemarks,
-                                        UiSessionContext session,
-                                        SessionStatus status)
+                                        UiSessionContext session)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         SimpleFollowUpForm followup = new SimpleFollowUpForm(patient);
         //Set up Encounter
@@ -285,6 +289,16 @@ public class DashboardVisitsFragmentController {
         }
 
         return labNumber;
+    }
+
+    private List<VisitDetailsWrapper> getVisitDetailsWrappers(List<Encounter> encounters){
+        List<VisitDetailsWrapper> wrappers = new ArrayList<VisitDetailsWrapper>();
+        for (Encounter encounter: encounters){
+            VisitDetailsWrapper vw = new VisitDetailsWrapper(encounter);
+            wrappers.add(vw);
+        }
+
+        return wrappers;
     }
 
 }
