@@ -118,7 +118,10 @@ public class MdrtbPatientWrapper {
     }
 
     public String returnShortenedConceptName(Concept concept){
-        if (concept.equals(mdrtbService.getConcept(MdrtbConcepts.POSITIVE))){
+        if (concept == null){
+            return "N/A";
+        }
+        else if (concept.equals(mdrtbService.getConcept(MdrtbConcepts.POSITIVE))){
             return "POS";
         }
         else if (concept.equals(mdrtbService.getConcept(MdrtbConcepts.NEGATIVE))){

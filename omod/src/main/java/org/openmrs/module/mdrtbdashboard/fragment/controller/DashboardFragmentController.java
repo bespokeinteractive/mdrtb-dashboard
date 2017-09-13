@@ -179,6 +179,7 @@ public class DashboardFragmentController {
     }
 
     public SimpleObject transferPatient(@RequestParam(value = "patientId") Patient patient,
+                                        @RequestParam(value = "programId") PatientProgram program,
                                         @RequestParam(value = "enrolledOn") Date enrolledOn,
                                         @RequestParam(value = "treatmentSite") Concept site,
                                         @RequestParam(value = "confirmationSite") Concept confirmation,
@@ -190,11 +191,13 @@ public class DashboardFragmentController {
                                         SessionStatus status)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
+
         PatientProgramDetails pd = dashboardService.getPatientProgramDetails(mpp);
         PatientProgram ref = new PatientProgram();
         Location location = session.getSessionLocation();
 
-        if (mdrtbService.getPersonLocation(patient).getLocation().equals(location)){
+        if (mpp.getPatientProgram().getLocation().equals(location)){
             return SimpleObject.create("status", "failed", "message", "You can't transfer to the same Location!");
         }
 
@@ -208,20 +211,33 @@ public class DashboardFragmentController {
             PatientProgram pp = mpp.getPatientProgram();
             pp.setDateCompleted(completedOn);
             pp.setOutcome(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.PATIENT_TRANSFERRED_OUT));
-            Context.getProgramWorkflowService().savePatientProgram(pp);
+            pp = Context.getProgramWorkflowService().savePatientProgram(pp);
 
-            PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
             ppd.setTransferred(true);
             ppd.setOutcome(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.PATIENT_TRANSFERRED_OUT));
             dashboardService.savePatientProgramDetails(ppd);
 
             ref = pp;
+            this.closeTransferIns(ref);
         }
 
-        this.patientEnrollment(mpp.getPatientProgram().getProgram(), patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, ref, site, confirmation,  session);
+        if (program != null){
+            ref = program;
+            this.closeTransferIns(ref);
+        }
+
+        ppd = this.patientEnrollment(mpp.getPatientProgram().getProgram(), patient, enrolledOn, previousTreatment, classification, patientType, treatmentCategory, ref, site, confirmation,  session);
 
         // Return Object for Success
-        return SimpleObject.create("status", "success", "message", "Patient successfully transferred!");
+        return SimpleObject.create("status", "success", "programId", ppd.getPatientProgram().getPatientProgramId(), "message", "Patient successfully transferred!");
+    }
+
+    private void closeTransferIns(PatientProgram pp){
+        List<PatientProgramTransfers> transfers = dashboardService.getActivePatientTransfers(pp);
+        for (PatientProgramTransfers transfer : transfers){
+            transfer.setProcessed(true);
+            this.dashboardService.savePatientProgramTransfers(transfer);
+        }
     }
 
     public String getSelectedLocation(UiSessionContext session){
@@ -252,6 +268,13 @@ public class DashboardFragmentController {
         List<DrugTestingResults> drugTest = dashboardService.getDrugSensitivityOutcome(encounter);
 
         return SimpleObject.create("details", details, "drugTest", drugTest);
+    }
+
+    public Integer getTransfersCount(UiSessionContext session){
+        Location location = session.getSessionLocation();
+
+        List<PatientProgramTransfers> list = dashboardService.getPatientProgramTransfers(location, false);
+        return list.size();
     }
 }
 

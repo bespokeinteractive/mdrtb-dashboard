@@ -12,6 +12,9 @@ import org.openmrs.module.mdrtb.util.DrugSensitivityModel;
 import org.openmrs.module.mdrtbdashboard.VisitDetailsWrapper;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtbdashboard.model.PatientProgramTransfers;
+import org.openmrs.module.mdrtbdashboard.model.PatientProgramVisits;
+import org.openmrs.module.mdrtbdashboard.model.VisitTypes;
 import org.openmrs.module.mdrtbdashboard.util.ResultModelWrapper;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
@@ -66,10 +69,23 @@ public class DashboardVisitsFragmentController {
                                         @RequestParam(value = "labNumber") String labNumber,
                                         @RequestParam(value = "testedOn") String testedOn,
                                         @RequestParam(value = "testResult") String result,
-                                        @RequestParam(value = "outcomeResults", required = false) String outcomeResults,
+                                        @RequestParam(value = "transferTo") Location transferTo,
+                                        @RequestParam(value = "outcomeResults") String outcomeResults,
                                         @RequestParam(value = "outcomeRemarks", required = false) String outcomeRemarks,
                                         UiSessionContext session)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        MdrtbPatientProgram mpp = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
+        List <VisitTypes> vt = dashboardService.getVisitTypes(mpp.getPatientProgram().getProgram(), false,true, false);
+
+        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
+        PatientProgramVisits ppv = dashboardService.getPatientProgramVisit(mpp.getPatientProgram(), vt.get(0));
+        if (ppv == null){
+            ppv = new PatientProgramVisits();
+            ppv.setPatientProgram(mpp.getPatientProgram());
+            ppv.setVisitType(vt.get(0));
+        }
+
+
         SimpleFollowUpForm followup = new SimpleFollowUpForm(patient);
         //Set up Encounter
         followup.setLocation(session.getSessionLocation());
@@ -82,28 +98,39 @@ public class DashboardVisitsFragmentController {
         //Save Encounter
         Encounter encounter = Context.getEncounterService().saveEncounter(followup.getEncounter());
 
-        if (StringUtils.isNotEmpty(outcomeResults)){
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-            Date date = df.parse(testedOn, new ParsePosition(0));
-            Concept outcome = Context.getConceptService().getConcept(Integer.parseInt(outcomeResults));
+        DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+        Date date = df.parse(testedOn, new ParsePosition(0));
+        Concept outcome = Context.getConceptService().getConcept(Integer.parseInt(outcomeResults));
 
-            MdrtbPatientProgram mpp = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
-            PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
+        PatientProgram pp = mpp.getPatientProgram();
+        pp.setDateCompleted(date);
+        pp.setOutcome(outcome);
+        ppd.setOutcome(outcome);
 
-            PatientProgram pp = mpp.getPatientProgram();
-            pp.setDateCompleted(date);
-            pp.setOutcome(outcome);
-            ppd.setOutcome(outcome);
+        ppv.setSputumResult(Context.getConceptService().getConcept(Integer.parseInt(result)));
+        ppv.setExamDate(date);
+        ppv.setEncounter(encounter);
+        ppv.setLabNumber(labNumber);
 
-            if (outcome.equals(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.DIED))){
-                patient.setDead(true);
-                Context.getPatientService().savePatient(patient);
-            }
-
-            Context.getProgramWorkflowService().savePatientProgram(pp);
-            dashboardService.savePatientProgramDetails(ppd);
-            dashboardService.saveParentProgramOutcome(ppd, outcome, date);
+        if (outcome.equals(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.DIED))){
+            patient.setDead(true);
+            Context.getPatientService().savePatient(patient);
         }
+
+        if (transferTo != null){
+            PatientProgramTransfers ppt = new PatientProgramTransfers();
+            ppt.setLocation(transferTo);
+            ppt.setPatientProgram(pp);
+            ppt.setTransferDate(date);
+
+            this.dashboardService.savePatientProgramTransfers(ppt);
+        }
+
+        Context.getProgramWorkflowService().savePatientProgram(pp);
+
+        this.dashboardService.savePatientProgramVisits(ppv);
+        this.dashboardService.savePatientProgramDetails(ppd);
+        this.dashboardService.saveParentProgramOutcome(ppd, outcome, date);
 
         //Return Answer
         return SimpleObject.create("status", "success", "message", "Patient visit successfully updated!");

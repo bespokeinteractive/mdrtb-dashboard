@@ -65,6 +65,7 @@
 				url: '${ui.actionLink("mdrtbdashboard", "dashboard", "transferPatient")}',
 				data: ({
 					patientId:			${patient.id},
+					programId:			${programId?programId:0},
 					enrolledOn: 		jq('#date-enrolled-field').val(),
 					treatmentSite: 		jq('#treatmentSite').val(),
 					confirmationSite: 	jq('#confirmationSite').val(),

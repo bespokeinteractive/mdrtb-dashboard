@@ -155,6 +155,15 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
+    public VisitTypes getVisitType(Program program, String name){
+        Criteria criteria = getSession().createCriteria(VisitTypes.class);
+        criteria.add(Restrictions.eq("program", program));
+        criteria.add(Restrictions.eq("name", name));
+
+        return (VisitTypes)criteria.uniqueResult();
+    }
+
+    @Override
     public VisitTypes getVisitType(Integer id){
         Criteria criteria = getSession().createCriteria(VisitTypes.class);
         criteria.add(Restrictions.eq("id", id));
@@ -238,7 +247,35 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
         criteria.add(Restrictions.eq("pp.location", location));
         criteria.add(Restrictions.ge("pp.dateEnrolled", startDate));
         criteria.add(Restrictions.le("pp.dateEnrolled", endDate));
-        criteria.add(Restrictions.le("facility", facility));
+        if (facility != null){
+            criteria.add(Restrictions.eq("facility", facility));
+        }
+
+        return criteria.list();
+    }
+
+    @Override
+    public PatientProgramTransfers savePatientProgramTransfers(PatientProgramTransfers patientProgramTransfers){
+        return (PatientProgramTransfers)getSession().merge(patientProgramTransfers);
+    }
+
+    @Override
+    public List<PatientProgramTransfers> getPatientProgramTransfers(Location location, Boolean status){
+        Criteria criteria = getSession().createCriteria(PatientProgramTransfers.class);
+        criteria.add(Restrictions.eq("location", location));
+        if (status != null){
+            criteria.add(Restrictions.eq("processed", status));
+        }
+
+        return criteria.list();
+    }
+
+    @Override
+    public List<PatientProgramTransfers> getActivePatientTransfers(PatientProgram patientProgram){
+        Criteria criteria = getSession().createCriteria(PatientProgramTransfers.class);
+        criteria.add(Restrictions.eq("patientProgram", patientProgram));
+        criteria.add(Restrictions.eq("processed", false));
+
         return criteria.list();
     }
 

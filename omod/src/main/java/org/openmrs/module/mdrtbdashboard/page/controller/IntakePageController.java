@@ -103,7 +103,6 @@ public class IntakePageController {
         PatientProgramRegimen ppr = new PatientProgramRegimen();
         List<VisitTypes> visitTypes = dashboardService.getVisitTypes(mpp.getPatientProgram().getProgram(),true,false,false);
         PatientProgramVisits ppv = dashboardService.getPatientProgramVisit(mpp.getPatientProgram(), visitTypes.get(0));
-
         if (ppv == null){
             ppv = new PatientProgramVisits();
             ppv.setPatientProgram(mpp.getPatientProgram());

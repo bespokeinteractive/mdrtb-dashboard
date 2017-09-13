@@ -46,6 +46,7 @@
 		PatientProgramRegimen.hbm.xml
 		PatientProgramDetails.hbm.xml
 		PatientProgramVisits.hbm.xml
+		PatientProgramTransfers.hbm.xml
 	</mappingFiles>
 
 	<!-- Internationalization -->

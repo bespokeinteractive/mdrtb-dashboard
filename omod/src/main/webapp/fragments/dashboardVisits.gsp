@@ -253,6 +253,19 @@
 				</select>
 			</li>
 			
+			<li class="transfer_to">
+				<label for="transferTo">
+					Transfer :
+				</label>
+				
+				<select id="transferTo" class="required" name="transfer.facility">
+					<option value="0">&nbsp;</option>
+					<% locations.eachWithIndex { location, index -> %>
+						<option value="${location.locationId}">${location.name.toString().toUpperCase()}</option>
+					<% } %>
+				</select>
+			</li>
+			
 			<li>
 				<label for="outcomeRemarks">
 					Remarks :

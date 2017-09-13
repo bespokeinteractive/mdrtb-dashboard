@@ -48,6 +48,17 @@
 			updateRegimenDialog.show();
 		});
 		
+		jq('#outcomeResults').change(function(){
+			var value = jq('#outcomeResults').val();
+			
+			if (value == 147 || value == 171){
+				jq('.transfer_to').show();
+			}
+			else {
+				jq('.transfer_to').hide();
+			}
+		}).change();
+		
 		jq('#regimenType').change(function(){
 			jq('#regimenNew').val('');
 			jq("#regimenNew").attr("readonly", true);
@@ -271,8 +282,9 @@
 							labNumber: 			jq('#LabNumber').val(),
 							testedOn: 			jq('#sputum-date-field').val(),
 							testResult:			jq('#sputumResult').val(),
+							transferTo:			jq('#transferTo').val(),
 							outcomeResults:		jq('#outcomeResults').val(),
-							outcomeRemarks:		jq('#outcomeRemarks').val()
+							outcomeRemarks:		jq('#outcomeRemarks').val(),
 						}),
 						dataType: "json",
 						success: function(data) {

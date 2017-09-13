@@ -1,18 +1,7 @@
 <style>
-	#tb6 tr:first-child td,
-	#tb6 tr:nth-child(2) td {
-		font-weight: bold;
-		font-size: 0.9em;
-		text-align: center;
-	}
-	#tb6 tr td:nth-child(1){
-		font-weight: bold;
-		font-size: 0.9em;
-		text-transform: uppercase;
-	}
-	#tb7 {
-		width: 60%;
-		margin: 0 0;
+	table th, table td {
+		text-align: left;
+		white-space: nowrap;
 	}
 </style>
 
@@ -48,76 +37,1022 @@
 	</tr>
 </table>
 
-<p class="reportTitle"><br/>Block 1: All TB cases registered during the quarter</p>
-<table id="tb6">
+<p class="reportTitle"><br/>Block 1: NEW BACTERIOLOGICALLY CONFIRMED CASES (PULMONARY)</p>
+<table id="tb1">	
 	<tr>
-		<td rowspan="2"></td>		
-		<td rowspan="2">Number of cases<br/>registered</td>
-		<td colspan="6">Treatment outcomes</td>
-	</tr>
-	
-	<tr>
-		<td><small>CURED</small></td>
-		<td><small>COMPLETED</small></td>
-		<td><small>FAILED</small></td>
-		<td><small>DIED</small></td>
-		<td><small>LOST TO FOLLOWUP</small></td>
-		<td><small>NOT EVALUATED</small></td>
-	</tr>
-	
-	<tr>
-		<td>Bacteriologically<br/>confirmed, new<br/>and relapse</td>		
-		<td style="width:10%"><small>${report.bcnrCured + report.bcnrComplete + report.bcnrFailed + report.bcnrDied + report.bcnrLost + report.bcnrOther}</small></td>
-		<td style="width:10%"><small>${report.bcnrCured}</small></td>
-		<td style="width:10%"><small>${report.bcnrComplete}</small></td>
-		<td style="width:10%"><small>${report.bcnrFailed}</small></td>
-		<td style="width:10%"><small>${report.bcnrDied}</small></td>
-		<td style="width:10%"><small>${report.bcnrLost}</small></td>
-		<td style="width:10%"><small>${report.bcnrOther}</small></td>
+		<th><small>Results at 2 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Smear Negative</small></th>
+		<th><small>Smear Not Done</small></th>
+		<th><small>Bacteriologically<br/>Confirmed Cases</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
 	</tr>
 	<tr>
-		<td>Clinically<br/>diagnosed, new<br/>and relapse</td>		
-		<td style="width:10%"><small>${report.cdnrCured + report.cdnrComplete + report.cdnrFailed + report.cdnrDied + report.cdnrLost + report.cdnrOther}</small></td>
-		<td style="width:10%"><small>${report.cdnrCured}</small></td>
-		<td style="width:10%"><small>${report.cdnrComplete}</small></td>
-		<td style="width:10%"><small>${report.cdnrFailed}</small></td>
-		<td style="width:10%"><small>${report.cdnrDied}</small></td>
-		<td style="width:10%"><small>${report.cdnrLost}</small></td>
-		<td style="width:10%"><small>${report.cdnrOther}</small></td>
+		<td><small>&nbsp;</small></td>
+		<td><small>${report.pbcnxTotal}</small></td>
+		<td><small>${report.pbcnxNegativeTwo}</small></td>
+		<td><small>${report.pbcnxNotDoneTwo}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxDied}</small></td>
+		<td><small>${report.pbcnxLTFU}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxTotal - report.pbcnxEvaluated}</small></td>
+		<td><small>${report.pbcnxEvaluated}</small></td>
+	</tr>	
+</table>
+
+<table id="tb2" style="margin-top: 2px;">	
+	<tr>
+		<th><small>Results at 5 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Smear Negative</small></th>
+		<th><small>Smear Not Done</small></th>
+		<th><small>Bacteriologically<br/>Confirmed Cases</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
 	</tr>
 	<tr>
-		<td>Retreatment<br/>excluding<br/>relapse</td>		
-		<td style="width:10%"><small>${report.rtrrCured + report.rtrrComplete + report.rtrrFailed + report.rtrrDied + report.rtrrLost + report.rtrrOther}</small></td>
-		<td style="width:10%"><small>${report.rtrrCured}</small></td>
-		<td style="width:10%"><small>${report.rtrrComplete}</small></td>
-		<td style="width:10%"><small>${report.rtrrFailed}</small></td>
-		<td style="width:10%"><small>${report.rtrrDied}</small></td>
-		<td style="width:10%"><small>${report.rtrrLost}</small></td>
-		<td style="width:10%"><small>${report.rtrrOther}</small></td>
-	</tr>
-	<tr>
-		<td>HIV-positive;<br/>all<br/>types</td>		
-		<td style="width:10%"><small>${report.hpatCured + report.hpatComplete + report.hpatFailed + report.hpatDied + report.hpatLost + report.hpatOther}</small></td>
-		<td style="width:10%"><small>${report.hpatCured}</small></td>
-		<td style="width:10%"><small>${report.hpatComplete}</small></td>
-		<td style="width:10%"><small>${report.hpatFailed}</small></td>
-		<td style="width:10%"><small>${report.hpatDied}</small></td>
-		<td style="width:10%"><small>${report.hpatLost}</small></td>
-		<td style="width:10%"><small>${report.hpatOther}</small></td>
-	</tr>
+		<td><small>&nbsp;</small></td>
+		<td><small>${report.pbcnxTotal}</small></td>
+		<td><small>${report.pbcnxNegativeFive}</small></td>
+		<td><small>${report.pbcnxNotDoneFive}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxDied}</small></td>
+		<td><small>${report.pbcnxLTFU}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxTotal - report.pbcnxEvaluated}</small></td>
+		<td><small>${report.pbcnxEvaluated}</small></td>
+	</tr>	
 </table>
 
 
-<p class="reportTitle"><br/>Block 2: TB/HIV activities (All TB cases registered during the quarter)</p>
-<table id="tb7">
+<table id="tb3" style="margin-top: 2px;">	
 	<tr>
-		<td style="width: 33%">HIV positive<br/>TB patients</td>
-		<td style="width: 33%">HIV positive TB<br/>patients on antiretroviral<br/>therapy (ART)</td>
-		<td>HIV positive TB<br/>patients on cotrimoxazole<br/>preventive therapy (CPT)</td>
+		<th><small>Results at 8 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Smear Negative</small></th>
+		<th><small>Smear Not Done</small></th>
+		<th><small>Bacteriologically<br/>Confirmed Cases</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	
+	<tr>
+		<td><small>Results at 8 months</small></td>
+		<td><small>${report.pbcnxTotal}</small></td>
+		<td><small>${report.pbcnxNegativeEight}</small></td>
+		<td><small>${report.pbcnxNotDoneEight}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxDied}</small></td>
+		<td><small>${report.pbcnxLTFU}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxTotal - report.pbcnxEvaluated}</small></td>
+		<td><small>${report.pbcnxEvaluated}</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV+</small></td>
+		<td><small>${report.pbcnxHivPosTotal}</small></td>
+		<td><small>${report.pbcnxHivPosNegative}</small></td>
+		<td><small>${report.pbcnxHivPosNotDone}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxHivPosDied}</small></td>
+		<td><small>${report.pbcnxHivPosLTFU}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxHivPosTotal - report.pbcnxHivPosEvaluated}</small></td>
+		<td><small>${report.pbcnxHivPosEvaluated}</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV-</small></td>
+		<td><small>${report.pbcnxHivNegTotal}</small></td>
+		<td><small>${report.pbcnxHivNegNegative}</small></td>
+		<td><small>${report.pbcnxHivNegNotDone}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxHivNegDied}</small></td>
+		<td><small>${report.pbcnxHivNegLTFU}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxHivNegTotal - report.pbcnxHivNegEvaluated}</small></td>
+		<td><small>${report.pbcnxHivNegEvaluated}</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>ND</small></td>
+		<td><small>${report.pbcnxHivNdTotal}</small></td>
+		<td><small>${report.pbcnxHivNdNegative}</small></td>
+		<td><small>${report.pbcnxHivNdNotDone}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxHivNdDied}</small></td>
+		<td><small>${report.pbcnxHivNdLTFU}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxHivNdTotal - report.pbcnxHivNdEvaluated}</small></td>
+		<td><small>${report.pbcnxHivNdEvaluated}</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on CPT</small></td>
+		<td><small>${report.pbcnxHivCptTotal}</small></td>
+		<td><small>${report.pbcnxHivCptNegative}</small></td>
+		<td><small>${report.pbcnxHivCptNotDone}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxHivCptDied}</small></td>
+		<td><small>${report.pbcnxHivCptLTFU}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxHivCptTotal - report.pbcnxHivCptEvaluated}</small></td>
+		<td><small>${report.pbcnxHivCptEvaluated}</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on ART</small></td>
+		<td><small>${report.pbcnxHivArtTotal}</small></td>
+		<td><small>${report.pbcnxHivArtNegative}</small></td>
+		<td><small>${report.pbcnxHivArtNotDone}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxHivArtDied}</small></td>
+		<td><small>${report.pbcnxHivArtLTFU}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxHivArtTotal - report.pbcnxHivArtEvaluated}</small></td>
+		<td><small>${report.pbcnxHivArtEvaluated}</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Total</small></td>
+		<td><small>${report.pbcnxTotal}</small></td>
+		<td><small>${report.pbcnxNegativeEight}</small></td>
+		<td><small>${report.pbcnxNotDoneEight}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxDied}</small></td>
+		<td><small>${report.pbcnxLTFU}</small></td>
+		<td><small>0</small></td>
+		<td><small>${report.pbcnxTotal - report.pbcnxEvaluated}</small></td>
+		<td><small>${report.pbcnxEvaluated}</small></td>
+	</tr>
+</table>
+
+<p class="reportTitle"><br/>Block 2: NEW SMEAR NEGATIVE PTB CASES</p>
+<table id="tb4">	
+	<tr>
+		<th><small>Results at 2 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>TC</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
 	</tr>
 	<tr>
-		<td><small>${report.hivStatus}</small></td>		
-		<td><small>${report.startedArt}</small></td>		
-		<td><small>${report.startedCpt}</small></td>
+		<td><small>&nbsp;</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>	
+</table>
+
+<table id="tb41" style="margin-top: 2px;">	
+	<tr>
+		<th><small>Results at 8 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>TC</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	
+	<tr>
+		<td><small>Results at 8 months</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV+</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV-</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>ND</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on CPT</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on ART</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Total</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+</table>
+
+<p class="reportTitle"><br/>Block 3: NEW EXTRA PULMONARY CASES (BACTERIOLOGICALLY CONFIRMED / CLINICALLY DIAGNOSED)</p>
+<table id="tb5">	
+	<tr>
+		<th><small>Results at 2 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Completed Treatment</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	<tr>
+		<td><small>&nbsp;</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>	
+</table>
+
+<table id="tb51" style="margin-top: 2px;">	
+	<tr>
+		<th><small>Results at 8 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Completed Treatment</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	
+	<tr>
+		<td><small>Results at 8 months</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV+</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV-</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>ND</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on CPT</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on ART</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Total</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+</table>
+
+<p class="reportTitle"><br/>Block 4: NEW PTB SMEAR NOT DONE TB CASES</p>
+<table id="tb5">	
+	<tr>
+		<th><small>Results at 2 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Completed Treatment</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	<tr>
+		<td><small>&nbsp;</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>	
+</table>
+
+<table id="tb51" style="margin-top: 2px;">	
+	<tr>
+		<th><small>Results at 8 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Completed Treatment</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	
+	<tr>
+		<td><small>Results at 8 months</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV+</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV-</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>ND</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on CPT</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on ART</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Total</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+</table>
+
+<p class="reportTitle"><br/>Block 5: PULMONARY, BACTERIOLOGICAL CONFIRMED PREVIOUSLY TREATED</p>
+<table id="tb5">	
+	<tr>
+		<th><small>Results at 2 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Smear<br/>Negative</small></th>
+		<th><small>Smear Not<br/>Done</small></th>
+		<th><small>Bacteriologically<br/>Confirmed Cases</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	<tr>
+		<td><small>&nbsp;</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>	
+</table>
+
+<table id="tb51" style="margin-top: 2px;">	
+	<tr>
+		<th><small>Results at 8 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Smear<br/>Negative</small></th>
+		<th><small>Smear Not<br/>Done</small></th>
+		<th><small>Bacteriologically<br/>Confirmed Cases</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	
+	<tr>
+		<td><small>Results at 8 months</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV+</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV-</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>ND</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on CPT</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on ART</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Total</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+</table>
+
+<p class="reportTitle"><br/>Block 6: BACTERIOLOGICALLY CONFIRMED TREATMENT AFTER FAILURE</p>
+<table id="tb5">	
+	<tr>
+		<th><small>Results at 2 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Smear<br/>Negative</small></th>
+		<th><small>Smear Not<br/>Done</small></th>
+		<th><small>Bacteriologically<br/>Confirmed Cases</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	<tr>
+		<td><small>&nbsp;</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>	
+</table>
+
+<table id="tb51" style="margin-top: 2px;">	
+	<tr>
+		<th><small>Results at 8 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Smear<br/>Negative</small></th>
+		<th><small>Smear Not<br/>Done</small></th>
+		<th><small>Bacteriologically<br/>Confirmed Cases</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	
+	<tr>
+		<td><small>Results at 8 months</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV+</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV-</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>ND</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on CPT</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on ART</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Total</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+</table>
+
+<p class="reportTitle"><br/>Block 7: PULMONARY, BACTERIOLOGICAL CONFIRMED TREATMENT AFTER LOSS TO FOLLOW UP</p>
+<table id="tb5">	
+	<tr>
+		<th><small>Results at 2 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Smear<br/>Negative</small></th>
+		<th><small>Smear Not<br/>Done</small></th>
+		<th><small>Bacteriologically<br/>Confirmed Cases</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	<tr>
+		<td><small>&nbsp;</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>	
+</table>
+
+<table id="tb51" style="margin-top: 2px;">	
+	<tr>
+		<th><small>Results at 8 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Smear<br/>Negative</small></th>
+		<th><small>Smear Not<br/>Done</small></th>
+		<th><small>Bacteriologically<br/>Confirmed Cases</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	
+	<tr>
+		<td><small>Results at 8 months</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV+</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV-</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>ND</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on CPT</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on ART</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Total</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+</table>
+
+<p class="reportTitle"><br/>Block 8: OTHER RETREATMENTS</p>
+<table id="tb5">	
+	<tr>
+		<th><small>Results at 2 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Finalied Initial<br/>Treatment</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	<tr>
+		<td><small>&nbsp;</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>	
+</table>
+
+<table id="tb51" style="margin-top: 2px;">	
+	<tr>
+		<th><small>Results at 8 months</small></th>
+		<th><small>Total Enrolled</small></th>
+		<th><small>Finalied Initial<br/>Treatment</small></th>
+		<th><small>Died</small></th>
+		<th><small>LTFU</small></th>
+		<th><small>MT4</small></th>
+		<th><small>Not Evaluated</small></th>
+		<th><small>Total Evaluated</small></th>
+	</tr>
+	
+	<tr>
+		<td><small>Results at 8 months</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV+</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>HIV-</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>ND</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on CPT</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Nr. on ART</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+	</tr>
+	
+	<tr>
+		<td><small>Total</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
+		<td><small>0</small></td>
 	</tr>
 </table>

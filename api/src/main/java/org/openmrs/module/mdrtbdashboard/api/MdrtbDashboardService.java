@@ -42,11 +42,16 @@ public interface MdrtbDashboardService
     RegimentType getRegimenType(Concept concept, Program program);
 
     List<VisitTypes> getVisitTypes(Program program, Boolean initial, Boolean finals, Boolean voided);
+    VisitTypes getVisitType(Program program, String name);
     VisitTypes getVisitType(Integer id);
 
     PatientProgramVisits getPatientProgramVisit(PatientProgram patientProgram, VisitTypes visitType);
     PatientProgramVisits getPatientProgramVisit(Encounter encounter);
     List<PatientProgramVisits> getPatientProgramVisits(PatientProgram patientProgram);
+
+    List<PatientProgramTransfers> getActivePatientTransfers(PatientProgram patientProgram);
+    List<PatientProgramTransfers> getPatientProgramTransfers(Location location, Boolean status);
+    PatientProgramTransfers savePatientProgramTransfers(PatientProgramTransfers patientProgramTransfers);
 
     Integer getNextTbmuNumberCount(String header);
     LocationFacilities getFacilityById(Integer facilityId);

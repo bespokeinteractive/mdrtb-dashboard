@@ -65,7 +65,10 @@ public class ReportCasefindingFragmentController {
             Boolean relapse = false;
             Boolean treated = false;
 
-            if (patient.getPatientType().getConcept().equals(mdrtbService.getConcept(MdrtbConcepts.NEW))){
+            if (patient.getPatientType() == null){
+                continue;
+            }
+            else if (patient.getPatientType().getConcept().equals(mdrtbService.getConcept(MdrtbConcepts.NEW))){
                 newPatient = true;
             }
             else if (patient.getPatientType().getConcept().equals(mdrtbService.getConcept(MdrtbConcepts.RELAPSE))){

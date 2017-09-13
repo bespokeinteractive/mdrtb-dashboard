@@ -26,6 +26,7 @@ public class TransferInPageController {
 
     public String get(
             @RequestParam(value = "patient") Patient patient,
+            @RequestParam(value = "programId", required = false) Integer programId,
             PageModel model,
             UiUtils ui) {
         MdrtbPatientProgram pp = Context.getService(MdrtbService.class).getMostRecentMdrtbPatientProgram(patient);
@@ -43,6 +44,7 @@ public class TransferInPageController {
         Collection<ConceptAnswer> anatomicalSites = mdrtbService.getPossibleAnatomicalSites();
         Collection<ConceptAnswer> siteConfirmation = mdrtbService.getPossibleAnatomicalSitesConfirmation();
 
+        model.addAttribute("programId", programId);
         model.addAttribute("patient", patient);
         model.addAttribute("gender", gender);
         model.addAttribute("pp", pp);

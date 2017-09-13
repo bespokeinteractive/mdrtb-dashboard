@@ -136,4 +136,23 @@
 			ADD site_confirmation INT(11) NULL AFTER outcome;
 		</sql>
 	</diff>
+	
+	<diff>
+		<version>1.0.5</version>
+		<author>Dennis Henry</author>
+		<date>Sept 12th 2017</date>
+		<description>
+			Add patient_program_transfers Table to store Transfers
+		</description>
+		<sql>
+			CREATE TABLE `patient_program_transfers` (
+			  `id` int(11) NOT NULL AUTO_INCREMENT,
+			  `location_id` int(11) DEFAULT '0',
+			  `patient_program_id` int(11) DEFAULT '0',
+			  `transfer_date` date DEFAULT NULL,
+			  `transfer_processed` int(11) DEFAULT '0',
+			  PRIMARY KEY (`id`)
+			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		</sql>
+	</diff>
 </sqldiff>

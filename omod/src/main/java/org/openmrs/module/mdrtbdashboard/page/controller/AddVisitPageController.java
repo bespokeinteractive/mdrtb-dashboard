@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -109,6 +110,7 @@ public class AddVisitPageController {
         String regimenName = request.getParameter("regimen.name");
         String regimenType = request.getParameter("regimen.type");
         String hivResult = request.getParameter("exams.hiv.result");
+        String labNumber = request.getParameter("exams.lab.number");
 
         if (StringUtils.equals(muac, "999")){
             muac = "";
@@ -122,9 +124,14 @@ public class AddVisitPageController {
             weight = "";
         }
 
+        Concept smear = conceptService.getConcept(30);
         Concept artstt;
         Concept cptstt;
         Concept hivConcept;
+
+        if (request.getParameter("exams.sputum.result") != null){
+            smear = conceptService.getConcept(Integer.parseInt(request.getParameter("exams.sputum.result")));
+        }
 
         SimpleFollowUpForm followup = new SimpleFollowUpForm(mpp.getPatient());
         //Set up Encounter
@@ -138,10 +145,13 @@ public class AddVisitPageController {
 
         //Store Sputum Smear Result/Lab Number
         if (request.getParameter("exams.sputum.result") != null){
-            followup.setSputumSmear(request.getParameter("exams.sputum.date"), request.getParameter("exams.lab.number"), request.getParameter("exams.sputum.result"));
+            followup.setSputumSmear(request.getParameter("exams.sputum.date"), labNumber, request.getParameter("exams.sputum.result"));
+            ppv.setExamDate(getDateFromStrings(request.getParameter("exams.sputum.date")));
+            ppv.setSputumResult(smear);
         }
         else {
             followup.setLabNumber(request.getParameter("exams.lab.number"));
+            ppv.setExamDate(getDateFromStrings(request.getParameter("exams.genxpert.date")));
         }
 
         followup.setGenXpert(request.getParameter("exams.genxpert.date"), request.getParameter("exams.genxpert.result"));
@@ -180,10 +190,23 @@ public class AddVisitPageController {
 
         //Save Encounter
         Encounter encounter = Context.getEncounterService().saveEncounter(followup.getEncounter());
-        ppd = dashboardService.savePatientProgramDetails(ppd);
+
+        ppv.setEncounter(encounter);
+        ppv.setLabNumber(labNumber);
+        ppv.setGeneXpertResult(conceptService.getConcept(Integer.parseInt(request.getParameter("exams.genxpert.result"))));
+        ppv.setHivResults(conceptService.getConcept(Integer.parseInt(request.getParameter("exams.hiv.result"))));
+        ppv.setXrayResults(conceptService.getConcept(Integer.parseInt(request.getParameter("exams.xray.result"))));
+
+        this.dashboardService.savePatientProgramDetails(ppd);
+        this.dashboardService.savePatientProgramVisits(ppv);
 
         params.put("programId", mpp.getPatientProgram().getId());
         params.put("patient", mpp.getPatient().getId());
         return "redirect:" + ui.pageLink("mdrtbdashboard", "main", params);
+    }
+
+    public Date getDateFromStrings(String stringDate){
+        DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+        return df.parse(stringDate, new ParsePosition(0));
     }
 }

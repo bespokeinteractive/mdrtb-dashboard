@@ -1,9 +1,6 @@
 package org.openmrs.module.mdrtbdashboard.page.controller;
 
-import org.openmrs.ConceptAnswer;
-import org.openmrs.Obs;
-import org.openmrs.Patient;
-import org.openmrs.ProgramWorkflowState;
+import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
@@ -13,10 +10,12 @@ import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
 import org.openmrs.module.mdrtbdashboard.model.PatientProgramRegimen;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
+import org.openmrs.util.PersonByNameComparator;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -43,6 +42,7 @@ public class MainPageController {
 
         PatientProgramDetails details = dashboard.getPatientProgramDetails(current);
 
+        List<Location> locations = Context.getLocationService().getAllLocations();
         List<PatientProgramRegimen> regimens = dashboard.getPatientProgramRegimens(details, false);
         Collections.reverse(regimens);
 
@@ -65,6 +65,7 @@ public class MainPageController {
         model.addAttribute("current", current);
         model.addAttribute("details", details);
         model.addAttribute("regimens", regimens);
+        model.addAttribute("locations", locations);
         model.addAttribute("regimenTypes", regimenTypes);
         model.addAttribute("program", current.getPatientProgram());
         model.addAttribute("tabs", tabs);

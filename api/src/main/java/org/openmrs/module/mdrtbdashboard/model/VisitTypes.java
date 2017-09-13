@@ -15,6 +15,12 @@ public class VisitTypes {
     private Boolean finalVisit;
     private Boolean voided;
 
+    public final static String TB_VISIT_00 = "Before Treatment";
+    public final static String TB_VISIT_02 = "2-3 Months";
+    public final static String TB_VISIT_05 = "5 Months";
+    public final static String TB_VISIT_08 = "End of Treatment";
+
+
     public Integer getId() {
         return id;
     }

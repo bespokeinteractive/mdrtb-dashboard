@@ -106,6 +106,11 @@ public class MdrtbDashboardServiceImpl
     }
 
     @Override
+    public VisitTypes getVisitType(Program program, String name){
+        return dao.getVisitType(program, name);
+    }
+
+    @Override
     public VisitTypes getVisitType(Integer id){
         return dao.getVisitType(id);
     }
@@ -189,5 +194,20 @@ public class MdrtbDashboardServiceImpl
     @Override
     public LocationFacilities getFacilityById(Integer facilityId){
         return dao.getFacilityById(facilityId);
+    }
+
+    @Override
+    public List<PatientProgramTransfers> getActivePatientTransfers(PatientProgram patientProgram){
+        return dao.getActivePatientTransfers(patientProgram);
+    }
+
+    @Override
+    public List <PatientProgramTransfers> getPatientProgramTransfers(Location location, Boolean status){
+        return  dao.getPatientProgramTransfers(location, status);
+    }
+
+    @Override
+    public PatientProgramTransfers savePatientProgramTransfers(PatientProgramTransfers patientProgramTransfers){
+        return dao.savePatientProgramTransfers(patientProgramTransfers);
     }
 }

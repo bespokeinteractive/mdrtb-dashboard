@@ -101,12 +101,12 @@
 		<div class="tital">WEIGHT</div>
 		<div style="display:inline-block; width: 100%">
 			<span class="entry">DATE</span>
-			<span class="value">${ui.formatDatePretty(current.getInitialWeightObsDuringProgram().obsDatetime).toUpperCase()}</span>
+			<span class="value">${current.getInitialWeightObsDuringProgram()?ui.formatDatePretty(current.getInitialWeightObsDuringProgram().obsDatetime).toUpperCase():'N/A'}</span>
 		</div>
 		
 		<div>
 			<span class="entry">RESULTS</span>
-			<span class="value">${current.getInitialWeightObsDuringProgram().valueNumeric}</span>
+			<span class="value">${current.getInitialWeightObsDuringProgram()?current.getInitialWeightObsDuringProgram().valueNumeric:'N/A'}</span>
 		</div>
 	</div>
 	
@@ -114,12 +114,12 @@
 		<div class="tital">HEIGHT</div>
 		<div style="display:inline-block; width: 100%">
 			<span class="entry">DATE</span>
-			<span class="value">${ui.formatDatePretty(current.getInitialHeightObsDuringProgram().obsDatetime).toUpperCase()}</span>
+			<span class="value">${current.getInitialHeightObsDuringProgram()?ui.formatDatePretty(current.getInitialHeightObsDuringProgram().obsDatetime).toUpperCase():'N/A'}</span>
 		</div>
 		
 		<div>
 			<span class="entry">RESULTS</span>
-			<span class="value">${current.getInitialHeightObsDuringProgram().valueNumeric}</span>
+			<span class="value">${current.getInitialHeightObsDuringProgram()?current.getInitialHeightObsDuringProgram().valueNumeric:'N/A'}</span>
 		</div>
 	</div>
 </div>
