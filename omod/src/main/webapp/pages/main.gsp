@@ -39,6 +39,15 @@
 			}			
 		});
 		
+		jq('.update-details').on('click', function(e){
+			e.preventDefault();
+			
+			jq('#regimenType').val('').change();
+			jq('#regimenRemarks').val('');
+			
+			updateDetailsDialog.show();
+		});
+		
 		jq('.update-treatment').on('click', function(e){
 			e.preventDefault();
 			
@@ -200,6 +209,65 @@
 				dstDialog.show();				
 			});
 		}
+		
+		var updateDetailsDialog = emr.setupConfirmationDialog({
+			dialogOpts: {
+				overlayClose: false,
+				close: true
+			},
+			selector: '#update-details-dialog',
+			actions: {
+				confirm: function() {
+					if (jq('#detailsType').val() == ''){
+						jq().toastmessage('showErrorToast', 'Ensure that you have specified the Tuberculosis Type');
+						jq('#detailsType').focus();
+						return false;
+					}
+					
+					if (jq('#detailsClass').val() == ''){
+						jq().toastmessage('showErrorToast', 'Ensure that you have specified the Classication of Tuberculosis');
+						jq('#detailsClass').focus();
+						return false;
+					}
+					
+					if (jq('#regimenNew').val() === jq('#regimenCurrent').val()){
+						jq().toastmessage('showErrorToast', "You can't change a Regimen to the same Regimen");
+						jq('#regimenNew').focus();
+						return false;
+					}
+					
+					jq.ajax({
+						type: "POST",
+						url: '${ui.actionLink("mdrtbdashboard", "dashboardOverview", "updatePatientProgramDetails")}',
+						data: ({
+							programId:		${current.program.patientProgramId},
+							enrolledOn:		jq('#details-date-field').val(),
+							detailsType:	jq('#detailsType').val(),
+							detailsClass: 	jq('#detailsClass').val(),
+							detailsRemarks:	jq('#detailsRemarks').val()
+						}),
+						dataType: "json",
+						success: function(data) {
+							if (data.status == "success"){
+								jq().toastmessage('showSuccessToast', data.message);
+								window.location.href = "main.page?patient=${patient.id}&programId=${current.program.patientProgramId}";
+							}
+							else {
+								jq().toastmessage('showErrorToast', 'x:'+ data.message);
+							}							
+						},
+						error: function(data){
+							jq().toastmessage('showErrorToast', "Post Failed. " + data.statusText);
+						}
+					});
+					
+					updateRegimenDialog.close();
+				},
+				cancel: function() {
+					updateRegimenDialog.close();
+				}
+			}
+		});
 		
 		var updateRegimenDialog = emr.setupConfirmationDialog({
 			dialogOpts: {

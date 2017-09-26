@@ -319,7 +319,7 @@
 									<td>N/A</td>
 								</tr>
 
-								<tr>
+								<tr style="display: none;">
 									<td><span class="status active"></span>Disease Sites</td>
 									<td>N/A</td>
 								</tr>

@@ -460,7 +460,7 @@
         <br>
 
         <div class="catg">
-            <i class="icon-tags small" style="font-size: 16px"></i><small>Agency:</small> Mercy USA
+            <i class="icon-tags small" style="font-size: 16px"></i><small>Agency:</small> ${agency}
         </div>
     </div>
 </div>
@@ -522,12 +522,6 @@
 						<% } %>
 					</select>
 				</div>
-				
-				
-				
-				
-				
-				
 				
 				<div>
 					<label for="enrollmentType">Resistance Profile:</label>

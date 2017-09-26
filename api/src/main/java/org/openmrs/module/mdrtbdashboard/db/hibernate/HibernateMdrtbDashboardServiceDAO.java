@@ -245,6 +245,7 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
         Criteria criteria = getSession().createCriteria(PatientProgramDetails.class);
         criteria.createAlias("patientProgram", "pp");
         criteria.add(Restrictions.eq("pp.location", location));
+        criteria.add(Restrictions.le("pp.voided", false));
         criteria.add(Restrictions.ge("pp.dateEnrolled", startDate));
         criteria.add(Restrictions.le("pp.dateEnrolled", endDate));
         if (facility != null){
@@ -324,7 +325,7 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
                 oLocation += ","+location.getId();
             }
 
-            hql += " AND p.patient_id IN (SELECT person_id FROM person_location WHERE location_id IN (" + oLocation + "))";
+            hql += " AND pp.location_id IN (" + oLocation + ")";
         }
 
         hql += " ORDER BY pn.given_name ASC, pn.family_name ASC, pn.middle_name ASC LIMIT 0, 50";
@@ -373,7 +374,10 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
                     }
 
                     MdrtbPatientProgram pp = Context.getService(MdrtbService.class).getMostRecentMdrtbPatientProgram(patient);
-                    if (programId == -1){
+                    if (pp == null){
+                        continue;
+                    }
+                    else if (programId == -1){
                         //Return only active patients, either MDRTB or TB
                         if (pp.getPatientProgram() != null && pp.getActive()){
                             search.add(pp);
@@ -390,6 +394,8 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
                 }
             }
         }
+
+        //System.out.println(hql);
 
         return search;
     }
@@ -428,6 +434,10 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
                 Object[] obj = (Object[])((Object[])o);
                 if(obj != null && obj.length > 0) {
                     MdrtbPatientProgram pp = Context.getService(MdrtbService.class).getMdrtbPatientProgram((Integer)obj[8]);
+                    if (pp == null){
+                        continue;
+                    }
+
                     if (programId == -1){
                         if (pp.getPatientProgram() != null && pp.getActive()){
                             search.add(pp);

@@ -396,6 +396,12 @@
 	field.regimen{
 		display: none;
 	}
+	#confirmation .confirm {
+		margin-left: 4px;
+	}	
+	.button.cancel, button.cancel, input.cancel[type="submit"], input.cancel[type="button"], input.cancel[type="submit"], a.button.cancel {
+		float: right;
+	}
 </style>
 
 ${ ui.includeFragment("mdrtbdashboard", "header", [patientId: patient.id, programId: program.patientProgramId]) }

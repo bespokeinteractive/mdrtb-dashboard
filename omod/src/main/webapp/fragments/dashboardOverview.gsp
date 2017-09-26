@@ -7,7 +7,7 @@
 		<div class="patient-items first">
 			<span class="span-left">ENROLLED ON</span>
 			<span class="span-right">${ui.formatDatePretty(program.dateEnrolled).toUpperCase()}</span>
-			<span class="right update-description"><a class="popups" href="#"><i class="icon-pencil small"></i>Edit Details</a></span>
+			<span class="right update-details"><a class="popups" href="#"><i class="icon-pencil small"></i>Edit Details</a></span>
 		</div>
 		
 		<div class="patient-items first">
@@ -44,7 +44,7 @@
 	<i class='icon-file-alt small'></i>
 	<span class="section-title">DIAGNOSIS</span>
 	<span class="right" style="padding-right: 15px; padding-top: 10px;"><small><i class=" icon-random  small"></i>Resistance Type: </small><span class="title-answer">${program.program.programId==1?'N/A':'MULTIDRUG RESISTANT'}</span></span>
-	<span class="right" style="margin-right: 15px; padding-top: 10px;"><small><i class=" icon-retweet small"></i>Site: </small><span class="title-answer">${current.getCurrentAnatomicalSiteDuringProgram().name}</span></span>
+	<span class="right" style="margin-right: 15px; padding-top: 10px;"><small><i class=" icon-retweet small"></i>Site: </small><span class="title-answer">${details.diseaseSite?details.diseaseSite.name:'N/A'}</span></span>
 </div>
 
 <div id="em-title-content">
@@ -167,6 +167,73 @@
 </div>
 
 <div class="clear"></div>
+
+<div id="update-details-dialog" class="dialog" style="display:none;">
+    <div class="dialog-header">
+        <i class="icon-folder-open"></i>
+        <h3>UPDATE ENROLLMENT DETAILS</h3>
+    </div>
+
+    <div class="dialog-content">
+        <ul>
+			<li>
+				<label for="detailsTbmuNo">
+					TBMU Number :
+				</label>
+				<input type="text" name="details.number" id="detailsTbmuNo" readonly="" value="${details.tbmuNumber?details.tbmuNumber:'N/A'}" />
+			</li>
+			
+			<li>
+				<label for="detailsPatient">
+					Patient Name :
+				</label>
+				<input type="text" name="details.patient" id="detailsPatient" readonly="" value="${patient.familyName} ${patient.givenName} ${patient.middleName ? patient.middleName : ''}" />
+			</li>
+						
+			<li>
+				<div style="width: 100%; border-top: 1px dotted; margin: 5px 0;"></div>
+			</li>
+				
+            <li>
+				${ui.includeFragment("uicommons", "field/datetimepicker", [formFieldName: 'details.date', id: 'details-date', label: 'Enrollment Date :', useTime: false, defaultDate: current.program.dateEnrolled, endDate: new Date()])}
+            </li>
+			
+			<li>
+				<label for="detailsType">
+					Tuberculosis Type :
+				</label>
+				<select id="detailsType" class="required" name="details.type">
+					<option value="">&nbsp;</option>
+					<% anatomicalSites.eachWithIndex { sites, index -> %>
+						<option value="${sites.answerConcept.id}" ${details.diseaseSite == sites.answerConcept?"selected":""} >${sites.answerConcept.name}</option>
+					<% } %>
+				</select>
+			</li>
+			
+			<li>
+				<label for="detailsClass">
+					Classification of TB:
+				</label>
+				<select id="detailsClass" class="required" name="details.class">
+					<option value="">&nbsp;</option>
+					<% siteConfirmation.eachWithIndex { sites, index -> %>
+						<option value="${sites.answerConcept.id}" ${details.confirmationSite == sites.answerConcept?"selected":""}>${sites.answerConcept.name}</option>
+					<% } %>
+				</select>
+			</li>		
+			
+			<li>
+				<label for="detailsRemarks">
+					Remarks :
+				</label>
+				<textarea id="detailsRemarks" name="regimen.remarks" placeholder="Remarks" style="height:100px; resize:none;" value="${details.description?details.description:''}"></textarea>
+			</li>
+        </ul>
+
+        <label class="button confirm right">Confirm</label>
+        <label class="button cancel">Cancel</label>
+    </div>
+</div>
 
 <div id="update-regimen-dialog" class="dialog" style="display:none;">
     <div class="dialog-header">

@@ -45,6 +45,8 @@ public class MainPageController {
         List<Location> locations = Context.getLocationService().getAllLocations();
         List<PatientProgramRegimen> regimens = dashboard.getPatientProgramRegimens(details, false);
         Collections.reverse(regimens);
+        Collection<ConceptAnswer> anatomicalSites = mdrtbService.getPossibleAnatomicalSites();
+        Collection<ConceptAnswer> siteConfirmation = mdrtbService.getPossibleAnatomicalSitesConfirmation();
 
         // Test if patient is Enrolled in Any program
         if (!(current != null && current.getActive())){
@@ -71,6 +73,9 @@ public class MainPageController {
         model.addAttribute("tabs", tabs);
         model.addAttribute("tbbOutcomes", tbbOutcomes);
         model.addAttribute("mdrOutcomes", mdrOutcomes);
+
+        model.addAttribute("anatomicalSites", anatomicalSites);
+        model.addAttribute("siteConfirmation", siteConfirmation);
 
         return null;
     }

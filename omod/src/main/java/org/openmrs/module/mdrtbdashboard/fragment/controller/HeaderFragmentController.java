@@ -38,10 +38,10 @@ public class HeaderFragmentController {
     }
 
     public SimpleObject getLoginLocations(UiUtils ui){
-        List<UserLocation> locales = Context.getService(MdrtbService.class).getUserLocations();
+        List<UserLocation> locations = Context.getService(MdrtbService.class).getUserLocations();
         List<LocationModel> models = new ArrayList<LocationModel>();
 
-        for (UserLocation locale : locales){
+        for (UserLocation locale : locations){
             LocationModel lm = new LocationModel();
             lm.setId(locale.getLocation().getId());
             lm.setName(locale.getLocation().getName());

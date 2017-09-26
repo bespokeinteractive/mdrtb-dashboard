@@ -32,7 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by Dennis Henry on 1/31/2017.
+ * Created by Dennis Henry
+ * Created on 1/31/2017.
  */
 public class DashboardVisitsFragmentController {
     MdrtbDashboardService dashboardService = Context.getService(MdrtbDashboardService.class);

@@ -79,7 +79,10 @@ public class ReportCohortFragmentController {
             Boolean tf = false; //Treatement Failure
             Boolean lf = false; //Lost to Follow-up
 
-            if (patient.getPatientType().getConcept().equals(mdrtbService.getConcept(MdrtbConcepts.NEW))){
+            if (patient.getPatientType() == null){
+                continue;
+            }
+            else if (patient.getPatientType().getConcept().equals(mdrtbService.getConcept(MdrtbConcepts.NEW))){
                 np = true;
             }
             else {

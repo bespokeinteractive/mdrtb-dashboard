@@ -10,6 +10,7 @@ import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
+import org.openmrs.module.mdrtb.model.UserLocation;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
@@ -123,6 +124,29 @@ public class DashboardFragmentController {
 
         // Return Object for Success
         return SimpleObject.create("status", "success", "message", "Patient successfully enrolled!", "programId", ppd.getId());
+    }
+
+    public SimpleObject getPatientProgramDetails(@RequestParam(value = "programId") PatientProgram pp){
+        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(pp);
+        String names = pp.getPatient().getGivenName() + " " + pp.getPatient().getFamilyName();
+        if (pp.getPatient().getMiddleName() != null){
+            names += " " + pp.getPatient().getMiddleName();
+        }
+
+        return SimpleObject.create("names", names, "identifier", ppd.getTbmuNumber());
+    }
+
+    public SimpleObject voidPatient(@RequestParam(value = "programId") PatientProgram pp,
+                                    @RequestParam(value = "reasons") String reasons,
+                                    UiSessionContext session){
+        pp.setVoided(true);
+        pp.setVoidedBy(session.getCurrentUser());
+        pp.setDateVoided(new Date());
+        pp.setVoidReason(reasons);
+
+        workflowService.savePatientProgram(pp);
+
+        return SimpleObject.create("status", "success", "message", "Patient successfully voided!", "programId", pp.getPatientProgramId());
     }
 
     public PatientProgramDetails patientEnrollment(Program program,
