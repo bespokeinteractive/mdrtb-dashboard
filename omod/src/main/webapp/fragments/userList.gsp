@@ -451,8 +451,13 @@
 		vertical-align: text-bottom;
 	}
 	table th, table td {
+		vertical-align: top;
 		white-space: nowrap;
-	}	
+	}
+	table th:nth-child(5), 
+	table td:nth-child(5) {
+		white-space: normal;
+	}
 	.dialog-content ul li input[type="text"],
 	.dialog-content ul li input[type="password"],
 	.dialog-content ul li select, 
