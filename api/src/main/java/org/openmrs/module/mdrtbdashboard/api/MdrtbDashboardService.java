@@ -51,6 +51,7 @@ public interface MdrtbDashboardService
 
     List<PatientProgramTransfers> getActivePatientTransfers(PatientProgram patientProgram);
     List<PatientProgramTransfers> getPatientProgramTransfers(Location location, Boolean status);
+    PatientProgramTransfers getPatientProgramTransfers(Integer transferId);
     PatientProgramTransfers savePatientProgramTransfers(PatientProgramTransfers patientProgramTransfers);
 
     Integer getNextTbmuNumberCount(String header);

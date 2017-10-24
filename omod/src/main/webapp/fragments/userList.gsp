@@ -451,7 +451,7 @@
 		vertical-align: text-bottom;
 	}
 	table th, table td {
-		vertical-align: top;
+		vertical-align: baseline;
 		white-space: nowrap;
 	}
 	table th:nth-child(5), 

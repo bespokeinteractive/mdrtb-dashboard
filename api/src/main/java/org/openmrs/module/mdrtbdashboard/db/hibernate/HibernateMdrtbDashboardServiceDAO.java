@@ -261,9 +261,17 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
+    public PatientProgramTransfers getPatientProgramTransfers(Integer transferId){
+        Criteria criteria = getSession().createCriteria(PatientProgramTransfers.class);
+        criteria.add(Restrictions.eq("id", transferId));
+        return (PatientProgramTransfers)criteria.uniqueResult();
+    }
+
+    @Override
     public List<PatientProgramTransfers> getPatientProgramTransfers(Location location, Boolean status){
         Criteria criteria = getSession().createCriteria(PatientProgramTransfers.class);
         criteria.add(Restrictions.eq("location", location));
+        criteria.add(Restrictions.eq("voided", false));
         if (status != null){
             criteria.add(Restrictions.eq("processed", status));
         }
@@ -276,6 +284,7 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
         Criteria criteria = getSession().createCriteria(PatientProgramTransfers.class);
         criteria.add(Restrictions.eq("patientProgram", patientProgram));
         criteria.add(Restrictions.eq("processed", false));
+        criteria.add(Restrictions.eq("voided", false));
 
         return criteria.list();
     }

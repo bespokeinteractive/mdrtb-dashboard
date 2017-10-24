@@ -207,6 +207,11 @@ public class MdrtbDashboardServiceImpl
     }
 
     @Override
+    public PatientProgramTransfers getPatientProgramTransfers(Integer transferId){
+        return dao.getPatientProgramTransfers(transferId);
+    }
+
+    @Override
     public PatientProgramTransfers savePatientProgramTransfers(PatientProgramTransfers patientProgramTransfers){
         return dao.savePatientProgramTransfers(patientProgramTransfers);
     }

@@ -155,4 +155,21 @@
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		</sql>
 	</diff>
+
+	<diff>
+		<version>1.0.6</version>
+		<author>Dennis Henry</author>
+		<date>Oct 2nd 2017</date>
+		<description>
+			Alter patient_program_transfers Table to include void options
+		</description>
+		<sql>
+            ALTER TABLE patient_program_transfers
+            ADD voided int(11) DEFAULT '0',
+            ADD voided_by int(11) NULL,
+			ADD void_date DATETIME NULL,
+			ADD void_reason VARCHAR(255) NULL,
+            ADD CONSTRAINT fk_patient_program_transfers_person1 FOREIGN KEY (voided_by) REFERENCES users (user_id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+		</sql>
+	</diff>
 </sqldiff>

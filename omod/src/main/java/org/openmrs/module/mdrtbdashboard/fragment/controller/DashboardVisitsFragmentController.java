@@ -115,6 +115,8 @@ public class DashboardVisitsFragmentController {
 
         if (outcome.equals(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.DIED))){
             patient.setDead(true);
+            patient.setDeathDate(date);
+            patient.setCauseOfDeath(pp.getProgram().getConcept());
             Context.getPatientService().savePatient(patient);
         }
 

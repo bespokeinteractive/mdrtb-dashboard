@@ -2,6 +2,7 @@ package org.openmrs.module.mdrtbdashboard.model;
 
 import org.openmrs.Location;
 import org.openmrs.PatientProgram;
+import org.openmrs.User;
 import java.util.Date;
 
 /**
@@ -15,6 +16,17 @@ public class PatientProgramTransfers {
     private Date transferDate;
     private PatientProgram patientProgram;
     private Boolean processed = false;
+    private Boolean voided = false;
+    private Date voidedOn;
+    private Integer voidedBy;
+    private String voidReason;
+
+    public PatientProgramTransfers() {
+    }
+
+    public PatientProgramTransfers(Integer transferId) {
+        this.id = transferId;
+    }
 
     public Integer getId() {
         return id;
@@ -54,5 +66,37 @@ public class PatientProgramTransfers {
 
     public void setProcessed(Boolean processed) {
         this.processed = processed;
+    }
+
+    public Boolean getVoided() {
+        return voided;
+    }
+
+    public void setVoided(Boolean voided) {
+        this.voided = voided;
+    }
+
+    public Integer getVoidedBy() {
+        return voidedBy;
+    }
+
+    public void setVoidedBy(Integer voidedBy) {
+        this.voidedBy = voidedBy;
+    }
+
+    public Date getVoidedOn() {
+        return voidedOn;
+    }
+
+    public void setVoidedOn(Date voidedOn) {
+        this.voidedOn = voidedOn;
+    }
+
+    public String getVoidReason() {
+        return voidReason;
+    }
+
+    public void setVoidReason(String voidReason) {
+        this.voidReason = voidReason;
     }
 }

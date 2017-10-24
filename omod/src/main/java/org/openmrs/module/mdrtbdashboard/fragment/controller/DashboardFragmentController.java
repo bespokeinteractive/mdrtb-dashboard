@@ -128,12 +128,18 @@ public class DashboardFragmentController {
 
     public SimpleObject getPatientProgramDetails(@RequestParam(value = "programId") PatientProgram pp){
         PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(pp);
+        String tbmu  = "N/A";
+
+        if (ppd != null){
+            tbmu = ppd.getTbmuNumber();
+        }
+
         String names = pp.getPatient().getGivenName() + " " + pp.getPatient().getFamilyName();
         if (pp.getPatient().getMiddleName() != null){
             names += " " + pp.getPatient().getMiddleName();
         }
 
-        return SimpleObject.create("names", names, "identifier", ppd.getTbmuNumber());
+        return SimpleObject.create("names", names, "identifier", tbmu);
     }
 
     public SimpleObject voidPatient(@RequestParam(value = "programId") PatientProgram pp,

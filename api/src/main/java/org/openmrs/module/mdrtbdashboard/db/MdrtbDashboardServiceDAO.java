@@ -29,6 +29,7 @@ public interface MdrtbDashboardServiceDAO {
     PatientProgramVisits savePatientProgramVisits(PatientProgramVisits patientProgramVisit);
 
     PatientProgramTransfers savePatientProgramTransfers(PatientProgramTransfers patientProgramTransfers);
+    PatientProgramTransfers getPatientProgramTransfers(Integer transferId);
     List<PatientProgramTransfers> getPatientProgramTransfers(Location location, Boolean status);
     List<PatientProgramTransfers> getActivePatientTransfers(PatientProgram patientProgram);
 

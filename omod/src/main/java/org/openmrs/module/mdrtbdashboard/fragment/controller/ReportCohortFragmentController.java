@@ -44,8 +44,8 @@ public class ReportCohortFragmentController {
         List<PatientProgramDetails> patients = dashboard.getPatientsFromDetails(session.getSessionLocation(), dates.getStartDate(), dates.getEndDate(), facility);
 
         for (PatientProgramDetails patient: patients) {
-            //This is for TB Patients Only
-            if (patient.getPatientProgram().getProgram().getProgramId() == 2) {
+            //This is for TB Patients Only, Ignoring Voided Ones
+            if (patient.getPatientProgram().getProgram().getProgramId() == 2 || patient.getPatientProgram().getVoided()) {
                 continue;
             }
 
