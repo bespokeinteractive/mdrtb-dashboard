@@ -25,6 +25,8 @@ public interface MdrtbDashboardService
     LocationCentres getCentresByLocation(Location location);
     LocationCentres saveLocationCentres(LocationCentres centre);
 
+    LocationFacilities saveLocationFacilities(LocationFacilities facility);
+
     LocationCentresAgencies getAgency(Integer agentId);
     LocationCentresRegions getRegion(Integer regionId);
 

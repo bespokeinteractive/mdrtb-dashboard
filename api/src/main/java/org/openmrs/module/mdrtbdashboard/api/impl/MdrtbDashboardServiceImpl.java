@@ -51,6 +51,11 @@ public class MdrtbDashboardServiceImpl
     }
 
     @Override
+    public LocationFacilities saveLocationFacilities(LocationFacilities facility){
+        return dao.saveLocationFacilities(facility);
+    }
+
+    @Override
     public LocationCentresAgencies getAgency(Integer agentId){
         return dao.getAgency(agentId);
     }
