@@ -163,10 +163,11 @@
 						type: "POST",
 						url: '${ui.actionLink("mdrtbdashboard", "LocationList", "addLocationDetails")}',
 						data: ({
-							names:	jq('#addNames').val(),
-							serial:	jq('#addSerial').val(),
-							agency:	jq('#addAgency').val(),
-							region:	jq('#addRegion').val(),
+							names:		jq('#addNames').val(),
+							serial:		jq('#addSerial').val(),
+							agency:		jq('#addAgency').val(),
+							region:		jq('#addRegion').val(),
+                            facility:	jq('#addHospital').val()
 						}),
 						dataType: "json",
 						success: function(data) {
@@ -463,7 +464,11 @@
 							<option value="${sites.id}">${sites.name}</option>
 						<% } %>
 					</select>
-				</li>				
+				</li>
+				<li>
+					<label for="addHospital">HOSPITAL :</label>
+					<input type="text" id="addHospital" placeholder="Hospital Name" />
+				</li>
 			</ul>		
 		</form>
 

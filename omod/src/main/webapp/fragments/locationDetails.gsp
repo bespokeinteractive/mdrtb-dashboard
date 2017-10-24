@@ -140,7 +140,7 @@
             </li>
             <li>
                 <i class="icon-chevron-right link"></i>
-                <a href="${ui.pageLink('mdrtbdashboard','users')}">Manage Locations</a>
+                <a href="${ui.pageLink('mdrtbdashboard','locations')}">Manage Locations</a>
             </li>
 			<li>
                 <i class="icon-chevron-right link"></i>

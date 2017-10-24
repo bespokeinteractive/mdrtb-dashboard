@@ -2,10 +2,12 @@ package org.openmrs.module.mdrtbdashboard.fragment.controller;
 
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentresAgencies;
 import org.openmrs.module.mdrtbdashboard.model.LocationCentresRegions;
+import org.openmrs.module.mdrtbdashboard.model.LocationFacilities;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentModel;
@@ -57,6 +59,8 @@ public class LocationListFragmentController {
                                            @RequestParam(value = "serial") String serial,
                                            @RequestParam(value = "agency") Integer agentId,
                                            @RequestParam(value = "region") Integer regionId,
+                                           @RequestParam(value = "facility") String facilityName,
+                                           UiSessionContext session,
                                            UiUtils ui){
 
         if (Context.getLocationService().getLocation(names) != null){
@@ -78,6 +82,17 @@ public class LocationListFragmentController {
         centre.setCreatedOn(new Date());
         centre.setCreator(Context.getAuthenticatedUser().getPerson());
         dashboardSvc.saveLocationCentres(centre);
+
+        LocationFacilities facility = new LocationFacilities();
+        facility.setLocation(location);
+        facility.setName(facilityName);
+        facility.setStatus("active");
+        facility.setCreatedOn(new Date());
+        facility.setCreator(session.getCurrentUser().getPerson());
+        //dashboardSvc.saveLocationCentres()
+
+
+
 
         return SimpleObject.create("status", "success", "message", "Location successfully added!");
     }
