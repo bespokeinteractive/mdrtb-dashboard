@@ -69,6 +69,13 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
+    public LocationFacilities getLocationFacility(Location location){
+        Criteria criteria = getSession().createCriteria(LocationFacilities.class);
+        criteria.add(Restrictions.eq("location", location));
+        return (LocationFacilities) criteria.uniqueResult();
+    }
+
+    @Override
     public LocationFacilities saveLocationFacilities(LocationFacilities facility){
         return (LocationFacilities)getSession().merge(facility);
     }

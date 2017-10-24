@@ -16,7 +16,8 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Dennis Henry on 12/24/2016.
+ * Created by Dennis Henry
+ * Created on 12/24/2016.
  */
 public class MdrtbDashboardServiceImpl
         extends BaseOpenmrsService
@@ -48,6 +49,11 @@ public class MdrtbDashboardServiceImpl
     @Override
     public LocationCentres saveLocationCentres(LocationCentres centre){
         return dao.saveLocationCentres(centre);
+    }
+
+    @Override
+    public LocationFacilities getLocationFacility(Location location){
+        return dao.getLocationFacility(location);
     }
 
     @Override

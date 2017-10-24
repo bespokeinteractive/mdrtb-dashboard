@@ -19,6 +19,7 @@ public interface MdrtbDashboardServiceDAO {
     LocationCentres getCentresByLocation(Location location);
     LocationCentres saveLocationCentres(LocationCentres centre);
 
+    LocationFacilities getLocationFacility(Location location);
     LocationFacilities saveLocationFacilities(LocationFacilities facility);
 
     LocationCentresAgencies getAgency(Integer agentId);
