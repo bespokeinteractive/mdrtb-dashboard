@@ -89,10 +89,7 @@ public class LocationListFragmentController {
         facility.setStatus("active");
         facility.setCreatedOn(new Date());
         facility.setCreator(session.getCurrentUser().getPerson());
-        //dashboardSvc.saveLocationCentres()
-
-
-
+        dashboardSvc.saveLocationFacilities(facility);
 
         return SimpleObject.create("status", "success", "message", "Location successfully added!");
     }
