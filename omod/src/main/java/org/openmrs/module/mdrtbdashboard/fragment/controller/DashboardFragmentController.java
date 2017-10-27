@@ -301,9 +301,7 @@ public class DashboardFragmentController {
     }
 
     public Integer getTransfersCount(UiSessionContext session){
-        Location location = session.getSessionLocation();
-
-        List<PatientProgramTransfers> list = dashboardService.getPatientProgramTransfers(location, false);
+        List<PatientProgramTransfers> list = dashboardService.getPatientProgramTransfers(session.getSessionLocation(), false);
         return list.size();
     }
 }

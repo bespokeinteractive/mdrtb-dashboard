@@ -27,19 +27,20 @@ public interface MdrtbDashboardServiceDAO {
 
     PatientProgramDetails getPatientProgramDetails(Integer ppid);
     PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails);
-    PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen);
     PatientProgramDetails saveParentProgramOutcome(PatientProgramDetails ppd, Concept outcome, Date completedOn);
-    PatientProgramVisits savePatientProgramVisits(PatientProgramVisits patientProgramVisit);
+    List<PatientProgramDetails> getActivePatients(Location location, Program program);
 
     PatientProgramTransfers savePatientProgramTransfers(PatientProgramTransfers patientProgramTransfers);
     PatientProgramTransfers getPatientProgramTransfers(Integer transferId);
     List<PatientProgramTransfers> getPatientProgramTransfers(Location location, Boolean status);
     List<PatientProgramTransfers> getActivePatientTransfers(PatientProgram patientProgram);
-
     RegimentType getRegimenType(Concept concept, Program program);
     List<RegimentType> getRegimenTypes(Concept concept, Program program);
+
+    PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen);
     List<PatientProgramRegimen> getPatientProgramRegimens(PatientProgramDetails pd, Boolean active);
 
+    PatientProgramVisits savePatientProgramVisits(PatientProgramVisits patientProgramVisit);
     PatientProgramVisits getPatientProgramVisit(PatientProgram patientProgram, VisitTypes visitType);
     PatientProgramVisits getPatientProgramVisit(Encounter encounter);
     List<PatientProgramVisits> getPatientProgramVisits(PatientProgram patientProgram);

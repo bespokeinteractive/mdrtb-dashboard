@@ -19,8 +19,10 @@ import org.openmrs.module.mdrtbdashboard.model.*;
 import java.util.*;
 
 /**
- * Created by Dennis Henry on 12/24/2016.
+ * Created by Dennis Henry
+ * Created on 12/24/2016.
  */
+
 public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceDAO {
     protected final Log log = LogFactory.getLog(getClass());
     private SessionFactory sessionFactory;
@@ -92,6 +94,18 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
         Criteria criteria = getSession().createCriteria(LocationCentresRegions.class);
         criteria.add(Restrictions.eq("id", regionId));
         return (LocationCentresRegions) criteria.uniqueResult();
+    }
+
+    @Override
+    public List<PatientProgramDetails> getActivePatients(Location location, Program program){
+        Criteria criteria = getSession().createCriteria(PatientProgramDetails.class);
+        criteria.createAlias("patientProgram", "pp");
+        criteria.add(Restrictions.eq("pp.voided", false));
+        criteria.add(Restrictions.eq("pp.program", program));
+        criteria.add(Restrictions.eq("pp.location", location));
+        criteria.add(Restrictions.isNull("pp.dateCompleted"));
+
+        return criteria.list();
     }
 
     @Override

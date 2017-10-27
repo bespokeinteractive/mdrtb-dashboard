@@ -31,15 +31,16 @@ public interface MdrtbDashboardService
     LocationCentresAgencies getAgency(Integer agentId);
     LocationCentresRegions getRegion(Integer regionId);
 
+    List<PatientProgramDetails> getActivePatients(Location location, Program program);
     PatientProgramDetails getPatientProgramDetails(Integer ppid);
     PatientProgramDetails getPatientProgramDetails(PatientProgram pp);
     PatientProgramDetails getPatientProgramDetails(MdrtbPatientProgram mpp);
-
     PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails);
-    PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen);
     PatientProgramDetails saveParentProgramOutcome(PatientProgramDetails ppd, Concept outcome, Date completedOn);
+
     PatientProgramVisits savePatientProgramVisits(PatientProgramVisits patientProgramVisit);
 
+    PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen);
     List<PatientProgramRegimen> getPatientProgramRegimens(PatientProgramDetails pd, Boolean active);
     List<RegimentType> getRegimenTypes(Concept concept, Program program);
     RegimentType getRegimenType(Concept concept, Program program);

@@ -72,6 +72,11 @@ public class MdrtbDashboardServiceImpl
     }
 
     @Override
+    public List<PatientProgramDetails> getActivePatients(Location location, Program program){
+        return dao.getActivePatients(location, program);
+    }
+
+    @Override
     public PatientProgramDetails getPatientProgramDetails(PatientProgram pp){
         return dao.getPatientProgramDetails(pp);
     }
