@@ -51,7 +51,9 @@ public class LocationListFragmentController {
 
     public SimpleObject getLocationDetails(@RequestParam(value = "locationId") Location location){
         LocationCentres centre = Context.getService(MdrtbDashboardService.class).getCentresByLocation(location);
-        SimpleObject locations = SimpleObject.create("names", location.getName(), "serial", centre.getSerialNumber(), "agency", centre.getAgency().getId(), "region", centre.getRegion().getId());
+        LocationFacilities facility = Context.getService(MdrtbDashboardService.class).getLocationFacility(location);
+
+        SimpleObject locations = SimpleObject.create("names", location.getName(), "serial", centre.getSerialNumber(), "agency", centre.getAgency().getId(), "region", centre.getRegion().getId(),"facility", facility.getName());
         return SimpleObject.create("location", locations);
     }
 
@@ -98,14 +100,32 @@ public class LocationListFragmentController {
                                               @RequestParam(value = "names") String names,
                                               @RequestParam(value = "serial") String serial,
                                               @RequestParam(value = "agency") Integer agentId,
-                                              @RequestParam(value = "region") Integer regionId){
+                                              @RequestParam(value = "facility") String facilityName,
+                                              @RequestParam(value = "region") Integer regionId,
+                                              UiSessionContext session){
+
+        LocationFacilities facility = dashboardSvc.getLocationFacility(location);
         LocationCentresRegions region = dashboardSvc.getRegion(regionId);
         LocationCentresAgencies agency = dashboardSvc.getAgency(agentId);
         LocationCentres centre = dashboardSvc.getCentresByLocation(location);
         centre.setSerialNumber(serial);
         centre.setAgency(agency);
         centre.setRegion(region);
+
+        if(facility == null){
+            facility = new LocationFacilities();
+            facility.setStatus("active");
+            facility.setLocation(location);
+            facility.setCreatedOn(new Date());
+            facility.setCreator(session.getCurrentUser().getPerson());
+        }
+
+        facility.setName(facilityName);
+        location.setName(names);
+
         dashboardSvc.saveLocationCentres(centre);
+        dashboardSvc.saveLocationFacilities(facility);
+        Context.getLocationService().saveLocation(location);
 
         return SimpleObject.create("status", "success", "message", "Location successfully updated!");
     }

@@ -126,6 +126,7 @@
 				jq('#editSerial').val(data.location.serial);
 				jq('#editAgency').val(data.location.agency);
 				jq('#editRegion').val(data.location.region);
+				jq('#editFacility').val(data.location.facility);
 			
 				editDialog.show();
 			});
@@ -227,6 +228,7 @@
 							serial:		jq('#editSerial').val(),
 							agency:		jq('#editAgency').val(),
 							region:		jq('#editRegion').val(),
+							facility:   jq('#editFacility').val(),
 						}),
 						dataType: "json",
 						success: function(data) {
@@ -514,7 +516,12 @@
 							<option value="${sites.id}">${sites.name}</option>
 						<% } %>
 					</select>
-				</li>				
+				</li>
+				<li>
+					<label for="editFacility">Hospital :</label>
+					<input type="text" id="editFacility" placeholder="Facility Name" />
+
+				</li>
 			</ul>		
 		</form>
 
