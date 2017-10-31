@@ -663,9 +663,9 @@
 		font-weight: bold;
 	}
 	#overview {
-		min-height: 450px;
-		padding: 5px;
-	}
+		 min-height: 450px;
+		 padding: 5px;
+	 }
 	.title-answer {
 		font-family: "Myriad Pro",Arial,Helvetica,Tahoma,sans-serif;
 		font-size: 13px;

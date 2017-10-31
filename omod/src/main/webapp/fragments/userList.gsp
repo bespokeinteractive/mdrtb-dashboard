@@ -8,6 +8,17 @@
 %>
 
 <script>
+    jq(function(){
+        var tabs = jq(".mdrtb-tabs").tabs();
+    });
+
+
+
+</script>
+
+<script>
+
+
 	var searchTable;
 	var searchTableObject;
 	var searchResultsData = [];
@@ -364,9 +375,11 @@
 		getMdrtbUsers();
 		
 	});
+
 </script>
 
 <style>
+
 	#breadcrumbs a, #breadcrumbs a:link, #breadcrumbs a:visited {
 		text-decoration: none;
 	}
@@ -486,11 +499,11 @@
 	#addLocations{
 		border-top: 1px solid #ddd;
 		margin-top: 3px;
-		padding-left: 110px;	
+		padding-left: 0px;
 	}
 	label.user-locations{
 		margin-top: 4px;
-		width: 50%;
+		width: 33%;
 	}
 	.dialog .dialog-content li {
 		margin-bottom: 0;
@@ -501,6 +514,20 @@
 	label.user-locations input{
 		margin-top: 4px;
 	}
+	#overview {
+		min-height: 450px;
+		padding: 5px;
+	}
+	.title-answer {
+		font-family: "Myriad Pro",Arial,Helvetica,Tahoma,sans-serif;
+		font-size: 13px;
+	}
+	#whv {
+		display: inline-block;
+		width: 100%;
+	}
+
+
 </style>
 
 <div class="clear"></div>
@@ -603,7 +630,7 @@
     </div>
 </div>
 
-<div id="edit-dialog" class="dialog" style="display:none;">
+<div id="edit-dialog" class="dialog" style="display:none; width: 650px">
     <div class="dialog-header">
         <i class="icon-folder-open"></i>
         <h3>EDIT USER</h3>
@@ -635,11 +662,31 @@
 					<label for="editNames">USERNAME:</label>
 					<input type="text" name="wrap.username" id="editUsername" placeholder="Username" />
 				</li>
-				<li id="editLocations">
-				</li>
-				
-				
-			</ul>		
+
+
+				<div class="mdrtb-tabs">
+					<ul>
+						<li id="cn"><a href="#overview">Locations</a></li>
+						<li id="ti"><a href="#useroles">Roles</a></li>
+
+
+					</ul>
+
+					<div id="overview">
+
+                        <li id="editLocations">
+                        </li>
+					</div>
+                    <div id="useroles">
+
+
+                    </div>
+				</div>
+
+
+
+
+			</ul>
 		</form>
 
         <label class="button confirm right">Confirm</label>
