@@ -5,7 +5,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
-
 /**
  * Created by Dennis Henry
  * Created On 4/1/2017
