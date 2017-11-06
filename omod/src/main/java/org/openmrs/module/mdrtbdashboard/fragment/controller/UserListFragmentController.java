@@ -15,7 +15,6 @@ import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.annotation.BindParams;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.openmrs.api.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.InvocationTargetException;
@@ -63,8 +62,6 @@ public class UserListFragmentController {
         user.setUsername(username);
 
         user.addRole(Context.getUserService().getRole("Authenticated"));
-        user.addRole(Context.getUserService().getRole("Provider"));
-        user.addRole(Context.getUserService().getRole("System Developer"));
 
         Context.getUserService().saveUser(user, password);
         Context.getService(MdrtbService.class).setUserLocations(user, locations);
@@ -119,6 +116,7 @@ public class UserListFragmentController {
     }
 
     public SimpleObject getUserDetails(@RequestParam(value = "userId") User user,
+
                                        UiUtils ui) {
         SimpleObject users = SimpleObject.create("names", user.getPersonName().getFullName(), "gender", user.getPerson().getGender(), "systemId", user.getSystemId(), "username", user.getUsername());
         List<UserLocationModel> model = new ArrayList<UserLocationModel>();
@@ -136,16 +134,20 @@ public class UserListFragmentController {
 
             model.add(usl);
         }
+
         List<Role> roles = Context.getUserService().getAllRoles();
-        List Rmodel = new ArrayList();
-        SimpleObject rol;
+        List<UserRoleModel> rmodel = new ArrayList<UserRoleModel>();
         for (Role role : roles) {
-            rol= SimpleObject.create("id", role.getUuid(), "name", role.getRole(), "checked", false);
-           Rmodel.add(rol);
+            UserRoleModel url = new UserRoleModel();
+            url.setName(role.getName());
+            if (user.hasRole(role.getRole())){
+                url.setChecked(true);
+            }
+
+            rmodel.add(url);
         }
 
-
-        return SimpleObject.create("user", users, "location", model,"role", Rmodel);
+        return SimpleObject.create("user", users, "location", model,"role", rmodel);
     }
 
     public SimpleObject getAllLocations() {
