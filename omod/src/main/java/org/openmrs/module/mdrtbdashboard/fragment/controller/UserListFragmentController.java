@@ -137,9 +137,15 @@ public class UserListFragmentController {
 
         List<Role> roles = Context.getUserService().getAllRoles();
         List<UserRoleModel> rmodel = new ArrayList<UserRoleModel>();
+
         for (Role role : roles) {
+            if (role.getRole().equals("Anonymous") || role.getRole().equals("Authenticated") || role.getRole().equals("System Developer") || role.getRole().equals("Privilege Level: Full") || role.getRole().equals("Provider")){
+                continue;
+            }
+
             UserRoleModel url = new UserRoleModel();
             url.setName(role.getName());
+
             if (user.hasRole(role.getRole())){
                 url.setChecked(true);
             }
