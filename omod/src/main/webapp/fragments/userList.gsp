@@ -192,7 +192,7 @@
                     checked = 'checked';
                 }
 
-                var row = '<label class="user-locations" id="' + item.id + '"><input type="checkbox" name="role.' + item.id + '" ' + checked + ' />' + item.name + '</label>';
+                var row = '<label class="user-locations" id="role.' + item.name + '"><input type="checkbox" name="role.' + item.name + '" ' + checked + ' />' + item.name + '</label>';
                 ulselect.append(row);
 
             });

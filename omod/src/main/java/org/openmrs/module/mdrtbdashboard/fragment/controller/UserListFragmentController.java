@@ -73,6 +73,8 @@ public class UserListFragmentController {
                                           HttpServletRequest request)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         List<Location> locations = new ArrayList<Location>();
+        List<Role> roles = new ArrayList<Role>();
+
         User user = wrapper.getUser();
         String gender = wrapper.getGender();
         String username = wrapper.getUsername();
@@ -81,6 +83,13 @@ public class UserListFragmentController {
             if (StringUtils.contains(params.getKey(), "location.")) {
                 Location location = Context.getLocationService().getLocation(Integer.parseInt(params.getKey().substring("location.".length())));
                 locations.add(location);
+            }
+        }
+
+        for (Map.Entry<String, String[]> params : ((Map<String, String[]>) request.getParameterMap()).entrySet()) {
+            if (StringUtils.contains(params.getKey(), "role.")) {
+                Role role = Context.getUserService().getRole(params.getKey().substring("roles".length()));
+                roles.add(role);
             }
         }
 
@@ -97,10 +106,31 @@ public class UserListFragmentController {
         user.setPerson(person);
         user.setUsername(username);
 
+        for(Role role: Context.getUserService().getAllRoles()){
+            if (role.getRole().equals("Anonymous") || role.getRole().equals("Authenticated")){
+                continue;
+            }
+
+           if (roles.contains(role)){
+               user.addRole(role);
+           }
+           else{
+               user.removeRole(role);
+           }
+       }
+
+
         Context.getUserService().saveUser(user, null);
         Context.getService(MdrtbService.class).setUserLocations(user, locations);
 
+
+
         return SimpleObject.create("status", "success", "message", "User details successfully updated!");
+    }
+
+    public  void setUserRoles(User user, List<Role> roles){
+
+
     }
 
     public SimpleObject changePasswordDetails(@BindParams("wrap") ResultModelWrapper wrapper,
