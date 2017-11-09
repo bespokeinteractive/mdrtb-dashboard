@@ -18,18 +18,10 @@ import java.util.List;
 @Transactional
 public interface MdrtbDashboardService
         extends OpenmrsService {
-    List<LocationCentres> getCentres();
-    List<LocationCentresAgencies> getAgencies();
-    List<LocationCentresRegions> getRegions();
 
-    LocationCentres getCentresByLocation(Location location);
-    LocationCentres saveLocationCentres(LocationCentres centre);
 
     LocationFacilities getLocationFacility(Location location);
     LocationFacilities saveLocationFacilities(LocationFacilities facility);
-
-    LocationCentresAgencies getAgency(Integer agentId);
-    LocationCentresRegions getRegion(Integer regionId);
 
     List<PatientProgramDetails> getActivePatients(Location location, Program program);
     PatientProgramDetails getPatientProgramDetails(Integer ppid);

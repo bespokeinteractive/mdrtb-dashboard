@@ -7,11 +7,10 @@ import java.util.Collection;
 import org.openmrs.ProgramWorkflowState;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
-import org.openmrs.module.mdrtb.model.UserLocation;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
+import org.openmrs.module.mdrtb.model.LocationCentres;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,7 +38,7 @@ public class EnrollPageController {
         Collection<ConceptAnswer> anatomicalSites = mdrtbService.getPossibleAnatomicalSites();
         Collection<ConceptAnswer> siteConfirmation = mdrtbService.getPossibleAnatomicalSitesConfirmation();
 
-        LocationCentres usl = Context.getService(MdrtbDashboardService.class).getCentresByLocation(session.getSessionLocation());
+        LocationCentres usl = mdrtbService.getCentresByLocation(session.getSessionLocation());
         String gender = "Male";
         if (patient.getGender().equals("F")){
             gender = "Female";

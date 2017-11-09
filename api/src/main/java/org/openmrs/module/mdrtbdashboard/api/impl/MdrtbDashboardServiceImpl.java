@@ -4,6 +4,9 @@ import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
+import org.openmrs.module.mdrtb.model.LocationCentres;
+import org.openmrs.module.mdrtb.model.LocationCentresAgencies;
+import org.openmrs.module.mdrtb.model.LocationCentresRegions;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
@@ -26,30 +29,7 @@ public class MdrtbDashboardServiceImpl
     public MdrtbDashboardServiceDAO getDao() { return dao; }
     public void setDao(MdrtbDashboardServiceDAO dao) { this.dao = dao; }
 
-    @Override
-    public List<LocationCentres> getCentres(){
-        return dao.getCentres();
-    }
 
-    @Override
-    public List<LocationCentresAgencies> getAgencies(){
-        return dao.getAgencies();
-    }
-
-    @Override
-    public List<LocationCentresRegions> getRegions(){
-        return dao.getRegions();
-    }
-
-    @Override
-    public LocationCentres getCentresByLocation(Location location){
-        return dao.getCentresByLocation(location);
-    }
-
-    @Override
-    public LocationCentres saveLocationCentres(LocationCentres centre){
-        return dao.saveLocationCentres(centre);
-    }
 
     @Override
     public LocationFacilities getLocationFacility(Location location){
@@ -59,16 +39,6 @@ public class MdrtbDashboardServiceImpl
     @Override
     public LocationFacilities saveLocationFacilities(LocationFacilities facility){
         return dao.saveLocationFacilities(facility);
-    }
-
-    @Override
-    public LocationCentresAgencies getAgency(Integer agentId){
-        return dao.getAgency(agentId);
-    }
-
-    @Override
-    public LocationCentresRegions getRegion(Integer regionId){
-        return dao.getRegion(regionId);
     }
 
     @Override

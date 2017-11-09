@@ -47,7 +47,6 @@ public class UserListFragmentController {
             }
         }
 
-
         NameModel names = new NameModel(wrapper.getNames());
         PersonName pn = new PersonName();
         pn.setGivenName(names.getGivenName());
@@ -119,18 +118,10 @@ public class UserListFragmentController {
            }
        }
 
-
         Context.getUserService().saveUser(user, null);
         Context.getService(MdrtbService.class).setUserLocations(user, locations);
 
-
-
         return SimpleObject.create("status", "success", "message", "User details successfully updated!");
-    }
-
-    public  void setUserRoles(User user, List<Role> roles){
-
-
     }
 
     public SimpleObject changePasswordDetails(@BindParams("wrap") ResultModelWrapper wrapper,
@@ -151,7 +142,7 @@ public class UserListFragmentController {
         SimpleObject users = SimpleObject.create("names", user.getPersonName().getFullName(), "gender", user.getPerson().getGender(), "systemId", user.getSystemId(), "username", user.getUsername());
         List<UserLocationModel> model = new ArrayList<UserLocationModel>();
         List<Location> locationList = Context.getLocationService().getAllLocations();
-        List<Location> locations = getAuthenticatedUsersLocations(user);
+        List<Location> locations = Context.getService(MdrtbService.class).getLocationsByUser(user);
 
         for (Location location : locationList) {
             UserLocationModel usl = new UserLocationModel();
@@ -198,24 +189,6 @@ public class UserListFragmentController {
         }
 
         return SimpleObject.create("location", model);
-    }
-
-    public List<SimpleObject> getAuthenticatedUsers(UiUtils ui, HttpServletRequest request) {
-        List<User> userList = Context.getUserService().getAllUsers();
-        List<MdrtbUserWrapper> wrapperList = mdrtbUserWithDetails(userList);
-
-        return SimpleObject.fromCollection(wrapperList, ui, "user.userId", "user.systemId", "user.username", "wrapperLocations", "wrapperNames");
-    }
-
-    public List<Location> getAuthenticatedUsersLocations(User user) {
-        List<UserLocation> locales = Context.getService(MdrtbService.class).getUserLocations(user);
-        List<Location> locations = new ArrayList<Location>();
-
-        for (UserLocation locale : locales) {
-            locations.add(locale.getLocation());
-        }
-
-        return locations;
     }
 
     private List<MdrtbUserWrapper> mdrtbUserWithDetails(List<User> users) {

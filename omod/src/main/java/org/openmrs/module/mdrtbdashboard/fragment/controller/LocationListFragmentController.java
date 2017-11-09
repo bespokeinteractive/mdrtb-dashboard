@@ -3,10 +3,11 @@ package org.openmrs.module.mdrtbdashboard.fragment.controller;
 import org.openmrs.Location;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
+import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentres;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentresAgencies;
-import org.openmrs.module.mdrtbdashboard.model.LocationCentresRegions;
+import org.openmrs.module.mdrtb.model.LocationCentres;
+import org.openmrs.module.mdrtb.model.LocationCentresAgencies;
+import org.openmrs.module.mdrtb.model.LocationCentresRegions;
 import org.openmrs.module.mdrtbdashboard.model.LocationFacilities;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
@@ -25,12 +26,11 @@ import java.util.List;
 
 public class LocationListFragmentController {
     MdrtbDashboardService dashboardSvc = Context.getService(MdrtbDashboardService.class);
+    MdrtbService mdrtbService = Context.getService(MdrtbService.class);
 
     public String get(FragmentModel model, UiUtils ui){
-        MdrtbDashboardService dashboard = Context.getService(MdrtbDashboardService.class);
-
-        List<LocationCentresRegions> regions = dashboard.getRegions();
-        List<LocationCentresAgencies> agencies = dashboard.getAgencies();
+        List<LocationCentresRegions> regions = mdrtbService.getRegions();
+        List<LocationCentresAgencies> agencies = mdrtbService.getAgencies();
 
         model.addAttribute("regions", regions);
         model.addAttribute("agencies", agencies);
@@ -39,7 +39,7 @@ public class LocationListFragmentController {
     }
 
     public List<SimpleObject> getMdrtbLocations(UiUtils ui) {
-        List<LocationCentres> centres = Context.getService(MdrtbDashboardService.class).getCentres();
+        List<LocationCentres> centres = mdrtbService.getCentres();
         Collections.sort(centres, new Comparator<LocationCentres>() {
             @Override
             public int compare(LocationCentres o1, LocationCentres o2) {
@@ -50,7 +50,7 @@ public class LocationListFragmentController {
     }
 
     public SimpleObject getLocationDetails(@RequestParam(value = "locationId") Location location){
-        LocationCentres centre = Context.getService(MdrtbDashboardService.class).getCentresByLocation(location);
+        LocationCentres centre = mdrtbService.getCentresByLocation(location);
         LocationFacilities facility = Context.getService(MdrtbDashboardService.class).getLocationFacility(location);
 
         SimpleObject locations = SimpleObject.create("names", location.getName(), "serial", centre.getSerialNumber(), "agency", centre.getAgency().getId(), "region", centre.getRegion().getId(),"facility", facility.getName());
@@ -69,8 +69,8 @@ public class LocationListFragmentController {
             return SimpleObject.create("status", "failed", "message", "Location already exsists!");
         }
 
-        LocationCentresRegions region = dashboardSvc.getRegion(regionId);
-        LocationCentresAgencies agency = dashboardSvc.getAgency(agentId);
+        LocationCentresRegions region = mdrtbService.getRegion(regionId);
+        LocationCentresAgencies agency = mdrtbService.getAgency(agentId);
 
         Location location = new Location();
         location.setName(names);
@@ -83,7 +83,7 @@ public class LocationListFragmentController {
         centre.setRegion(region);
         centre.setCreatedOn(new Date());
         centre.setCreator(Context.getAuthenticatedUser().getPerson());
-        dashboardSvc.saveLocationCentres(centre);
+        mdrtbService.saveLocationCentres(centre);
 
         LocationFacilities facility = new LocationFacilities();
         facility.setLocation(location);
@@ -105,9 +105,9 @@ public class LocationListFragmentController {
                                               UiSessionContext session){
 
         LocationFacilities facility = dashboardSvc.getLocationFacility(location);
-        LocationCentresRegions region = dashboardSvc.getRegion(regionId);
-        LocationCentresAgencies agency = dashboardSvc.getAgency(agentId);
-        LocationCentres centre = dashboardSvc.getCentresByLocation(location);
+        LocationCentresRegions region = mdrtbService.getRegion(regionId);
+        LocationCentresAgencies agency = mdrtbService.getAgency(agentId);
+        LocationCentres centre = mdrtbService.getCentresByLocation(location);
         centre.setSerialNumber(serial);
         centre.setAgency(agency);
         centre.setRegion(region);
@@ -123,7 +123,7 @@ public class LocationListFragmentController {
         facility.setName(facilityName);
         location.setName(names);
 
-        dashboardSvc.saveLocationCentres(centre);
+        mdrtbService.saveLocationCentres(centre);
         dashboardSvc.saveLocationFacilities(facility);
         Context.getLocationService().saveLocation(location);
 

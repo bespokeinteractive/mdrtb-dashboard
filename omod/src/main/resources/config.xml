@@ -38,8 +38,6 @@
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
 		LocationFacilities.hbm.xml
-		LocationCentres.hbm.xml
-		LocationCentresRegions.hbm.xml
 		LocationCentresAgencies.hbm.xml
 		RegimentType.hbm.xml
 		VisitTypes.hbm.xml

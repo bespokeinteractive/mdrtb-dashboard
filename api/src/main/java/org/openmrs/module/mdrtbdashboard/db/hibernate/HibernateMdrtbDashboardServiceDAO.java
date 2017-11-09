@@ -38,39 +38,6 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     }
 
     @Override
-    public List<LocationCentres> getCentres(){
-        Criteria criteria = getSession().createCriteria(LocationCentres.class);
-        List list = criteria.list();
-        return list;
-    }
-
-    @Override
-    public List<LocationCentresAgencies> getAgencies(){
-        Criteria criteria = getSession().createCriteria(LocationCentresAgencies.class);
-        List list = criteria.list();
-        return list;
-    }
-
-    @Override
-    public List<LocationCentresRegions> getRegions(){
-        Criteria criteria = getSession().createCriteria(LocationCentresRegions.class);
-        List list = criteria.list();
-        return list;
-    }
-
-    @Override
-    public LocationCentres getCentresByLocation(Location location){
-        Criteria criteria = getSession().createCriteria(LocationCentres.class);
-        criteria.add(Restrictions.eq("location", location));
-        return (LocationCentres) criteria.uniqueResult();
-    }
-
-    @Override
-    public LocationCentres saveLocationCentres(LocationCentres centre){
-        return (LocationCentres)getSession().merge(centre);
-    }
-
-    @Override
     public LocationFacilities getLocationFacility(Location location){
         Criteria criteria = getSession().createCriteria(LocationFacilities.class);
         criteria.add(Restrictions.eq("location", location));
@@ -80,20 +47,6 @@ public class HibernateMdrtbDashboardServiceDAO implements MdrtbDashboardServiceD
     @Override
     public LocationFacilities saveLocationFacilities(LocationFacilities facility){
         return (LocationFacilities)getSession().merge(facility);
-    }
-
-    @Override
-    public LocationCentresAgencies getAgency(Integer agentId){
-        Criteria criteria = getSession().createCriteria(LocationCentresAgencies.class);
-        criteria.add(Restrictions.eq("id", agentId));
-        return (LocationCentresAgencies) criteria.uniqueResult();
-    }
-
-    @Override
-    public LocationCentresRegions getRegion(Integer regionId){
-        Criteria criteria = getSession().createCriteria(LocationCentresRegions.class);
-        criteria.add(Restrictions.eq("id", regionId));
-        return (LocationCentresRegions) criteria.uniqueResult();
     }
 
     @Override

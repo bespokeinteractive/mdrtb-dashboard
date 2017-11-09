@@ -10,7 +10,7 @@ import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
-import org.openmrs.module.mdrtb.model.UserLocation;
+import org.openmrs.module.mdrtb.model.LocationCentres;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
@@ -25,8 +25,6 @@ import java.text.SimpleDateFormat;
 import org.openmrs.ui.framework.UiUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created by Dennis Henry
@@ -45,7 +43,7 @@ public class DashboardFragmentController {
 
     public String generateTbmuNumber(Date regdate,
                                      Location location){
-        LocationCentres centre = dashboardService.getCentresByLocation(location);
+        LocationCentres centre = mdrtbService.getCentresByLocation(location);
         SimpleDateFormat sdf = new SimpleDateFormat("yy");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(regdate);

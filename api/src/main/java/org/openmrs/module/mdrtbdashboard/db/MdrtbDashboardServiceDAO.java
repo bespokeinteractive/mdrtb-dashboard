@@ -12,18 +12,9 @@ import java.util.List;
  * Created on 12/24/2016.
  */
 public interface MdrtbDashboardServiceDAO {
-    List<LocationCentres> getCentres();
-    List<LocationCentresAgencies> getAgencies();
-    List<LocationCentresRegions> getRegions();
-
-    LocationCentres getCentresByLocation(Location location);
-    LocationCentres saveLocationCentres(LocationCentres centre);
-
     LocationFacilities getLocationFacility(Location location);
-    LocationFacilities saveLocationFacilities(LocationFacilities facility);
 
-    LocationCentresAgencies getAgency(Integer agentId);
-    LocationCentresRegions getRegion(Integer regionId);
+    LocationFacilities saveLocationFacilities(LocationFacilities facility);
 
     PatientProgramDetails getPatientProgramDetails(Integer ppid);
     PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails);
