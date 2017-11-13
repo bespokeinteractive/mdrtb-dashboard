@@ -8,9 +8,9 @@
 %>
 
 <script>
-    jq(function () {
-        var tabs = jq(".mdrtb-tabs").tabs();
-    });
+//    jq(function () {
+//
+//    });
 
 
 
@@ -82,7 +82,7 @@
 
     jq(function () {
         searchTableObject = jq("#searchList");
-
+        var tabs = jq(".mdrtb-tabs").tabs();
         searchTable = searchTableObject.dataTable({
             bAutoWidth: false,
             bFilter: true,
@@ -187,10 +187,12 @@
 
             _.each(searchResultsData, function (item) {
                 var checked = '';
+               var name = item.name;
+                var name2 = 'Access All';
 
                 if (item.checked) {
                     checked = 'checked';
-                }
+            }
 
                 var row = '<label class="user-locations" id="role.' + item.name + '"><input type="checkbox" name="role.' + item.name + '" ' + checked + ' />' + item.name + '</label>';
                 ulselect.append(row);
@@ -211,7 +213,7 @@
                     checked = 'checked';
                 }
 
-                var row = '<label class="user-locations" id="' + item.id + '"><input type="checkbox" name="location.' + item.id + '" ' + checked + ' />' + item.name + '</label>';
+                var row = '<label class="user-locations" id="' + item.id + '"><input type="checkbox"  name="location.' + item.id + '" ' + checked + ' />' + item.name + '</label>';
                 ulselect.append(row);
 
             });
@@ -398,6 +400,16 @@
         getMdrtbUsers();
 
     });
+
+    jq(document).ready(function(){
+        jq('.check:button').toggle(function(){
+            jq('input:checkbox').attr('checked','checked');
+            jq(this).val('uncheck all')
+        },function(){
+            jq('input:checkbox').removeAttr('checked');
+            jq(this).val('check all');
+        })
+    })
 
 </script>
 
@@ -734,10 +746,13 @@ label.user-locations input {
                     <div id="overview">
 
                         <li id="editLocations">
+
                         </li>
+                        <input type="button" class="check" value="check all" />
                     </div>
 
                     <div id="userRoles">
+
                         <li id="editRoles">
                         </li>
 
