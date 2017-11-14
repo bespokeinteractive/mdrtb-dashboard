@@ -137,7 +137,6 @@ public class UserListFragmentController {
     }
 
     public SimpleObject getUserDetails(@RequestParam(value = "userId") User user,
-
                                        UiUtils ui) {
         SimpleObject users = SimpleObject.create("names", user.getPersonName().getFullName(), "gender", user.getPerson().getGender(), "systemId", user.getSystemId(), "username", user.getUsername());
         List<UserLocationModel> model = new ArrayList<UserLocationModel>();
@@ -176,6 +175,14 @@ public class UserListFragmentController {
 
         return SimpleObject.create("user", users, "location", model,"role", rmodel);
     }
+
+    public List<SimpleObject> getAuthenticatedUsers(UiUtils ui, HttpServletRequest request) {
+        List<User> userList = Context.getUserService().getAllUsers();
+        List<MdrtbUserWrapper> wrapperList = mdrtbUserWithDetails(userList);
+
+        return SimpleObject.fromCollection(wrapperList, ui, "user.userId", "user.systemId", "user.username", "wrapperLocations", "wrapperNames");
+    }
+
 
     public SimpleObject getAllLocations() {
         List<Location> locationList = Context.getLocationService().getAllLocations();
