@@ -7,14 +7,6 @@
     ui.includeJavascript("mdrtbregistration", "jq.dataTables.min.js")
 %>
 
-<script>
-//    jq(function () {
-//
-//    });
-
-
-
-</script>
 
 <script>
 
@@ -130,22 +122,6 @@
 
         //End of DataTables
 
-        jq('#advanced').on('click', function () {
-            jq.getJSON('${ ui.actionLink("mdrtbdashboard", "userList", "getAllLocations") }')
-                .success(function (data) {
-                    jq('#addNames').val('');
-                    jq('#addGender').val('');
-                    jq('#addUsername').val('');
-                    jq('#addPassword').val('');
-                    jq('#addConfirm').val('');
-
-                    updateLocationList(data.location, jq('#addLocations'))
-
-
-                    addDialog.show();
-                });
-        });
-
         jq('#searchList').on('click', '.edit-user', function () {
             var idnt = jq(this).data('idnt');
             jq.getJSON('${ ui.actionLink("mdrtbdashboard", "userList", "getUserDetails") }', {
@@ -163,6 +139,22 @@
 
                 editDialog.show();
             });
+        });
+
+        jq('#advanced').on('click', function () {
+            jq.getJSON('${ ui.actionLink("mdrtbdashboard", "userList", "getAllLocations") }')
+                .success(function (data) {
+                    jq('#addNames').val('');
+                    jq('#addGender').val('');
+                    jq('#addUsername').val('');
+                    jq('#addPassword').val('');
+                    jq('#addConfirm').val('');
+
+                    updateLocationList(data.location, jq('#addLocations'))
+
+
+                    addDialog.show();
+                });
         });
 
         jq('#searchList').on('click', '.reset-password', function () {
