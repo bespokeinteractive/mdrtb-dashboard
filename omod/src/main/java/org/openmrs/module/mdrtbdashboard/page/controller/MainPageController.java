@@ -2,20 +2,17 @@ package org.openmrs.module.mdrtbdashboard.page.controller;
 
 import org.openmrs.*;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.mdrtb.MdrtbConcepts;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramRegimen;
+import org.openmrs.module.mdrtb.model.PatientProgramDetails;
+import org.openmrs.module.mdrtb.model.PatientProgramRegimen;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
-import org.openmrs.util.PersonByNameComparator;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -40,10 +37,10 @@ public class MainPageController {
             current = mdrtbService.getMdrtbPatientProgram(programId);
         }
 
-        PatientProgramDetails details = dashboard.getPatientProgramDetails(current);
+        PatientProgramDetails details = mdrtbService.getPatientProgramDetails(current);
 
         List<Location> locations = Context.getLocationService().getAllLocations();
-        List<PatientProgramRegimen> regimens = dashboard.getPatientProgramRegimens(details, false);
+        List<PatientProgramRegimen> regimens = mdrtbService.getPatientProgramRegimens(details, false);
         Collections.reverse(regimens);
         Collection<ConceptAnswer> anatomicalSites = mdrtbService.getPossibleAnatomicalSites();
         Collection<ConceptAnswer> siteConfirmation = mdrtbService.getPossibleAnatomicalSitesConfirmation();

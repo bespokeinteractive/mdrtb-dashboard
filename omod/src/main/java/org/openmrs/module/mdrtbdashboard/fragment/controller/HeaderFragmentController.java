@@ -6,7 +6,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.mdrtb.model.UserLocation;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtb.model.PatientProgramDetails;
 import org.openmrs.module.mdrtbdashboard.util.LocationModel;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
@@ -32,7 +32,7 @@ public class HeaderFragmentController {
 
         Patient patient = Context.getPatientService().getPatient(Integer.parseInt(config.get("patientId").toString()));
         PatientProgram pp = Context.getProgramWorkflowService().getPatientProgram(Integer.parseInt(config.get("programId").toString()));
-        PatientProgramDetails patientDetails = Context.getService(MdrtbDashboardService.class).getPatientProgramDetails(pp);
+        PatientProgramDetails patientDetails = Context.getService(MdrtbService.class).getPatientProgramDetails(pp);
 
         model.addAttribute("patientDetails", patientDetails);
     }

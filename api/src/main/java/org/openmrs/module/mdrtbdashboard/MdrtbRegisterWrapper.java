@@ -1,7 +1,7 @@
 package org.openmrs.module.mdrtbdashboard;
 
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramVisits;
+import org.openmrs.module.mdrtb.model.PatientProgramVisits;
 import org.openmrs.module.mdrtbdashboard.util.RegisterDrVisits;
 import org.openmrs.module.mdrtbdashboard.util.RegisterTbVisits;
 
@@ -31,7 +31,7 @@ public class MdrtbRegisterWrapper extends MdrtbPatientWrapper implements java.io
     }
 
     public void getVisitDetails(){
-        List<PatientProgramVisits> visits = dashboardService.getPatientProgramVisits(this.getPatientProgram().getPatientProgram());
+        List<PatientProgramVisits> visits = mdrtbService.getPatientProgramVisits(this.getPatientProgram().getPatientProgram());
         if (this.getPatientProgram().getPatientProgram().getProgram().getId() == 1){
             this.tbVisits = new RegisterTbVisits();
 

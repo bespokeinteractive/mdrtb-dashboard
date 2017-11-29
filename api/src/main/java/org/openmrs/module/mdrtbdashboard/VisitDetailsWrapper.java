@@ -2,8 +2,9 @@ package org.openmrs.module.mdrtbdashboard;
 
 import org.openmrs.Encounter;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramVisits;
+import org.openmrs.module.mdrtb.model.PatientProgramVisits;
 
 /**
  * Created by Dennis Henry
@@ -16,7 +17,7 @@ public class VisitDetailsWrapper {
     public VisitDetailsWrapper(Encounter encounter){
         this.encounter = encounter;
 
-        PatientProgramVisits ppv = Context.getService(MdrtbDashboardService.class).getPatientProgramVisit(encounter);
+        PatientProgramVisits ppv = Context.getService(MdrtbService.class).getPatientProgramVisit(encounter);
         if (ppv != null){
             wrapperVisitName = ppv.getVisitType().getName();
         }

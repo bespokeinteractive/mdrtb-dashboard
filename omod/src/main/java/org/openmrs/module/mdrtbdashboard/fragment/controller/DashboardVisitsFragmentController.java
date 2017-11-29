@@ -11,10 +11,10 @@ import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtb.util.DrugSensitivityModel;
 import org.openmrs.module.mdrtbdashboard.VisitDetailsWrapper;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramTransfers;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramVisits;
-import org.openmrs.module.mdrtbdashboard.model.VisitTypes;
+import org.openmrs.module.mdrtb.model.PatientProgramDetails;
+import org.openmrs.module.mdrtb.model.PatientProgramTransfers;
+import org.openmrs.module.mdrtb.model.PatientProgramVisits;
+import org.openmrs.module.mdrtb.model.VisitTypes;
 import org.openmrs.module.mdrtbdashboard.util.ResultModelWrapper;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
@@ -37,6 +37,7 @@ import java.util.*;
  */
 public class DashboardVisitsFragmentController {
     MdrtbDashboardService dashboardService = Context.getService(MdrtbDashboardService.class);
+    MdrtbService mdrtbService = Context.getService(MdrtbService.class);
 
     public void controller(FragmentModel model,
                            FragmentConfiguration config,
@@ -76,10 +77,10 @@ public class DashboardVisitsFragmentController {
                                         UiSessionContext session)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         MdrtbPatientProgram mpp = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
-        List <VisitTypes> vt = dashboardService.getVisitTypes(mpp.getPatientProgram().getProgram(), false,true, false);
+        List <VisitTypes> vt = mdrtbService.getVisitTypes(mpp.getPatientProgram().getProgram(), false,true, false);
 
-        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
-        PatientProgramVisits ppv = dashboardService.getPatientProgramVisit(mpp.getPatientProgram(), vt.get(0));
+        PatientProgramDetails ppd = mdrtbService.getPatientProgramDetails(mpp);
+        PatientProgramVisits ppv = mdrtbService.getPatientProgramVisit(mpp.getPatientProgram(), vt.get(0));
         if (ppv == null){
             ppv = new PatientProgramVisits();
             ppv.setPatientProgram(mpp.getPatientProgram());
@@ -126,14 +127,14 @@ public class DashboardVisitsFragmentController {
             ppt.setPatientProgram(pp);
             ppt.setTransferDate(date);
 
-            this.dashboardService.savePatientProgramTransfers(ppt);
+            this.mdrtbService.savePatientProgramTransfers(ppt);
         }
 
         Context.getProgramWorkflowService().savePatientProgram(pp);
 
-        this.dashboardService.savePatientProgramVisits(ppv);
-        this.dashboardService.savePatientProgramDetails(ppd);
-        this.dashboardService.saveParentProgramOutcome(ppd, outcome, date);
+        this.mdrtbService.savePatientProgramVisits(ppv);
+        this.mdrtbService.savePatientProgramDetails(ppd);
+        this.mdrtbService.saveParentProgramOutcome(ppd, outcome, date);
 
         //Return Answer
         return SimpleObject.create("status", "success", "message", "Patient visit successfully updated!");
@@ -272,7 +273,7 @@ public class DashboardVisitsFragmentController {
                                           SessionStatus status)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         MdrtbPatientProgram mpp = Context.getService(MdrtbService.class).getMdrtbPatientProgram(programId);
-        PatientProgramDetails pd = dashboardService.getPatientProgramDetails(mpp.getPatientProgram());
+        PatientProgramDetails pd = mdrtbService.getPatientProgramDetails(mpp.getPatientProgram());
         PatientProgram pp = mpp.getPatientProgram();
         Concept outcome = Context.getConceptService().getConcept(Integer.parseInt(outcomeResults));
 
@@ -286,8 +287,8 @@ public class DashboardVisitsFragmentController {
         }
 
         //Save Patient Details
-        dashboardService.savePatientProgramDetails(pd);
-        dashboardService.saveParentProgramOutcome(pd, outcome, outcomeDate);
+        mdrtbService.savePatientProgramDetails(pd);
+        mdrtbService.saveParentProgramOutcome(pd, outcome, outcomeDate);
 
         //Save the actual update
         Context.getProgramWorkflowService().savePatientProgram(pp);

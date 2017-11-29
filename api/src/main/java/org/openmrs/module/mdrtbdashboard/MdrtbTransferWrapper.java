@@ -2,9 +2,10 @@ package org.openmrs.module.mdrtbdashboard;
 
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramTransfers;
+import org.openmrs.module.mdrtb.model.PatientProgramDetails;
+import org.openmrs.module.mdrtb.model.PatientProgramTransfers;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -23,7 +24,7 @@ public class MdrtbTransferWrapper {
     public MdrtbTransferWrapper(PatientProgramTransfers patientTransfers){
         this.patientTransfers = patientTransfers;
 
-        this.patientDetails = Context.getService(MdrtbDashboardService.class).getPatientProgramDetails(patientTransfers.getPatientProgram());
+        this.patientDetails = Context.getService(MdrtbService.class).getPatientProgramDetails(patientTransfers.getPatientProgram());
         this.wrapperIdentifier = patientDetails.getTbmuNumber();
     }
 

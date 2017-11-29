@@ -5,12 +5,11 @@ import org.openmrs.*;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
-import org.openmrs.module.mdrtb.MdrtbConcepts;
 import org.openmrs.module.mdrtb.form.SimpleIntakeForm;
+import org.openmrs.module.mdrtb.model.*;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.*;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,7 +38,7 @@ public class IntakePageController {
             UiSessionContext session) {
 
         MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
-        PatientProgramDetails details = dashboardService.getPatientProgramDetails(mpp);
+        PatientProgramDetails details = mdrtbService.getPatientProgramDetails(mpp);
         Location location = session.getSessionLocation();
 
         if (programId != null){
@@ -63,7 +62,7 @@ public class IntakePageController {
             }
         }
 
-        List<LocationFacilities> facilities = dashboardService.getFacilities(location, "active");
+        List<LocationFacilities> facilities = mdrtbService.getFacilities(location, "active");
 
         Collection<ConceptAnswer> anatomicalSites = mdrtbService.getPossibleAnatomicalSites();
         Collection<ConceptAnswer> siteConfirmation = mdrtbService.getPossibleAnatomicalSitesConfirmation();
@@ -99,10 +98,10 @@ public class IntakePageController {
         Map<String, Object> params=new HashMap<String, Object>();
         Patient patient = Context.getPatientService().getPatient(Integer.parseInt(request.getParameter("patient.id")));
         MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
-        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
+        PatientProgramDetails ppd = mdrtbService.getPatientProgramDetails(mpp);
         PatientProgramRegimen ppr = new PatientProgramRegimen();
-        List<VisitTypes> visitTypes = dashboardService.getVisitTypes(mpp.getPatientProgram().getProgram(),true,false,false);
-        PatientProgramVisits ppv = dashboardService.getPatientProgramVisit(mpp.getPatientProgram(), visitTypes.get(0));
+        List<VisitTypes> visitTypes = mdrtbService.getVisitTypes(mpp.getPatientProgram().getProgram(),true,false,false);
+        PatientProgramVisits ppv = mdrtbService.getPatientProgramVisit(mpp.getPatientProgram(), visitTypes.get(0));
         if (ppv == null){
             ppv = new PatientProgramVisits();
             ppv.setPatientProgram(mpp.getPatientProgram());
@@ -129,7 +128,7 @@ public class IntakePageController {
             weight = "";
         }
         //Definitions
-        LocationFacilities facility = dashboardService.getFacilityById(Integer.parseInt(request.getParameter("treatment.facility")));
+        LocationFacilities facility = mdrtbService.getFacilityById(Integer.parseInt(request.getParameter("treatment.facility")));
         Concept status = conceptService.getConcept(Integer.parseInt(request.getParameter("exams.hiv.result")));
         Concept smear = conceptService.getConcept(30);
         Concept artstt = conceptService.getConcept(126);
@@ -218,13 +217,13 @@ public class IntakePageController {
             ppr.setName(request.getParameter("regimen.name"));
             ppr.setType(conceptService.getConcept(Integer.parseInt(request.getParameter("regimen.type"))));
             ppr.setStartedOn(date);
-            ppr = dashboardService.savePatientProgramRegimen(ppr);
+            ppr = mdrtbService.savePatientProgramRegimen(ppr);
 
             ppd.setRegimen(ppr);
         }
 
-        this.dashboardService.savePatientProgramDetails(ppd);
-        this.dashboardService.savePatientProgramVisits(ppv);
+        this.mdrtbService.savePatientProgramDetails(ppd);
+        this.mdrtbService.savePatientProgramVisits(ppv);
 
         params.put("patient", patient.getId());
         return "redirect:" + ui.pageLink("mdrtbdashboard", "main", params);

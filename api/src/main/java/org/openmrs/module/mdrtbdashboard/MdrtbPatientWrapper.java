@@ -9,8 +9,8 @@ import org.openmrs.module.mdrtb.model.PersonLocation;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramRegimen;
+import org.openmrs.module.mdrtb.model.PatientProgramDetails;
+import org.openmrs.module.mdrtb.model.PatientProgramRegimen;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -71,7 +71,7 @@ public class MdrtbPatientWrapper {
 
     private void getPatientProgramDetails(){
         try{
-            this.patientDetails = dashboardService.getPatientProgramDetails(patientProgram.getPatientProgram());
+            this.patientDetails = mdrtbService.getPatientProgramDetails(patientProgram.getPatientProgram());
             this.wrapperIdentifier = patientDetails.getTbmuNumber();
 
             if (patientDetails.getInitialStatus() != null || patientDetails.getCurrentStatus() != null) {
@@ -195,7 +195,7 @@ public class MdrtbPatientWrapper {
             wrapperStatus = this.patientProgram.getPatientProgram().getProgram().getName();
         }
         else{
-            PatientProgramDetails ppd = Context.getService(MdrtbDashboardService.class).getPatientProgramDetails(this.patientProgram.getPatientProgram());
+            PatientProgramDetails ppd = Context.getService(MdrtbService.class).getPatientProgramDetails(this.patientProgram.getPatientProgram());
             if (ppd.getOutcome() != null){
                 wrapperStatus = ppd.getOutcome().getDisplayString();
             }
@@ -251,8 +251,8 @@ public class MdrtbPatientWrapper {
     }
 
     public String getWrapperTreatmentDate() {
-        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(patientProgram.getPatientProgram());
-        List<PatientProgramRegimen> list = dashboardService.getPatientProgramRegimens(ppd,false);
+        PatientProgramDetails ppd = mdrtbService.getPatientProgramDetails(patientProgram.getPatientProgram());
+        List<PatientProgramRegimen> list = mdrtbService.getPatientProgramRegimens(ppd,false);
 
         if (!list.isEmpty()){
             wrapperTreatmentDate = returnFormattedDate(list.get(0).getStartedOn());

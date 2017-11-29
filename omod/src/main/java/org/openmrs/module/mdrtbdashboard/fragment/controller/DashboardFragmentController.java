@@ -10,11 +10,10 @@ import org.openmrs.api.ProgramWorkflowService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
-import org.openmrs.module.mdrtb.model.LocationCentres;
+import org.openmrs.module.mdrtb.model.*;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.*;
 import org.openmrs.module.mdrtbdashboard.VisitDetails;
 import org.openmrs.module.mdrtbdashboard.util.DrugTestingResults;
 import org.openmrs.module.mdrtbdashboard.util.LocationModel;
@@ -59,15 +58,15 @@ public class DashboardFragmentController {
                                              @RequestParam(value = "name") String name,
                                              @RequestParam(value = "start") String start,
                                              @RequestParam(value = "remarks", required = false) String remarks){
-        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(ppdId);
-        List<PatientProgramRegimen> regimens = dashboardService.getPatientProgramRegimens(ppd, true);
+        PatientProgramDetails ppd = mdrtbService.getPatientProgramDetails(ppdId);
+        List<PatientProgramRegimen> regimens = mdrtbService.getPatientProgramRegimens(ppd, true);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         Date date = df.parse(start, new ParsePosition(0));
 
         for (PatientProgramRegimen regimen : regimens){
             regimen.setFinishedOn(date);
-            dashboardService.savePatientProgramRegimen(regimen);
+            mdrtbService.savePatientProgramRegimen(regimen);
         }
 
         if (StringUtils.isEmpty(remarks)){
@@ -80,24 +79,24 @@ public class DashboardFragmentController {
         regimen.setName(name);
         regimen.setStartedOn(date);
         regimen.setRemarks(remarks);
-        regimen = dashboardService.savePatientProgramRegimen(regimen);
+        regimen = mdrtbService.savePatientProgramRegimen(regimen);
 
         ppd.setRegimen(regimen);
-        dashboardService.savePatientProgramDetails(ppd);
+        mdrtbService.savePatientProgramDetails(ppd);
 
         return SimpleObject.create("status", "success", "message", "Patient visit successfully updated!");
     }
 
     public String getRegimenName(@RequestParam(value = "concept") Concept concept,
                                  @RequestParam(value = "program") Program program){
-        RegimentType regimentType = dashboardService.getRegimenType(concept, program);
+        RegimentType regimentType = mdrtbService.getRegimenType(concept, program);
         return regimentType.getName();
     }
 
     public List<SimpleObject> getRegimenNames(@RequestParam(value = "concept") Concept concept,
                                               @RequestParam(value = "program") Program program,
                                               UiUtils ui){
-        List<RegimentType> types = dashboardService.getRegimenTypes(concept, program);
+        List<RegimentType> types = mdrtbService.getRegimenTypes(concept, program);
         return SimpleObject.fromCollection(types, ui,"id", "name");
     }
 
@@ -125,7 +124,7 @@ public class DashboardFragmentController {
     }
 
     public SimpleObject getPatientProgramDetails(@RequestParam(value = "programId") PatientProgram pp){
-        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(pp);
+        PatientProgramDetails ppd = mdrtbService.getPatientProgramDetails(pp);
         String tbmu  = "N/A";
 
         if (ppd != null){
@@ -203,7 +202,7 @@ public class DashboardFragmentController {
         ppd.setDiseaseSite(site);
         ppd.setConfirmationSite(confirmation);
 
-        return dashboardService.savePatientProgramDetails(ppd);
+        return mdrtbService.savePatientProgramDetails(ppd);
     }
 
     public SimpleObject transferPatient(@RequestParam(value = "patientId") Patient patient,
@@ -219,9 +218,9 @@ public class DashboardFragmentController {
                                         SessionStatus status)
             throws SecurityException, IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         MdrtbPatientProgram mpp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
-        PatientProgramDetails ppd = dashboardService.getPatientProgramDetails(mpp);
+        PatientProgramDetails ppd = mdrtbService.getPatientProgramDetails(mpp);
 
-        PatientProgramDetails pd = dashboardService.getPatientProgramDetails(mpp);
+        PatientProgramDetails pd = mdrtbService.getPatientProgramDetails(mpp);
         PatientProgram ref = new PatientProgram();
         Location location = session.getSessionLocation();
 
@@ -243,7 +242,7 @@ public class DashboardFragmentController {
 
             ppd.setTransferred(true);
             ppd.setOutcome(Context.getService(MdrtbService.class).getConcept(MdrtbConcepts.PATIENT_TRANSFERRED_OUT));
-            dashboardService.savePatientProgramDetails(ppd);
+            mdrtbService.savePatientProgramDetails(ppd);
 
             ref = pp;
             this.closeTransferIns(ref);
@@ -261,10 +260,10 @@ public class DashboardFragmentController {
     }
 
     private void closeTransferIns(PatientProgram pp){
-        List<PatientProgramTransfers> transfers = dashboardService.getActivePatientTransfers(pp);
+        List<PatientProgramTransfers> transfers = mdrtbService.getActivePatientTransfers(pp);
         for (PatientProgramTransfers transfer : transfers){
             transfer.setProcessed(true);
-            this.dashboardService.savePatientProgramTransfers(transfer);
+            this.mdrtbService.savePatientProgramTransfers(transfer);
         }
     }
 
@@ -274,7 +273,7 @@ public class DashboardFragmentController {
 
     public SimpleObject getSelectedLocationFacilities(UiSessionContext session){
         Location location = session.getSessionLocation();
-        List<LocationFacilities> facilities = dashboardService.getFacilities(location, "active");
+        List<LocationFacilities> facilities = mdrtbService.getFacilities(location, "active");
         List<LocationModel> models = new ArrayList<LocationModel>();
 
         for (LocationFacilities facility: facilities){
@@ -299,7 +298,7 @@ public class DashboardFragmentController {
     }
 
     public Integer getTransfersCount(UiSessionContext session){
-        List<PatientProgramTransfers> list = dashboardService.getPatientProgramTransfers(session.getSessionLocation(), false);
+        List<PatientProgramTransfers> list = mdrtbService.getPatientProgramTransfers(session.getSessionLocation(), false);
         return list.size();
     }
 }

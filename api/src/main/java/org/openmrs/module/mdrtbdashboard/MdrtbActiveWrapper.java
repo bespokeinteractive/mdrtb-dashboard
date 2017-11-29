@@ -1,7 +1,7 @@
 package org.openmrs.module.mdrtbdashboard;
 
 import org.apache.commons.lang.StringUtils;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtb.model.PatientProgramDetails;
 
 /**
  * Created by Dennys Henry

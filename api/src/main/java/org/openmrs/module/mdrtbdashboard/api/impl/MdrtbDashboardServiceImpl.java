@@ -4,18 +4,12 @@ import org.openmrs.*;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
-import org.openmrs.module.mdrtb.model.LocationCentres;
-import org.openmrs.module.mdrtb.model.LocationCentresAgencies;
-import org.openmrs.module.mdrtb.model.LocationCentresRegions;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
 import org.openmrs.module.mdrtbdashboard.db.MdrtbDashboardServiceDAO;
-import org.openmrs.module.mdrtbdashboard.model.*;
 import org.openmrs.module.mdrtbdashboard.util.DrugTestingResults;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,106 +23,9 @@ public class MdrtbDashboardServiceImpl
     public MdrtbDashboardServiceDAO getDao() { return dao; }
     public void setDao(MdrtbDashboardServiceDAO dao) { this.dao = dao; }
 
-
-
-    @Override
-    public LocationFacilities getLocationFacility(Location location){
-        return dao.getLocationFacility(location);
-    }
-
-    @Override
-    public LocationFacilities saveLocationFacilities(LocationFacilities facility){
-        return dao.saveLocationFacilities(facility);
-    }
-
-    @Override
-    public List<PatientProgramDetails> getActivePatients(Location location, Program program){
-        return dao.getActivePatients(location, program);
-    }
-
-    @Override
-    public PatientProgramDetails getPatientProgramDetails(PatientProgram pp){
-        return dao.getPatientProgramDetails(pp);
-    }
-
-    @Override
-    public PatientProgramDetails getPatientProgramDetails(MdrtbPatientProgram mpp){
-        return getPatientProgramDetails(mpp.getPatientProgram());
-    }
-
     @Override
     public Integer getNextTbmuNumberCount(String header) {
         return dao.getNextTbmuNumberCount(header);
-    }
-
-    @Override
-    public PatientProgramDetails savePatientProgramDetails(PatientProgramDetails patientProgramDetails) {
-        return dao.savePatientProgramDetails(patientProgramDetails);
-    }
-
-    @Override
-    public PatientProgramDetails saveParentProgramOutcome(PatientProgramDetails ppd, Concept outcome, Date completedOn){
-        return dao.saveParentProgramOutcome(ppd, outcome, completedOn);
-    }
-
-    @Override
-    public PatientProgramVisits savePatientProgramVisits(PatientProgramVisits patientProgramVisit){
-        return dao.savePatientProgramVisits(patientProgramVisit);
-    }
-
-    @Override
-    public RegimentType getRegimenType(Concept concept, Program program){
-        return dao.getRegimenType(concept, program);
-    }
-
-    @Override
-    public List<RegimentType> getRegimenTypes(Concept concept, Program program){
-        return dao.getRegimenTypes(concept, program);
-    }
-
-    @Override
-    public List<VisitTypes> getVisitTypes(Program program, Boolean initial, Boolean finals, Boolean voided){
-        return dao.getVisitTypes(program, initial, finals, voided);
-    }
-
-    @Override
-    public VisitTypes getVisitType(Program program, String name){
-        return dao.getVisitType(program, name);
-    }
-
-    @Override
-    public VisitTypes getVisitType(Integer id){
-        return dao.getVisitType(id);
-    }
-
-    @Override
-    public PatientProgramVisits getPatientProgramVisit(PatientProgram patientProgram, VisitTypes visitType){
-        return dao.getPatientProgramVisit(patientProgram, visitType);
-    }
-
-    @Override
-    public PatientProgramVisits getPatientProgramVisit(Encounter encounter){
-        return dao.getPatientProgramVisit(encounter);
-    }
-
-    @Override
-    public List<PatientProgramVisits> getPatientProgramVisits(PatientProgram patientProgram){
-        return dao.getPatientProgramVisits(patientProgram);
-    }
-
-    @Override
-    public PatientProgramDetails getPatientProgramDetails(Integer ppid){
-        return dao.getPatientProgramDetails(ppid);
-    }
-
-    @Override
-    public List<PatientProgramRegimen> getPatientProgramRegimens(PatientProgramDetails pd, Boolean active){
-        return dao.getPatientProgramRegimens(pd, active);
-    }
-
-    @Override
-    public PatientProgramRegimen savePatientProgramRegimen(PatientProgramRegimen patientProgramRegimen){
-        return dao.savePatientProgramRegimen(patientProgramRegimen);
     }
 
     @Override
@@ -167,38 +64,5 @@ public class MdrtbDashboardServiceImpl
         return outcomes;
     }
 
-    @Override
-    public List<LocationFacilities> getFacilities(Location location, String status){
-        return dao.getFacilities(location, status);
-    }
 
-    @Override
-    public List<PatientProgramDetails> getPatientsFromDetails(Location location, Date startDate, Date endDate, LocationFacilities facility){
-        return dao.getPatientsFromDetails(location, startDate, endDate, facility);
-    }
-
-    @Override
-    public LocationFacilities getFacilityById(Integer facilityId){
-        return dao.getFacilityById(facilityId);
-    }
-
-    @Override
-    public List<PatientProgramTransfers> getActivePatientTransfers(PatientProgram patientProgram){
-        return dao.getActivePatientTransfers(patientProgram);
-    }
-
-    @Override
-    public List <PatientProgramTransfers> getPatientProgramTransfers(Location location, Boolean status){
-        return  dao.getPatientProgramTransfers(location, status);
-    }
-
-    @Override
-    public PatientProgramTransfers getPatientProgramTransfers(Integer transferId){
-        return dao.getPatientProgramTransfers(transferId);
-    }
-
-    @Override
-    public PatientProgramTransfers savePatientProgramTransfers(PatientProgramTransfers patientProgramTransfers){
-        return dao.savePatientProgramTransfers(patientProgramTransfers);
-    }
 }

@@ -6,10 +6,10 @@ import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.LocationFacilities;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramVisits;
-import org.openmrs.module.mdrtbdashboard.model.VisitTypes;
+import org.openmrs.module.mdrtb.model.LocationFacilities;
+import org.openmrs.module.mdrtb.model.PatientProgramDetails;
+import org.openmrs.module.mdrtb.model.PatientProgramVisits;
+import org.openmrs.module.mdrtb.model.VisitTypes;
 import org.openmrs.module.mdrtbdashboard.reports.CohortReport;
 import org.openmrs.module.mdrtbdashboard.util.DateRangeModel;
 import org.openmrs.ui.framework.UiUtils;
@@ -38,10 +38,10 @@ public class ReportCohortFragmentController {
 
         Integer quarter = Integer.parseInt(config.get("qtr").toString());
         Integer year = Integer.parseInt(config.get("year").toString());
-        LocationFacilities facility = dashboard.getFacilityById(Integer.parseInt(config.get("facility").toString()));
+        LocationFacilities facility = mdrtbService.getFacilityById(Integer.parseInt(config.get("facility").toString()));
 
         DateRangeModel dates = new DateRangeModel(quarter, year);
-        List<PatientProgramDetails> patients = dashboard.getPatientsFromDetails(session.getSessionLocation(), dates.getStartDate(), dates.getEndDate(), facility);
+        List<PatientProgramDetails> patients = mdrtbService.getPatientsFromDetails(session.getSessionLocation(), dates.getStartDate(), dates.getEndDate(), facility);
 
         for (PatientProgramDetails patient: patients) {
             //This is for TB Patients Only, Ignoring Voided Ones
@@ -139,13 +139,13 @@ public class ReportCohortFragmentController {
 
 
             // Visit Status
-            VisitTypes vt2 = dashboard.getVisitType(patient.getPatientProgram().getProgram(), VisitTypes.TB_VISIT_02);
-            VisitTypes vt5 = dashboard.getVisitType(patient.getPatientProgram().getProgram(), VisitTypes.TB_VISIT_05);
-            VisitTypes vt8 = dashboard.getVisitType(patient.getPatientProgram().getProgram(), VisitTypes.TB_VISIT_08);
+            VisitTypes vt2 = mdrtbService.getVisitType(patient.getPatientProgram().getProgram(), VisitTypes.TB_VISIT_02);
+            VisitTypes vt5 = mdrtbService.getVisitType(patient.getPatientProgram().getProgram(), VisitTypes.TB_VISIT_05);
+            VisitTypes vt8 = mdrtbService.getVisitType(patient.getPatientProgram().getProgram(), VisitTypes.TB_VISIT_08);
 
-            PatientProgramVisits ppv2 = dashboard.getPatientProgramVisit(patient.getPatientProgram(), vt2);
-            PatientProgramVisits ppv5 = dashboard.getPatientProgramVisit(patient.getPatientProgram(), vt5);
-            PatientProgramVisits ppv8 = dashboard.getPatientProgramVisit(patient.getPatientProgram(), vt8);
+            PatientProgramVisits ppv2 = mdrtbService.getPatientProgramVisit(patient.getPatientProgram(), vt2);
+            PatientProgramVisits ppv5 = mdrtbService.getPatientProgramVisit(patient.getPatientProgram(), vt5);
+            PatientProgramVisits ppv8 = mdrtbService.getPatientProgramVisit(patient.getPatientProgram(), vt8);
 
             //Block 1. NEW BACTERIOLOGICALLY CONFIRMED CASES (PULMONARY)
             if (ptb && bc && np){

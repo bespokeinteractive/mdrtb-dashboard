@@ -2,8 +2,9 @@ package org.openmrs.module.mdrtbdashboard.page.controller;
 
 import org.openmrs.api.context.Context;
 import org.openmrs.module.appui.UiSessionContext;
+import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.LocationFacilities;
+import org.openmrs.module.mdrtb.model.LocationFacilities;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +24,7 @@ public class ReportsPageController {
                        PageModel model,
                        UiUtils ui,
                        UiSessionContext session){
-        LocationFacilities facility = Context.getService(MdrtbDashboardService.class).getFacilityById(facilityId);
+        LocationFacilities facility = Context.getService(MdrtbService.class).getFacilityById(facilityId);
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 
         Integer year = Integer.parseInt(period.substring(0,4));

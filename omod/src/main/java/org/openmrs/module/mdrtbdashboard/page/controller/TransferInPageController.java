@@ -4,17 +4,14 @@ import org.openmrs.ConceptAnswer;
 import org.openmrs.Patient;
 import org.openmrs.ProgramWorkflowState;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtb.program.MdrtbPatientProgram;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtb.model.PatientProgramDetails;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.page.PageModel;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -29,8 +26,8 @@ public class TransferInPageController {
             @RequestParam(value = "programId", required = false) Integer programId,
             PageModel model,
             UiUtils ui) {
-        MdrtbPatientProgram pp = Context.getService(MdrtbService.class).getMostRecentMdrtbPatientProgram(patient);
-        PatientProgramDetails pd = Context.getService(MdrtbDashboardService.class).getPatientProgramDetails(pp);
+        MdrtbPatientProgram pp = mdrtbService.getMostRecentMdrtbPatientProgram(patient);
+        PatientProgramDetails pd = mdrtbService.getPatientProgramDetails(pp);
 
         String gender = "Male";
         if (patient.getGender().equals("F")){

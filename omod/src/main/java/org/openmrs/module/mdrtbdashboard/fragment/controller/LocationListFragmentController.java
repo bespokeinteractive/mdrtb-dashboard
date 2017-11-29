@@ -8,7 +8,7 @@ import org.openmrs.module.mdrtb.model.LocationCentresAgencies;
 import org.openmrs.module.mdrtb.model.LocationCentresRegions;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.LocationFacilities;
+import org.openmrs.module.mdrtb.model.LocationFacilities;
 import org.openmrs.ui.framework.SimpleObject;
 import org.openmrs.ui.framework.UiUtils;
 import org.openmrs.ui.framework.fragment.FragmentModel;
@@ -51,7 +51,7 @@ public class LocationListFragmentController {
 
     public SimpleObject getLocationDetails(@RequestParam(value = "locationId") Location location){
         LocationCentres centre = mdrtbService.getCentresByLocation(location);
-        LocationFacilities facility = Context.getService(MdrtbDashboardService.class).getLocationFacility(location);
+        LocationFacilities facility = Context.getService(MdrtbService.class).getLocationFacility(location);
 
         SimpleObject locations = SimpleObject.create("names", location.getName(), "serial", centre.getSerialNumber(), "agency", centre.getAgency().getId(), "region", centre.getRegion().getId(),"facility", facility.getName());
         return SimpleObject.create("location", locations);
@@ -91,7 +91,7 @@ public class LocationListFragmentController {
         facility.setStatus("active");
         facility.setCreatedOn(new Date());
         facility.setCreator(session.getCurrentUser().getPerson());
-        dashboardSvc.saveLocationFacilities(facility);
+        mdrtbService.saveLocationFacilities(facility);
 
         return SimpleObject.create("status", "success", "message", "Location successfully added!");
     }
@@ -104,7 +104,7 @@ public class LocationListFragmentController {
                                               @RequestParam(value = "region") Integer regionId,
                                               UiSessionContext session){
 
-        LocationFacilities facility = dashboardSvc.getLocationFacility(location);
+        LocationFacilities facility = mdrtbService.getLocationFacility(location);
         LocationCentresRegions region = mdrtbService.getRegion(regionId);
         LocationCentresAgencies agency = mdrtbService.getAgency(agentId);
         LocationCentres centre = mdrtbService.getCentresByLocation(location);
@@ -124,7 +124,7 @@ public class LocationListFragmentController {
         location.setName(names);
 
         mdrtbService.saveLocationCentres(centre);
-        dashboardSvc.saveLocationFacilities(facility);
+        mdrtbService.saveLocationFacilities(facility);
         Context.getLocationService().saveLocation(location);
 
         return SimpleObject.create("status", "success", "message", "Location successfully updated!");

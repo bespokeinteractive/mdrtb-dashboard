@@ -37,14 +37,7 @@
 
 	<!-- Maps hibernate file's, if present -->
 	<mappingFiles>
-		LocationFacilities.hbm.xml
-		LocationCentresAgencies.hbm.xml
-		RegimentType.hbm.xml
-		VisitTypes.hbm.xml
-		PatientProgramRegimen.hbm.xml
-		PatientProgramDetails.hbm.xml
-		PatientProgramVisits.hbm.xml
-		PatientProgramTransfers.hbm.xml
+
 	</mappingFiles>
 
 	<!-- Internationalization -->

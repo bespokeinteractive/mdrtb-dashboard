@@ -5,8 +5,8 @@ import org.openmrs.module.appui.UiSessionContext;
 import org.openmrs.module.mdrtb.MdrtbConcepts;
 import org.openmrs.module.mdrtb.service.MdrtbService;
 import org.openmrs.module.mdrtbdashboard.api.MdrtbDashboardService;
-import org.openmrs.module.mdrtbdashboard.model.LocationFacilities;
-import org.openmrs.module.mdrtbdashboard.model.PatientProgramDetails;
+import org.openmrs.module.mdrtb.model.LocationFacilities;
+import org.openmrs.module.mdrtb.model.PatientProgramDetails;
 import org.openmrs.module.mdrtbdashboard.reports.CaseFindingReport;
 import org.openmrs.module.mdrtbdashboard.util.DateRangeModel;
 import org.openmrs.ui.framework.UiUtils;
@@ -35,10 +35,10 @@ public class ReportCasefindingFragmentController {
 
         Integer quarter = Integer.parseInt(config.get("qtr").toString());
         Integer year = Integer.parseInt(config.get("year").toString());
-        LocationFacilities facility = dashboard.getFacilityById(Integer.parseInt(config.get("facility").toString()));
+        LocationFacilities facility = mdrtbService.getFacilityById(Integer.parseInt(config.get("facility").toString()));
 
         DateRangeModel dates = new DateRangeModel(quarter, year);
-        List<PatientProgramDetails> patients = dashboard.getPatientsFromDetails(session.getSessionLocation(), dates.getStartDate(), dates.getEndDate(), facility);
+        List<PatientProgramDetails> patients = mdrtbService.getPatientsFromDetails(session.getSessionLocation(), dates.getStartDate(), dates.getEndDate(), facility);
         for (PatientProgramDetails patient: patients){
             //This is for TB Patients Only, Ignoring Voided Ones
             if (patient.getPatientProgram().getProgram().getProgramId() == 2 || patient.getPatientProgram().getVoided()){
